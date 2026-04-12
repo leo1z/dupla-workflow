@@ -28,8 +28,7 @@ if [ "$1" = "--config" ]; then
   # Cargar variables del config (ignorar líneas de comentario y vacías)
   while IFS='=' read -r key value; do
     [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
-    key=$(echo "$key" | tr -d ' ')
-    value=$(echo "$value" | tr -d ' ')
+    key=$(echo "$key" | xargs)
     export "$key=$value"
   done < "$CONFIG_FILE"
   echo ""
