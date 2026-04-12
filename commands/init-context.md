@@ -1,25 +1,35 @@
-Genera un Context Pack completo para este proyecto.
+Genera el contexto completo para este proyecto.
 
 Sigue exactamente este proceso:
 
-1. Lee el template en: C:/Users/Leo Borjas/Projects/AI_CONTEXT_TEMPLATE/CONTEXT_PACK_TEMPLATE.md
-
-2. Explora el proyecto actual:
-   - Estructura de carpetas (1 nivel de profundidad)
-   - package.json o equivalente (para detectar stack)
+1. Explora el proyecto actual:
+   - Estructura de carpetas (2 niveles de profundidad)
+   - package.json o equivalente (para detectar stack y dependencias)
    - README.md si existe
-   - Archivos de configuración relevantes (.env.example, docker-compose, etc.)
+   - Archivos de configuración (.env.example, docker-compose, etc.)
 
-3. Genera un archivo CLAUDE.md en la raíz del proyecto con todas las secciones
-   del template llenadas con información real del proyecto.
+2. Genera CLAUDE.md en la raíz del proyecto con estas secciones:
+   - Reglas para la AI (zonas prohibidas, comportamiento automático)
+   - Proyecto (nombre, tipo, estado, repo, URL)
+   - Stack (tabla de herramientas y roles)
+   - Arquitectura (diagrama en texto del flujo de datos)
+   - Estructura de carpetas (generada del código real)
+   - Base de datos (tablas principales si aplica)
+   - Variables de entorno (solo nombres, nunca valores)
+   - Workflow git
+   - Contexto mínimo (Claude Desktop) — sección compacta para pegar en Project Instructions
 
-4. Para cada sección:
-   - Si puedes inferirla del código → llénala
-   - Si requiere info que solo el usuario sabe (credenciales, URLs, decisiones) → deja [PENDIENTE]
+3. Genera docs/PROJECT_STATE.md si no existe:
+   - Estado actual: "Proyecto recién inicializado"
+   - En progreso: branch actual + objetivo inicial
+   - Próximos pasos: 3 items [PENDIENTE — llenar con el roadmap]
+   - Completado: vacío por ahora
 
-5. Al terminar, lista en un mensaje corto:
+4. Al terminar, muestra en máximo 10 líneas:
    - Secciones completadas automáticamente
-   - Secciones que quedaron como [PENDIENTE] y qué información necesitas para completarlas
+   - Secciones que quedaron como [PENDIENTE] y qué info necesitas del usuario
 
-El archivo final debe funcionar como contexto completo para cualquier AI.
-No inventes datos — es mejor dejar [PENDIENTE] que poner información incorrecta.
+Reglas:
+- No inventes datos — deja [PENDIENTE] si no puedes inferirlo del código
+- No crear docs/PROBLEMS.md vacío — solo existe cuando hay errores documentados
+- Si CLAUDE.md ya existe → mostrar diff y pedir aprobación antes de sobrescribir

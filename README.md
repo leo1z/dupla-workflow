@@ -1,20 +1,8 @@
-# Sistema de Trabajo — Skills para Claude Code
+# Sistema de Trabajo V2 — Skills para Claude Code
 
-Skills y templates para trabajar con Claude Code de forma estructurada.
-Incluye gestión de sesiones, roadmap vivo, detección de ciclos y contexto de proyecto.
-
-## ¿Qué es esto?
-
-Un conjunto de skills (comandos) para Claude Code que implementan una metodología de trabajo:
-- Inicio y cierre de sesión con contexto
-- Roadmap actualizado automáticamente
-- Detección de ciclos sin avance
-- Contexto de proyecto cacheado
-- Kanban integrado
+Skills para trabajar con Claude Code de forma estructurada: inicio/cierre de sesión, contexto de proyecto cacheado, estado dinámico y detección de ciclos.
 
 ## Instalación
-
-### En Windows (con bash / Git Bash)
 
 ```bash
 git clone https://github.com/leo1z/sistema-trabajo
@@ -22,73 +10,32 @@ cd sistema-trabajo
 bash instalar.sh
 ```
 
-### Manual (cualquier OS)
-
-Copia todos los archivos de `commands/` a tu carpeta `~/.claude/commands/`:
-
-**Windows:**
-```
-C:\Users\TU_USUARIO\.claude\commands\
-```
-
-**Mac/Linux:**
-```
-~/.claude/commands/
-```
-
-Si la carpeta no existe, créala primero.
+Copia los 4 skills a `~/.claude/commands/`. Funciona en Windows, Mac y Linux.
 
 ---
 
-## Skills incluidos
+## Los 4 skills
 
-### Sesión de trabajo
-| Comando | Qué hace |
-|---|---|
-| `/goal "objetivo"` | Inicia la sesión — snapshot del proyecto + plan para el día |
-| `/progress` | Cierra la sesión — marca completado, detecta ciclos, actualiza ROADMAP |
-| `/project-status` | Snapshot rápido: dónde estás, qué sigue, riesgos activos |
-| `/scope-check` | Revisa si la sesión se desvió del objetivo original |
-
-### Kanban del proyecto
-| Comando | Qué hace |
-|---|---|
-| `/kanban` | Muestra el estado del Kanban (Must/Should/Could/Won't) |
-
-### Mantener documentos actualizados
-| Comando | Qué hace |
-|---|---|
-| `/init-context` | Genera CLAUDE.md para un proyecto explorando su código |
-| `/update-context` | Actualiza CLAUDE.md cuando algo cambió |
-| `/update-roadmap` | Actualiza ROADMAP.md |
-| `/update-tier1` | Actualiza tier1.md (versión liviana para Claude Desktop) |
-
-### Optimización
-| Comando | Qué hace |
-|---|---|
-| `/tokens` | Estima tokens usados y costo en la sesión actual |
-| `/reprompt "texto"` | Reformula un mensaje largo para ahorrar tokens |
-| `/coherencia` | Auditoría mensual: docs + conexiones + estado |
-| `/evaluar-tool nombre` | Evalúa si vale la pena instalar una herramienta |
+| Comando | Qué hace | Cuándo |
+|---|---|---|
+| `/goal "objetivo"` | Lee PROJECT_STATE.md, da plan en 10 líneas | Al INICIAR sesión — obligatorio |
+| `/progress` | Actualiza PROJECT_STATE.md con lo completado | Al CERRAR sesión — obligatorio |
+| `/init-context` | Genera CLAUDE.md + PROJECT_STATE.md para proyecto nuevo | Una vez por proyecto |
+| `/update-context` | Actualiza solo la sección afectada de CLAUDE.md | Cuando cambia arquitectura o stack |
 
 ---
 
-## Configuración inicial (después de instalar)
+## Configuración inicial
 
-### 1. Configura tu CLAUDE.md global
-
-El archivo `templates/CLAUDE.global.md` es una plantilla base. Cópiala y edítala:
+### 1. CLAUDE.md global
 
 ```bash
 cp templates/CLAUDE.global.md ~/.claude/CLAUDE.md
 ```
 
-Edita el archivo y completa:
-- **Quién sos** — tu rol y nivel de experiencia
-- **Tus proyectos** — rutas locales y repos de GitHub
-- **Stack base** — las tecnologías que usas
+Edita el archivo y completa: quién eres, tus proyectos, tu stack base.
 
-### 2. Crea tu archivo de credenciales
+### 2. Credenciales
 
 ```bash
 cp templates/CREDENCIALES.template.md ~/.claude/CREDENCIALES.md
@@ -96,31 +43,29 @@ cp templates/CREDENCIALES.template.md ~/.claude/CREDENCIALES.md
 
 Llena los valores. **Nunca subas este archivo a git.**
 
-### 3. Verifica que los skills funcionan
+### 3. Verifica
 
-Abre VS Code con cualquier proyecto y escribe en Claude:
+Abre VS Code con cualquier proyecto y escribe:
 ```
-/project-status
+/goal "test"
 ```
 
-Si Claude responde con un análisis del proyecto → todo funciona.
+Si Claude responde con el estado del proyecto → todo funciona.
 
 ---
 
 ## Estructura de documentos por proyecto
 
-Cada proyecto debería tener estos archivos para que el sistema funcione:
+Cada proyecto necesita estos archivos:
 
 ```
 mi-proyecto/
-├── CLAUDE.md               ← contexto completo para VS Code
+├── CLAUDE.md                  ← contexto completo (stack, arquitectura, reglas)
 ├── docs/
-│   ├── ROADMAP.md          ← estado actual y próximos pasos
-│   ├── KANBAN.md           ← tareas priorizadas
-│   ├── PROBLEMS.md         ← errores resueltos (no repetir)
-│   ├── DECISIONS.md        ← por qué está construido así
-│   └── tier1.md            ← resumen para Claude Desktop
-└── GUIA_COLABORADOR.md     ← onboarding para nuevos colaboradores
+│   ├── PROJECT_STATE.md       ← estado dinámico: dónde estamos, qué sigue
+│   └── PROBLEMS.md            ← errores ya resueltos (no repetir)
+├── .env.local                 ← variables con valores — NUNCA a git
+└── .env.example               ← variables sin valores — sí a git
 ```
 
 Para generar esta estructura en un proyecto existente:
@@ -130,28 +75,20 @@ Para generar esta estructura en un proyecto existente:
 
 ---
 
-## Uso diario
+## Flujo de trabajo
 
 ```
-Al iniciar:   git pull → /goal "qué quiero hacer hoy"
-Al terminar:  git push → /progress
-Si hay error: copia el error → díselo a Claude con contexto
+Inicio:   git pull → /goal "objetivo del día"
+Trabajo:  commits frecuentes
+Cierre:   git push → /progress
 ```
 
 ---
 
 ## Actualizaciones
 
-Cuando haya nuevos skills o mejoras:
-
 ```bash
 cd sistema-trabajo
 git pull
 bash instalar.sh
 ```
-
----
-
-## Créditos
-
-Desarrollado por [@leo1z](https://github.com/leo1z) con Claude Code.
