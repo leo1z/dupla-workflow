@@ -26,8 +26,11 @@ if [ "$1" = "--config" ]; then
   fi
   echo "Leyendo config: $CONFIG_FILE"
   # Cargar variables del config (ignorar líneas de comentario y vacías)
-  while IFS='=' read -r key value; do
-    [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+  # Usa %% y ## para partir solo en el primer = y soportar valores con = (URLs, etc.)
+  while IFS= read -r line; do
+    [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+    key="${line%%=*}"
+    value="${line#*=}"
     key=$(echo "$key" | xargs)
     export "$key=$value"
   done < "$CONFIG_FILE"
