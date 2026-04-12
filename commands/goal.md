@@ -4,41 +4,35 @@ El usuario escribió: /goal "$ARGUMENTS"
 
 Ejecuta en este orden sin preguntar:
 
-1. Lee CLAUDE.md del proyecto
-2. Lee docs/PROJECT_STATE.md (si no existe → leer docs/ROADMAP.md como fallback)
-3. Lee docs/PROBLEMS.md (si existe)
-4. Ejecuta en terminal: git status, git branch --show-current, git log --oneline -5
+1. Ejecuta: git branch --show-current, git log --oneline -8, git status --short
+2. Lee docs/PROJECT_STATE.md si existe
+3. Lee docs/PROBLEMS.md si existe y es relevante al objetivo
 
-Responde con este formato exacto (sin secciones extra, máximo 15 líneas en total):
+**Lógica de estado (en orden de confianza):**
+- Si PROJECT_STATE.md existe Y el último commit es más reciente que su última modificación → el estado real está en git log, no en PROJECT_STATE.md. Usa git log como fuente primaria y PROJECT_STATE.md como contexto de fondo.
+- Si PROJECT_STATE.md existe Y está actualizado → úsalo como fuente primaria.
+- Si PROJECT_STATE.md no existe → infiere el estado solo desde git log. No pidas /init-context a menos que git log esté vacío.
+
+Responde con este formato (máximo 12 líneas):
 
 ---
-## Sesión — [fecha hoy]
+## Sesión — [fecha]
 
-**Objetivo:** [repite el objetivo del usuario]
-**Branch actual:** [nombre del branch]
+**Objetivo:** [lo que pidió el usuario]
+**Branch:** [branch actual] [⚠️ si es main]
 
-**Estado del proyecto:**
-[1-2 líneas de qué estaba pendiente según PROJECT_STATE.md]
+**Estado inferido:**
+[1-2 líneas — qué se hizo según git log + PROJECT_STATE.md. Si hay discrepancia entre ambos, usar git log.]
 
-**Problemas relevantes ya resueltos:**
-[Si PROBLEMS.md tiene algo relacionado con el objetivo → 1-2 líneas: "Este tipo de problema ya se resolvió: [solución corta]"]
-[Si no hay nada relevante → omite esta sección completamente]
+**Plan:**
+1. [paso concreto]
+2. [paso concreto]
+3. [si aplica]
 
-**Plan (máximo 4 pasos):**
-1. [primer paso — específico y accionable]
-2. [segundo]
-3. [tercero si aplica]
-4. [cuarto si aplica]
-
-**Alertas (solo si existen):**
-- [si estás en branch main → "⚠️ Estás en main — crea un branch: git checkout -b work/descripcion"]
-- [si el objetivo contradice el PROJECT_STATE → menciona la discrepancia]
-- [si el objetivo ya estaba en Completado → avísalo antes del plan]
-
+**Alerta:** [solo si hay algo que bloquea — credencial, branch main, conflicto con PROJECT_STATE]
 ---
 
 Reglas:
-- No inventes estado — solo lo que los archivos confirman
-- Si no existe PROJECT_STATE.md ni ROADMAP.md → avisar y ofrecer crearlo: "No hay PROJECT_STATE.md. Corre /init-context para generarlo."
-- Si el usuario escribe solo /goal sin argumento → pide el objetivo en una línea
-- Respuesta máxima: 15 líneas. Sin headers extra, sin texto de relleno
+- Máximo 12 líneas. Sin texto de relleno.
+- Si el usuario no pasó argumento → pregunta el objetivo en una sola línea.
+- No exijas /progress anterior — infiere desde git.
