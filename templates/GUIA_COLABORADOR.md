@@ -10,7 +10,22 @@
 * [ ] Credenciales del proyecto (`.env.local`) — pedirlas por canal seguro (nunca GitHub)
 * [ ] Claude Code instalado (https://claude.ai/code)
 * [ ] Git instalado
-* [ ] Node.js (si aplica)
+
+---
+
+## ¿Primera vez en esta máquina?
+
+Si nunca has usado dupla-workflow en esta máquina, instala el sistema primero:
+
+```bash
+git clone https://github.com/leo1z/dupla-workflow "C:/Users/TU_USUARIO/Projects/dupla-workflow"
+cd "C:/Users/TU_USUARIO/Projects/dupla-workflow"
+bash instalar.sh
+```
+
+Luego abre cualquier proyecto en VS Code y corre `/setup` — Claude te hará una entrevista para configurar tu perfil.
+
+Si el sistema ya está instalado, salta directamente al Paso 1.
 
 ---
 
@@ -58,8 +73,7 @@ npm install
 npm run dev
 ```
 
-Abrir:
-http://localhost:3000
+Abrir: http://localhost:3000
 
 Si falla → copiar error completo
 
@@ -78,26 +92,37 @@ No necesitas explicar nada manualmente.
 
 ---
 
+## ¿Tienes un proyecto existente que no usa dupla-workflow?
+
+Si el proyecto no tiene `CLAUDE.md` ni `docs/PROJECT_STATE.md`, puedes adoptarlo al sistema:
+
+1. Abre el proyecto en VS Code con Claude Code
+2. Escribe: `/adopt`
+
+Claude va a:
+- Leer el estado real del repo (git log, README, package.json)
+- Reportar qué docs faltan
+- Generar los docs faltantes desde el código real (no templates vacíos)
+- Registrar el proyecto en `~/.claude/PROJECTS_SKILLS.md`
+
+No sobrescribe nada sin mostrarte el diff primero.
+
+---
+
 ## Fuente de verdad del proyecto
 
 Claude SIEMPRE trabaja basado en:
 
 1. Código del proyecto
-2. docs/PROJECT_STATE.md
+2. `docs/PROJECT_STATE.md`
 
-Esto define:
-
-* Qué se está haciendo
-* Qué sigue
-* Qué NO hacer
-
-Otros docs son apoyo.
+Esto define qué se está haciendo, qué sigue, y qué NO hacer. Otros docs son apoyo.
 
 ---
 
 ## Flujo de trabajo diario
 
-### 🔹 Al iniciar
+### Al iniciar
 
 ```bash
 git pull
@@ -109,26 +134,19 @@ En Claude:
 /new-session
 ```
 
-Claude:
-
-* Lee PROJECT_STATE.md
-* Detecta estado actual
-* Te dice:
-
-  * next steps
-  * blockers
+Claude lee PROJECT_STATE.md, detecta el estado actual y te dice los próximos pasos y bloqueadores.
 
 ---
 
-### 🔹 Durante el trabajo
+### Durante el trabajo
 
 * Trabaja en tareas pequeñas
-* Sigue Next Steps
+* Sigue Next Steps del PROJECT_STATE
 * No improvises fuera del scope
 
 ---
 
-### 🔹 Al terminar
+### Al terminar
 
 ```bash
 git add .
@@ -142,11 +160,7 @@ Luego en Claude:
 /progress
 ```
 
-Claude:
-
-* Actualiza PROJECT_STATE.md
-* Evalúa progreso
-* Deja listo siguiente estado
+Claude actualiza PROJECT_STATE.md, evalúa el progreso, y deja listo el siguiente estado.
 
 ---
 
@@ -160,8 +174,6 @@ git checkout -b work/lo-que-vas-a-hacer
 
 Nunca trabajar en main.
 
----
-
 ### Commits
 
 ```
@@ -170,8 +182,6 @@ fix(módulo): bug
 docs: documentación
 chore: setup/configuración
 ```
-
----
 
 ### Merge a main
 
@@ -184,8 +194,7 @@ Solo si:
 
 ## Uso de Claude (reglas clave)
 
-* No necesitas explicar contexto
-* Claude ya lo tiene
+* No necesitas explicar contexto — Claude ya lo tiene
 * Siempre trabaja desde PROJECT_STATE.md
 * Si algo contradice el estado → se debe señalar
 
@@ -202,7 +211,6 @@ Archivo: [archivo]
 ```
 
 Claude:
-
 1. Revisa PROBLEMS.md
 2. Si no está → diagnostica
 3. Aplica fix
@@ -214,10 +222,13 @@ Claude:
 
 | Comando           | Qué hace                                         | Cuándo                   |
 | ----------------- | ------------------------------------------------ | ------------------------ |
+| `/setup`          | Configura el sistema por primera vez             | Una vez por máquina      |
+| `/adopt`          | Adopta proyecto existente al workflow            | Una vez por proyecto     |
 | `/new-session`    | Inicia sesión, lee estado, define próximos pasos | Siempre al iniciar       |
 | `/progress`       | Cierra sesión, actualiza estado y sincroniza     | Siempre al terminar      |
-| `/new-project`    | Inicializa proyecto desde docs                   | Una vez                  |
-| `/update-context` | Alinea roadmap + arquitectura                    | Cuando cambia el sistema |
+| `/new-project`    | Inicializa proyecto desde docs                   | Una vez por proyecto nuevo |
+| `/update-context` | Alinea docs con el estado real del código        | Cuando cambia el sistema |
+| `/health-check`   | Auditoría: credenciales, skills, coherencia      | Cada 2-4 semanas         |
 
 ---
 

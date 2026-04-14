@@ -1,40 +1,145 @@
 #!/bin/bash
-# Instala los skills de Claude Code y el script de nuevo proyecto
+# instalar.sh — Instala dupla-workflow en una máquina nueva
+# Copia skills a ~/.claude/commands/ y global-templates a ~/.claude/
+# Después corre /setup en Claude para personalizar el sistema.
+#
+# Uso: bash instalar.sh
 
-COMMANDS_DIR="$HOME/.claude/commands"
-PROJECTS_DIR="$HOME/Projects"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COMMANDS_DIR="$HOME/.claude/commands"
+CLAUDE_DIR="$HOME/.claude"
 
-# ── Skills de Claude Code ────────────────────────────────────
-echo "Instalando skills en $COMMANDS_DIR..."
+echo ""
+echo "======================================"
+echo "  DUPLA WORKFLOW — Instalación"
+echo "======================================"
+echo ""
+
+# ── CHECK DEPENDENCIAS ───────────────────────────────────────
+
+echo "[0/3] Verificando dependencias..."
+
+MISSING=0
+
+if ! command -v git &> /dev/null; then
+  echo "  ✗ git no encontrado — instalar desde https://git-scm.com"
+  MISSING=1
+else
+  echo "  ✓ git $(git --version | awk '{print $3}')"
+fi
+
+if ! command -v code &> /dev/null; then
+  echo "  ⚠ VS Code CLI no encontrado — instalar desde https://code.visualstudio.com"
+  echo "    (opcional — puedes abrir VS Code manualmente)"
+else
+  echo "  ✓ VS Code CLI disponible"
+fi
+
+# Claude Code check
+if ! command -v claude &> /dev/null; then
+  echo "  ⚠ Claude Code no encontrado — instalar desde https://claude.ai/code"
+  echo "    (requerido para usar los skills)"
+else
+  echo "  ✓ Claude Code disponible"
+fi
+
+if [ $MISSING -eq 1 ]; then
+  echo ""
+  echo "  Instala las dependencias faltantes y vuelve a correr este script."
+  exit 1
+fi
+
+echo ""
+
+# ── SKILLS → ~/.claude/commands/ ────────────────────────────
+
+echo "[1/3] Instalando skills en $COMMANDS_DIR..."
 mkdir -p "$COMMANDS_DIR"
-cp "$SCRIPT_DIR/commands/"*.md "$COMMANDS_DIR/"
+
+COPIED=0
+SKIPPED=0
+
+for skill in "$SCRIPT_DIR/commands/"*.md; do
+  name=$(basename "$skill")
+  dest="$COMMANDS_DIR/$name"
+
+  if [ -f "$dest" ]; then
+    echo "  ↷ $name (ya existe — omitido)"
+    SKIPPED=$((SKIPPED + 1))
+  else
+    cp "$skill" "$dest"
+    echo "  ✓ $name"
+    COPIED=$((COPIED + 1))
+  fi
+done
+
+echo "  → $COPIED instalados, $SKIPPED omitidos"
+echo ""
+
+# ── GLOBAL TEMPLATES → ~/.claude/ ───────────────────────────
+
+echo "[2/3] Copiando global-templates a $CLAUDE_DIR/..."
+mkdir -p "$CLAUDE_DIR"
+
+TEMPLATE_COPIED=0
+
+for tpl in "$SCRIPT_DIR/global-templates/"*.md; do
+  name=$(basename "$tpl")
+  dest="$CLAUDE_DIR/$name"
+
+  # Solo copiar si no existe (son templates — el usuario los personaliza con /setup)
+  if [ -f "$dest" ]; then
+    echo "  ↷ $name (ya existe — omitido)"
+  else
+    cp "$tpl" "$dest"
+    echo "  ✓ $name"
+    TEMPLATE_COPIED=$((TEMPLATE_COPIED + 1))
+  fi
+done
 
 echo ""
-echo "Skills instalados:"
-ls "$COMMANDS_DIR/"*.md | xargs -I{} basename {}
 
-# ── Script nuevo-proyecto.sh ─────────────────────────────────
+# ── CREDENTIALS TEMPLATE ─────────────────────────────────────
+
+echo "[3/3] Verificando CREDENCIALES.md..."
+CREDS="$CLAUDE_DIR/CREDENCIALES.md"
+CREDS_TEMPLATE="$SCRIPT_DIR/templates/CREDENTIALS_TEMPLATE.md"
+
+if [ -f "$CREDS" ]; then
+  echo "  ↷ CREDENCIALES.md ya existe — no se sobrescribe"
+elif [ -f "$CREDS_TEMPLATE" ]; then
+  cp "$CREDS_TEMPLATE" "$CREDS"
+  echo "  ✓ CREDENCIALES.md creado desde template — llénalo con tus credenciales reales"
+else
+  echo "  ⚠ Template de credenciales no encontrado — crea $CREDS manualmente"
+fi
+
 echo ""
-echo "Instalando nuevo-proyecto.sh en $PROJECTS_DIR..."
-mkdir -p "$PROJECTS_DIR"
-cp "$SCRIPT_DIR/nuevo-proyecto.sh" "$PROJECTS_DIR/nuevo-proyecto.sh"
-chmod +x "$PROJECTS_DIR/nuevo-proyecto.sh"
-echo "  ✓ nuevo-proyecto.sh listo en $PROJECTS_DIR"
 
-# ── Templates ────────────────────────────────────────────────
-echo ""
-echo "Copiando templates a $PROJECTS_DIR/AI_CONTEXT_TEMPLATE/..."
-mkdir -p "$PROJECTS_DIR/AI_CONTEXT_TEMPLATE"
-cp "$SCRIPT_DIR/templates/"* "$PROJECTS_DIR/AI_CONTEXT_TEMPLATE/"
-echo "  ✓ Templates copiados (incluye PLANNING_PROMPT.md)"
+# ── RESULTADO ────────────────────────────────────────────────
 
+echo "======================================"
+echo "  ✓ Instalación completa"
+echo "======================================"
 echo ""
 echo "Próximos pasos:"
-echo "  1. Copia templates/CLAUDE.global.md a ~/.claude/CLAUDE.md y edítalo con tu info"
-echo "  2. Copia templates/CREDENCIALES.template.md a ~/.claude/CREDENCIALES.md y llénalo"
-echo "  3. Para planificar un proyecto nuevo: lee AI_CONTEXT_TEMPLATE/PLANNING_PROMPT.md"
-echo "  4. Para crear un proyecto:"
-echo "       bash ~/Projects/nuevo-proyecto.sh                         (interactivo)"
-echo "       bash ~/Projects/nuevo-proyecto.sh --config mi.config      (desde plan)"
-echo "  5. Abre un proyecto en VS Code y escribe /goal \"test\" para verificar"
+echo ""
+echo "  1. Abre cualquier proyecto en VS Code con Claude Code"
+echo "  2. Escribe: /setup"
+echo "     Claude te hará una entrevista y generará:"
+echo "       ~/.claude/CLAUDE.md"
+echo "       ~/.claude/CONTEXTO_[tu-nombre].md"
+echo "       ~/.claude/STACK_GLOBAL.md"
+echo "       ~/.claude/PROJECTS_SKILLS.md"
+echo ""
+echo "  3. Después del setup, corre: /health-check"
+echo "     Verifica que todo está en orden."
+echo ""
+echo "  4. Para proyectos nuevos:"
+echo "     bash nuevo-proyecto.sh   (desde esta carpeta o ruta completa)"
+echo ""
+echo "  5. Para adoptar un proyecto existente:"
+echo "     Abre el proyecto en VS Code y escribe: /adopt"
+echo ""
+echo "  Docs del sistema: $SCRIPT_DIR/docs/"
+echo ""
