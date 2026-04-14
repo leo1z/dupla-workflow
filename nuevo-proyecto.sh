@@ -126,122 +126,79 @@ TODAY=$(date +%Y-%m-%d)
 mkdir -p "$PROJECT_DIR/docs"
 cd "$PROJECT_DIR"
 
-# ── GENERAR CLAUDE.md CON LAS RESPUESTAS ───────────────────
+# ── GENERAR CLAUDE.md (basado en CLAUDE_TEMPLATE) ──────────
 
 cat > "$PROJECT_DIR/CLAUDE.md" << CLAUDEEOF
-# $PROJECT_NAME — CLAUDE.md
+# Context — $PROJECT_NAME
 
-> Cargado automáticamente por Claude Code al abrir la carpeta.
-> Actualizar con \`/update-context\` cuando cambie arquitectura, stack, DB o reglas.
-
----
-
-## 0. REGLAS PARA LA AI
-
-**Rol:** Eres el Staff Engineer de $PROJECT_NAME. Actúa como si hubieras trabajado aquí desde el inicio.
-
-**Obligatorio en cada cambio:**
-- Qué cambia y por qué
-- Riesgo: \`Low / Medium / High\`
-- Sistemas afectados
-- Rollback si riesgo es Medium o High
-
-**Nunca sin instrucción explícita:**
-- Commit a \`main\`
-- Cambios en: ${FORBIDDEN:-"[completar con /update-context]"}
-- Subir credenciales a git
-
-**Comportamiento automático durante el trabajo:**
-- Antes de debuggear cualquier error → leer \`docs/PROBLEMS.md\` primero. Si ya está resuelto ahí, aplicar esa solución.
-- Si llevamos 3+ intercambios intentando lo mismo sin avanzar → parar, decirlo, proponer enfoque distinto o sugerir nueva conversación.
-- Si lo que se pide contradice el PROJECT_STATE o las zonas prohibidas → señalarlo antes de ejecutar.
+> Type: Semi-static (update with /update-context when stack or architecture changes)
+> Used: /new-session
+> Last updated: $TODAY
 
 ---
 
-## 1. PROYECTO
+## Project
 
-\`\`\`
-Nombre:      $PROJECT_NAME
-Tipo:        [completar con /init-context]
-Estado:      En desarrollo
-Repo:        https://github.com/leo1z/$PROJECT_NAME
-Deploy URL:  [PENDIENTE]
-Actualizado: $TODAY
-\`\`\`
-
-**Qué hace:** $PROJECT_DESC
+$PROJECT_DESC
+Repo: https://github.com/leo1z/$PROJECT_NAME
 
 ---
 
-## 2. STACK
+## Current Phase
 
-$STACK
-
-> Detalle completo → ejecutar \`/init-context\` para que Claude explore el código y llene esto.
+Planning
 
 ---
 
-## 3. ARQUITECTURA
+## Stack
 
-> Ejecutar \`/init-context\` para generar el diagrama automáticamente.
-
-\`\`\`
-[PENDIENTE — /init-context lo genera]
-\`\`\`
+$(echo "$STACK" | tr ',' '\n' | sed 's/^ */- /')
 
 ---
 
-## 4. ESTRUCTURA DE CARPETAS
+## Constraints
 
-> Ejecutar \`/init-context\` para generar automáticamente.
-
----
-
-## 5. BASE DE DATOS
-
-${HAS_DB:+"> Ejecutar \`/init-context\` para documentar el schema."}
+- Do NOT modify: ${FORBIDDEN:-"[define after /new-project]"}
+- No credentials in repo — use .env.local only
+- Work in work/* branches only — never commit to main
 
 ---
 
-## 6. VARIABLES DE ENTORNO
+## Workflow Rules
 
-> Solo nombres — nunca valores aquí. Valores en \`.env.local\` y en \`CREDENCIALES.md\`.
-
-\`\`\`env
-# Completar según el stack del proyecto
-\`\`\`
-
----
-
-## 7. WORKFLOW GIT
-
-\`\`\`
-main          = producción — nunca commitear directo
-work/[nombre] = donde se trabaja siempre
-\`\`\`
-
-**Flujo:** checkout work/ → trabajar → commit → npm run build → merge a main → deploy
+- PROJECT_STATE.md + code = source of truth
+- Always read PROJECT_STATE.md first
+- Follow roadmap phases (adapt to reality)
+- Prototype first, then production
+- Do NOT over-engineer
 
 ---
 
-## 8. CONTEXTO MÍNIMO (Claude Desktop)
+## Execution Rules
 
-> Copia esta sección en "Project Instructions" de Claude Desktop. Actualízala cuando cambies el stack o la arquitectura.
-
-**Proyecto:** $PROJECT_NAME — $PROJECT_DESC
-**Stack:** $STACK
-**Deploy:** $DEPLOY
-**Repo:** github.com/leo1z/$PROJECT_NAME · Branch trabajo: \`work/*\`
-**Zonas prohibidas:** ${FORBIDDEN:-"[completar]"}
-**Estado actual:** ver docs/PROJECT_STATE.md
-
-**Comportamiento esperado:**
-- Challenge: si lo que te pido contradice PROJECT_STATE o hay una forma más simple, dímelo antes de ejecutar.
-- Stay updated: si ves una práctica obsoleta para este stack, avísame en una línea.
+- Before debugging → check docs/PROBLEMS.md
+- If fix exists → reuse it
+- If new issue → document it
+- If stuck after 3+ attempts → stop and rethink
+- If request conflicts with PROJECT_STATE → flag it before executing
 
 ---
 
-*Completar secciones pendientes con \`/init-context\`. Estado del proyecto → \`docs/PROJECT_STATE.md\`.*
+## Command Map
+
+- /new-session → read PROJECT_STATE.md + start work
+- /progress → update state + sync repo
+- /update-context → align docs with current code
+- /new-project → initialize from IDEA_DRAFT + ROADMAP
+
+---
+
+## Docs Map
+
+- State → docs/PROJECT_STATE.md (always)
+- Roadmap → docs/ROADMAP.md (direction)
+- Architecture → docs/ARCHITECTURE.md (build)
+- Problems → docs/PROBLEMS.md (debug only)
 CLAUDEEOF
 
 # ── GENERAR PROJECT_STATE.md ─────────────────────────────────
