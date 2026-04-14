@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo rename dupla-workflow --repo leo1z/sistema-trabajo --yes)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo view leo1z/dupla-workflow --json name,url)",
+      "Bash(cp \"C:/Users/Leo Borjas/Projects/AI_CONTEXT_TEMPLATE/CONTEXT_PACK_TEMPLATE.md\" \"C:/Users/Leo Borjas/Projects/sistema-trabajo/templates/\")",
+      "Bash(cp \"C:/Users/Leo Borjas/Projects/AI_CONTEXT_TEMPLATE/ARCHIVO_COMO_USAR.md\" \"C:/Users/Leo Borjas/Projects/sistema-trabajo/templates/\")",
+      "Bash(cp \"C:/Users/Leo Borjas/Projects/EMPIEZA_AQUI.md\" \"C:/Users/Leo Borjas/Projects/sistema-trabajo/docs/\")",
+      "Bash(cp \"C:/Users/Leo Borjas/Projects/GUIAS_TRABAJO.md\" \"C:/Users/Leo Borjas/Projects/sistema-trabajo/docs/\")",
+      "Bash(cp \"C:/Users/Leo Borjas/Projects/SISTEMA.md\" \"C:/Users/Leo Borjas/Projects/sistema-trabajo/docs/\")",
+      "Bash(cp \"C:/Users/Leo Borjas/Projects/WORKFLOW_IDEAL.md\" \"C:/Users/Leo Borjas/Projects/sistema-trabajo/docs/\")",
+      "Bash(powershell -Command \"Rename-Item -Path 'C:\\\\Users\\\\Leo Borjas\\\\Projects\\\\sistema-trabajo' -NewName 'dupla-workflow'\")",
+      "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/new-session.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/new-session.md\")",
+      "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/new-project.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/new-project.md\")",
+      "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/progress.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/progress.md\")",
+      "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/health-check.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/health-check.md\")",
+      "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/goal.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/goal.md\")"
+    ]
+  }
+}

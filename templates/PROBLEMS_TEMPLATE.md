@@ -1,21 +1,36 @@
-# Log de Problemas — [NOMBRE DEL PROYECTO]
-> Cada problema resuelto va aquí. Antes de buscar un error, búscalo aquí primero.
+# Problems — [PROJECT_NAME]
+
+> Type: Dynamic (append only)
+> Used: Debugging only
+> Last updated: [DATE TIME]
 
 ---
 
-## Cómo agregar una entrada
+## Rules
 
-```
-### [FECHA] — Título corto del problema
-
-**Síntoma:** Qué fallaba / qué error salía
-**Causa raíz:** Por qué pasó
-**Solución:** Qué hice para arreglarlo
-**Lección:** Qué evitar en el futuro
-```
+- Check BEFORE debugging
+- Reuse existing fixes
+- Add only confirmed solutions
+- Keep entries minimal
 
 ---
 
-## Entradas
+## Format
 
-*(Agrega aquí — más reciente primero)*
+### [DATE] — [Short Title]
+
+**Symptom:**  
+[short]
+
+**Cause:**  
+[root cause]
+
+**Fix:**  
+[action]
+
+---
+
+## Escalation
+
+If this issue appears in multiple projects:
+→ promote to PROBLEMS_GLOBAL.md

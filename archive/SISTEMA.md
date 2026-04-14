@@ -130,15 +130,15 @@ Usa esta tabla cuando hagas mejoras al sistema (como hoy):
 
 | Si cambias... | Archivos a actualizar | Cómo |
 |---|---|---|
-| Un skill (goal, progress, etc.) | `~/.claude/commands/[skill].md` + `sistema-trabajo/commands/[skill].md` | Editar + `git push` en sistema-trabajo |
+| Un skill (goal, progress, etc.) | `~/.claude/commands/[skill].md` + `dupla-workflow/commands/[skill].md` | Editar + `git push` en dupla-workflow |
 | Reglas globales de Claude | `~/.claude/CLAUDE.md` | Editar directamente |
 | El flujo de trabajo | `GUIAS_TRABAJO.md` | Editar directamente |
 | La arquitectura del sistema | `SISTEMA.md` (este archivo) | Editar directamente |
 | La lista de skills disponibles | `EMPIEZA_AQUI.md` + `~/.claude/CLAUDE.md` | Editar ambos |
-| Los templates de proyectos nuevos | `AI_CONTEXT_TEMPLATE/` + `sistema-trabajo/templates/` | Editar + sincronizar |
+| Los templates de proyectos nuevos | `dupla-workflow/templates/` | Es la fuente única — no hay duplicado |
 | Las reglas dentro de un proyecto | `[proyecto]/CLAUDE.md` | `/update-context` |
 
-**Regla de sincronización:** cuando editas un skill en `~/.claude/commands/`, copia el archivo a `sistema-trabajo/commands/` y haz push. Son los únicos dos lugares donde viven los skills.
+**Regla de sincronización:** cuando editas un skill en `~/.claude/commands/`, copia el archivo a `dupla-workflow/commands/` y haz push. Son los únicos dos lugares donde viven los skills.
 
 ---
 

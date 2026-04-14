@@ -6,14 +6,17 @@ Ejecuta en este orden:
    - Lista todas las líneas con ⚠️
 
 2. **SKILLS** — Lista archivos en ~/.claude/commands/
-   - Verifica que existen: goal.md, progress.md, init-context.md, update-context.md, health-check.md
+   - Verifica que existen: new-session.md, new-project.md, progress.md, update-context.md, health-check.md
+   - goal.md e init-context.md son legacy — no son error
    - Si hay otros → mencionarlos como "terceros" (no son error)
 
 3. **PROYECTO ACTIVO** (si hay carpeta de proyecto abierta)
    - Ejecuta: git branch --show-current, git status --short
    - Verifica que existe CLAUDE.md en la raíz
    - Verifica que existe docs/PROJECT_STATE.md
-   - Busca archivos obsoletos: docs/ROADMAP.md, docs/KANBAN.md, docs/tier1.md, docs/WORKING_NOTES.md, docs/DECISIONS.md
+   - Verifica que existen: docs/PROJECT_STATE.md, docs/PROBLEMS.md
+   - Busca archivos obsoletos: docs/KANBAN.md, docs/tier1.md, docs/WORKING_NOTES.md
+   - Verifica presencia de: docs/ROADMAP.md, docs/ARCHITECTURE.md (esperados si proyecto avanzado)
 
 4. **COHERENCIA DE STACK** (solo si hay proyecto abierto con package.json)
    - Lee package.json → extrae versiones principales

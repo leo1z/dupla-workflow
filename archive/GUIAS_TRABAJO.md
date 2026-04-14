@@ -120,6 +120,8 @@ No sirve para: ejecutar skills, editar archivos, correr comandos.
 
 **Tiempo total: ~30 minutos**
 
+> Para el workflow completo por fases (Discovery → Planning → Design → Development → Validation) → ver [`docs/WORKFLOW_IDEAL.md`](WORKFLOW_IDEAL.md)
+
 ## Paso 1 — Valida la idea (5 min) — en ChatGPT
 
 1. Abre ChatGPT

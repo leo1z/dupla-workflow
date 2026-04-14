@@ -1,26 +1,69 @@
-# PROJECT_STATE — [Nombre del Proyecto]
-> Actualizado: [fecha]
-> Este archivo lo actualiza /progress al cerrar sesión. No editar manualmente salvo que sea urgente.
+# Project State — [PROJECT_NAME]
+
+> Type: Dynamic (source of truth)
+> Used: /new-session, /progress, /update-context
+> Last updated: [DATE TIME]
 
 ---
 
-## Estado actual
-[1-2 líneas de dónde está el proyecto — qué fase, qué funciona, qué no]
+## Current Goal
+[1 clear objective]
 
-## En progreso ahora
-- Branch: `work/[nombre]`
-- Objetivo: [qué se está haciendo]
-- Empezado: [fecha]
+---
 
-## Próximos pasos (en orden de prioridad)
-- [ ] **Must:** [tarea crítica]
+## Status
+[1–2 lines]
+
+---
+
+## In Progress
+- Task
+- Task
+
+---
+
+## Next Steps
+
 - [ ] **Must:** [tarea crítica]
 - [ ] **Should:** [tarea importante pero no urgente]
 - [ ] **Could:** [nice to have]
 
-## Completado recientemente
-- [fecha] — [qué se completó]
-- [fecha] — [qué se completó]
+---
 
-## Bloqueadores activos
-- [descripción del bloqueador, si existe — sino borrar esta sección]
+## Blockers
+- Blocker
+
+---
+
+## Recent Changes (last 3–5)
+- [DATE] — Change
+- [DATE] — Change
+
+---
+
+## Sync Status (IMPORTANT)
+
+- Branch: work/[name]
+- Compared to main: [ahead/behind/equal]
+- Ready to merge: YES / NO
+
+---
+
+## Rules
+
+- This + codebase = source of truth
+- Updated on /progress
+- Do NOT infer state from chat
+
+---
+
+## Priority Rule
+
+If conflict between documents:
+
+1. PROJECT_STATE.md
+2. Codebase
+3. ROADMAP.md
+4. ARCHITECTURE.md
+
+Always follow this order.

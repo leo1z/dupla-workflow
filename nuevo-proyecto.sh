@@ -5,7 +5,7 @@
 # Requiere: git. gh.exe en C:/Program Files/GitHub CLI/
 
 BASE_DIR="C:/Users/Leo Borjas/Projects"
-TEMPLATE_DIR="$BASE_DIR/AI_CONTEXT_TEMPLATE"
+TEMPLATE_DIR="$BASE_DIR/dupla-workflow/templates"
 GH="/c/Program Files/GitHub CLI/gh.exe"
 CREDS="C:/Users/Leo Borjas/.claude/CREDENCIALES.md"
 
@@ -274,6 +274,38 @@ STATEEOF
 cp "$TEMPLATE_DIR/PROBLEMS_TEMPLATE.md" "$PROJECT_DIR/docs/PROBLEMS.md"
 sed -i "s/\[NOMBRE DEL PROYECTO\]/$PROJECT_NAME/g" "$PROJECT_DIR/docs/PROBLEMS.md"
 
+# ── CREAR PLACEHOLDERS DE DOCS DE PLANNING ──────────────────
+
+cat > "$PROJECT_DIR/docs/IDEA_DRAFT.md" << 'IDEAEOF'
+# Idea Draft — [PROJECT_NAME]
+
+> Type: Static (locked after validation)
+> Used: /new-project
+> Status: PENDING — fill using templates/RESEARCH_PROMPT.md
+
+See: Projects/dupla-workflow/templates/RESEARCH_PROMPT.md
+IDEAEOF
+
+cat > "$PROJECT_DIR/docs/ROADMAP.md" << 'ROADMAPEOF'
+# Roadmap — [PROJECT_NAME]
+
+> Type: Dynamic (update if direction changes)
+> Used: /new-session, /update-context
+> Status: PENDING — generate using templates/PLAN_PROMPT.md
+
+See: Projects/dupla-workflow/templates/PLAN_PROMPT.md
+ROADMAPEOF
+
+cat > "$PROJECT_DIR/docs/ARCHITECTURE.md" << 'ARCHEOF'
+# Architecture — [PROJECT_NAME]
+
+> Type: Dynamic (updated via /progress and /update-context)
+> Used: building + system changes
+> Status: PENDING — generate using templates/PLAN_PROMPT.md
+
+See: Projects/dupla-workflow/templates/PLAN_PROMPT.md
+ARCHEOF
+
 # ── GENERAR .env.example ────────────────────────────────────
 
 cat > "$PROJECT_DIR/.env.example" << ENVEOF
@@ -367,14 +399,12 @@ echo "Branch:   work/setup (activo)"
 echo ""
 echo "Próximos pasos:"
 echo "  1. Abre VS Code:  code \"$PROJECT_DIR\""
-echo "  2. En Claude:     /init-context   (genera el CLAUDE.md completo)"
-echo "  3. Crea:          .env.local con los valores de CREDENCIALES.md"
-echo "  4. Inicia sesión: /goal \"configurar el proyecto\""
-echo ""
-echo "  Para Claude Desktop:"
-echo "  → Nuevo Project → copia la sección '## Contexto mínimo (Claude Desktop)' del CLAUDE.md en Project Instructions"
-echo "  → Sube docs/PROJECT_STATE.md y docs/PROBLEMS.md como Knowledge"
+echo "  2. Llena:         docs/IDEA_DRAFT.md  (usa templates/RESEARCH_PROMPT.md como guía)"
+echo "  3. En Claude Plan Mode: pega templates/PLAN_PROMPT.md → genera ROADMAP.md + ARCHITECTURE.md"
+echo "  4. En Claude:     /new-project   (inicializa PROJECT_STATE.md con los primeros pasos)"
+echo "  5. Crea:          .env.local con los valores de CREDENCIALES.md"
+echo "  6. Inicia sesión: /new-session"
 echo ""
 echo "  Docs creados en docs/:"
-echo "  → PROJECT_STATE.md  PROBLEMS.md"
+echo "  → IDEA_DRAFT.md  ROADMAP.md  ARCHITECTURE.md  PROJECT_STATE.md  PROBLEMS.md"
 echo ""

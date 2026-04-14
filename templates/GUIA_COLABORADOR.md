@@ -6,17 +6,15 @@
 
 ## Lo que necesitas antes de empezar
 
-- [ ] Acceso al repo en GitHub (pedirlo al dueño)
-- [ ] Credenciales del proyecto (`.env.local`) — pedirlas por un canal seguro, nunca por GitHub
-- [ ] [Claude Code](https://claude.ai/code) instalado (necesitas cuenta de Claude)
-- [ ] [git](https://git-scm.com/download/win) instalado
-- [ ] Node.js instalado (si el proyecto usa Next.js / Node)
+* [ ] Acceso al repo en GitHub (pedirlo al dueño)
+* [ ] Credenciales del proyecto (`.env.local`) — pedirlas por canal seguro (nunca GitHub)
+* [ ] Claude Code instalado (https://claude.ai/code)
+* [ ] Git instalado
+* [ ] Node.js (si aplica)
 
 ---
 
 ## Paso 1 — Clonar el proyecto
-
-Abre la terminal y ejecuta (reemplaza el nombre del repo):
 
 ```bash
 git clone https://github.com/leo1z/nombre-proyecto "C:/Users/TU_USUARIO/Projects/nombre-proyecto"
@@ -30,13 +28,14 @@ git clone https://github.com/leo1z/nombre-proyecto "C:/Users/TU_USUARIO/Projects
 code "C:/Users/TU_USUARIO/Projects/nombre-proyecto"
 ```
 
-> **IMPORTANTE:** Abre la CARPETA, no un archivo suelto. Claude Code carga el contexto del proyecto automáticamente al abrir la carpeta.
+IMPORTANTE:
+
+* Abre la carpeta completa
+* Claude carga el contexto automáticamente
 
 ---
 
 ## Paso 3 — Instalar dependencias
-
-Si el proyecto usa Next.js o Node:
 
 ```bash
 npm install
@@ -46,10 +45,10 @@ npm install
 
 ## Paso 4 — Variables de entorno
 
-1. En la carpeta del proyecto hay un archivo `.env.example` con los nombres de las variables
-2. Crea un archivo `.env.local` en la misma carpeta
-3. Pide los valores al dueño del proyecto (por WhatsApp, Slack, o donde corresponda — nunca por GitHub)
-4. Copia los valores al `.env.local`
+1. Revisa `.env.example`
+2. Crea `.env.local`
+3. Pide credenciales al dueño (WhatsApp/Slack)
+4. Copia valores
 
 ---
 
@@ -59,133 +58,190 @@ npm install
 npm run dev
 ```
 
-Abre `http://localhost:3000` en el navegador. Si algo falla, copia el error y díselo al dueño.
+Abrir:
+http://localhost:3000
+
+Si falla → copiar error completo
 
 ---
 
-## Paso 6 — Contexto del proyecto (Claude ya lo tiene)
+## Paso 6 — Contexto del proyecto
 
-Cuando abriste la carpeta en VS Code, Claude cargó automáticamente el `CLAUDE.md` del proyecto. Ya sabe:
-- Qué hace el proyecto
-- Cómo está estructurado
-- Las reglas de trabajo
+Claude ya cargó automáticamente:
 
-No necesitas explicarle nada. Puedes preguntar directamente:
-```
-¿Qué hace este proyecto y cómo está organizado?
-```
+* CLAUDE.md (reglas)
+* PROJECT_STATE.md (estado)
+* ARCHITECTURE.md (estructura)
+* ROADMAP.md (dirección)
 
-Para ver el estado actual y próximos pasos:
-```
-/goal "ver estado del proyecto"
-```
+No necesitas explicar nada manualmente.
 
 ---
 
-## Reglas de trabajo en equipo
+## Fuente de verdad del proyecto
 
-### Branches — obligatorio
-Nunca trabajes directo en `main`. Crea un branch para cada tarea:
+Claude SIEMPRE trabaja basado en:
 
-```bash
-git checkout -b work/lo-que-vas-a-hacer
-```
+1. Código del proyecto
+2. docs/PROJECT_STATE.md
 
-Ejemplos:
-```bash
-git checkout -b work/fix-login-bug
-git checkout -b work/agregar-filtro-fecha
-```
+Esto define:
 
-### Commits — formato estándar
+* Qué se está haciendo
+* Qué sigue
+* Qué NO hacer
 
-```
-feat(módulo): descripción corta
-fix(módulo): descripción corta
-chore: configuración o setup
-docs: solo documentación
-wip: trabajo sin terminar (para guardar y retomar)
-```
-
-### Mergear a main
-Solo mergea a `main` cuando:
-1. El código compila sin errores (`npm run build`)
-2. El dueño del proyecto lo revisó
+Otros docs son apoyo.
 
 ---
 
 ## Flujo de trabajo diario
 
-**Al iniciar:**
+### 🔹 Al iniciar
+
 ```bash
 git pull
 ```
-Luego en Claude:
+
+En Claude:
+
 ```
-/goal "qué quiero hacer hoy"
+/new-session
 ```
 
-**Al terminar:**
+Claude:
+
+* Lee PROJECT_STATE.md
+* Detecta estado actual
+* Te dice:
+
+  * next steps
+  * blockers
+
+---
+
+### 🔹 Durante el trabajo
+
+* Trabaja en tareas pequeñas
+* Sigue Next Steps
+* No improvises fuera del scope
+
+---
+
+### 🔹 Al terminar
+
 ```bash
 git add .
 git commit -m "tipo(módulo): descripción"
 git push
 ```
 
+Luego en Claude:
+
+```
+/progress
+```
+
+Claude:
+
+* Actualiza PROJECT_STATE.md
+* Evalúa progreso
+* Deja listo siguiente estado
+
+---
+
+## Reglas de trabajo
+
+### Branches (obligatorio)
+
+```bash
+git checkout -b work/lo-que-vas-a-hacer
+```
+
+Nunca trabajar en main.
+
+---
+
+### Commits
+
+```
+feat(módulo): nueva funcionalidad
+fix(módulo): bug
+docs: documentación
+chore: setup/configuración
+```
+
+---
+
+### Merge a main
+
+Solo si:
+
+1. `npm run build` funciona
+2. Código revisado
+
+---
+
+## Uso de Claude (reglas clave)
+
+* No necesitas explicar contexto
+* Claude ya lo tiene
+* Siempre trabaja desde PROJECT_STATE.md
+* Si algo contradice el estado → se debe señalar
+
 ---
 
 ## Si algo falla
 
-1. Copia el error completo
-2. En Claude escribe:
+En Claude:
+
 ```
-Error: [pega el error]
-Estaba haciendo: [qué hacías]
-Archivo: [nombre del archivo]
+Error: [pegar error]
+Estaba haciendo: [acción]
+Archivo: [archivo]
 ```
 
-Si no se resuelve → avisa al dueño del proyecto con el error y lo que ya intentaste.
+Claude:
+
+1. Revisa PROBLEMS.md
+2. Si no está → diagnostica
+3. Aplica fix
+4. Si es reusable → documenta
 
 ---
 
-## Opcional pero recomendado — Instalar el sistema de trabajo
+## Sistema de comandos
 
-El proyecto usa un sistema de skills para gestionar sesiones, roadmap y contexto. Puedes instalarlo en menos de 5 minutos:
+| Comando           | Qué hace                                         | Cuándo                   |
+| ----------------- | ------------------------------------------------ | ------------------------ |
+| `/new-session`    | Inicia sesión, lee estado, define próximos pasos | Siempre al iniciar       |
+| `/progress`       | Cierra sesión, actualiza estado y sincroniza     | Siempre al terminar      |
+| `/new-project`    | Inicializa proyecto desde docs                   | Una vez                  |
+| `/update-context` | Alinea roadmap + arquitectura                    | Cuando cambia el sistema |
 
-### Instalar
+---
 
-```bash
-git clone https://github.com/leo1z/dupla-workflow
-cd dupla-workflow
-bash instalar.sh
-```
+## Reglas importantes
 
-Eso copia todos los skills a tu `~/.claude/commands/`.
+* PROJECT_STATE.md manda sobre todo
+* No improvisar fuera del flujo
+* No agregar features fuera de scope
+* No subir credenciales
+* No trabajar en main
 
-### Configurar tu contexto global
+---
 
-```bash
-cp templates/CLAUDE.global.md ~/.claude/CLAUDE.md
-```
+## Flujo del sistema
 
-Abre `~/.claude/CLAUDE.md` y llena tu nombre, proyectos y stack.
+Idea → Roadmap → Architecture → Setup → Execution → Progress → Iteration
 
-### Verificar que funciona
+---
 
-Abre VS Code con este proyecto y escribe en Claude:
-```
-/goal "test"
-```
+## Resultado esperado
 
-Si Claude responde con el estado del proyecto → todo funciona.
+Si sigues este flujo:
 
-### Skills disponibles
-
-| Comando | Qué hace | Cuándo |
-|---|---|---|
-| `/goal "objetivo"` | Inicia sesión — lee PROJECT_STATE.md, da plan | Al empezar — obligatorio |
-| `/progress` | Cierra sesión — actualiza PROJECT_STATE.md | Al terminar — obligatorio |
-| `/init-context` | Genera CLAUDE.md + PROJECT_STATE.md | Solo en proyectos nuevos |
-| `/update-context` | Actualiza CLAUDE.md cuando cambia el stack | Cuando cambia arquitectura |
-
-Para más info y actualizaciones: [github.com/leo1z/dupla-workflow](https://github.com/leo1z/dupla-workflow)
+* Siempre sabes qué hacer
+* No pierdes contexto
+* No repites errores
+* Avanzas de forma consistente

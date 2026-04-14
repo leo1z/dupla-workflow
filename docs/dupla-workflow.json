@@ -1,0 +1,54 @@
+{
+  "nodes": [
+    {"id": "g1", "text": "GLOBAL SYSTEM", "x": 0, "y": -400, "color": "blue"},
+    {"id": "g2", "text": "CLAUDE.md (global)\n→ thinking + execution", "x": -200, "y": -300},
+    {"id": "g3", "text": "CONTEXTO_Leo\n→ reasoning", "x": 0, "y": -300},
+    {"id": "g4", "text": "STACK_GLOBAL\n→ tech decisions", "x": 200, "y": -300},
+    {"id": "g5", "text": "PROBLEMS_GLOBAL\n→ cross-project memory", "x": -100, "y": -200},
+    {"id": "g6", "text": "CREDENTIALS\n→ secrets (no autoload)", "x": 100, "y": -200},
+
+    {"id": "p1", "text": "PROJECT SYSTEM", "x": 0, "y": -50, "color": "green"},
+    {"id": "p2", "text": "IDEA_DRAFT\n(static)", "x": -300, "y": 50},
+    {"id": "p3", "text": "ROADMAP\n(dynamic)", "x": -100, "y": 50},
+    {"id": "p4", "text": "ARCHITECTURE\n(dynamic)", "x": 100, "y": 50},
+    {"id": "p5", "text": "CLAUDE.md (project)", "x": 300, "y": 50},
+
+    {"id": "p6", "text": "PROJECT_STATE ⭐\nSOURCE OF TRUTH", "x": -100, "y": 200, "color": "red"},
+    {"id": "p7", "text": "PROBLEMS", "x": 100, "y": 200},
+
+    {"id": "f1", "text": "EXECUTION FLOW", "x": 0, "y": 350, "color": "yellow"},
+    {"id": "f2", "text": "RESEARCH_PROMPT", "x": -400, "y": 450},
+    {"id": "f3", "text": "IDEA_DRAFT", "x": -250, "y": 450},
+    {"id": "f4", "text": "PLAN_PROMPT", "x": -100, "y": 450},
+    {"id": "f5", "text": "ROADMAP + ARCH", "x": 50, "y": 450},
+    {"id": "f6", "text": "/new-project", "x": 200, "y": 450},
+    {"id": "f7", "text": "PROJECT SETUP", "x": 350, "y": 450},
+
+    {"id": "loop1", "text": "/new-session\n(read state)", "x": -100, "y": 600},
+    {"id": "loop2", "text": "WORK", "x": 50, "y": 600},
+    {"id": "loop3", "text": "/progress\n(update state)", "x": 200, "y": 600}
+  ],
+
+  "edges": [
+    {"from": "g2", "to": "p5"},
+    {"from": "g3", "to": "p5"},
+    {"from": "g5", "to": "p7"},
+
+    {"from": "p2", "to": "p3"},
+    {"from": "p3", "to": "p4"},
+    {"from": "p4", "to": "p6"},
+    {"from": "p6", "to": "p4"},
+    {"from": "p7", "to": "g5"},
+
+    {"from": "f2", "to": "f3"},
+    {"from": "f3", "to": "f4"},
+    {"from": "f4", "to": "f5"},
+    {"from": "f5", "to": "f6"},
+    {"from": "f6", "to": "f7"},
+
+    {"from": "f7", "to": "loop1"},
+    {"from": "loop1", "to": "loop2"},
+    {"from": "loop2", "to": "loop3"},
+    {"from": "loop3", "to": "loop1"}
+  ]
+}
