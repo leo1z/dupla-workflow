@@ -201,7 +201,7 @@ Naming convention:
 
 Mapping:
 
-- CLAUDE_TEMPLATE.md → docs/CLAUDE.md
+- CLAUDE_TEMPLATE.md → CLAUDE.md (project root, NOT docs/)
 - PROJECT_STATE_TEMPLATE.md → docs/PROJECT_STATE.md
 - PROBLEMS_TEMPLATE.md → docs/PROBLEMS.md
 - CREDENTIALS_TEMPLATE.md → docs/CREDENTIALS.md

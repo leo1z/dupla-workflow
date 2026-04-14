@@ -72,6 +72,23 @@ if [ "$1" = "--config" ]; then
 else
   # ── MODO INTERACTIVO ───────────────────────────────────────
 
+  echo "Antes de continuar — verifica que completaste los pasos previos:"
+  echo ""
+  read -p "  ¿Tienes IDEA_DRAFT.md listo? (RESEARCH_PROMPT.md) [s/n]: " HAS_IDEA
+  read -p "  ¿Tienes ROADMAP.md + ARCHITECTURE.md generados? (PLAN_PROMPT.md) [s/n]: " HAS_PLAN
+  echo ""
+
+  if [ "$HAS_IDEA" != "s" ] || [ "$HAS_PLAN" != "s" ]; then
+    echo "⚠️  Pasos previos incompletos. Sigue el flujo primero:"
+    echo ""
+    echo "  Guía: $BASE_DIR/dupla-workflow/docs/New_Project_Guide.md"
+    echo ""
+    [ "$HAS_IDEA" != "s" ] && echo "  • Falta: IDEA_DRAFT.md — usa templates/RESEARCH_PROMPT.md"
+    [ "$HAS_PLAN" != "s" ] && echo "  • Falta: ROADMAP.md + ARCHITECTURE.md — usa templates/PLAN_PROMPT.md"
+    echo ""
+    exit 0
+  fi
+
   read -p "Nombre del proyecto (sin espacios, guiones OK): " PROJECT_NAME
   if [ -z "$PROJECT_NAME" ]; then echo "Error: falta el nombre."; exit 1; fi
 
@@ -201,67 +218,80 @@ $(echo "$STACK" | tr ',' '\n' | sed 's/^ */- /')
 - Problems → docs/PROBLEMS.md (debug only)
 CLAUDEEOF
 
-# ── GENERAR PROJECT_STATE.md ─────────────────────────────────
+# ── GENERAR PROJECT_STATE.md (basado en PROJECT_STATE_TEMPLATE) ──
 
 cat > "$PROJECT_DIR/docs/PROJECT_STATE.md" << STATEEOF
-# PROJECT_STATE — $PROJECT_NAME
-> Actualizado: $TODAY
-> Este archivo lo actualiza /progress al cerrar sesión.
+# Project State — $PROJECT_NAME
+
+> Type: Dynamic (source of truth)
+> Used: /new-session, /progress, /update-context
+> Last updated: $TODAY
 
 ---
 
-## Estado actual
-En desarrollo. Configuración inicial completada.
+## Current Goal
+Copy planning docs to docs/ and run /new-project to initialize
 
-## En progreso ahora
+---
+
+## Status
+Project structure created. Awaiting planning docs + /new-project.
+
+---
+
+## In Progress
 - Branch: \`work/setup\`
-- Objetivo: Configurar el proyecto base
+- Pending: Copy IDEA_DRAFT.md, ROADMAP.md, ARCHITECTURE.md to docs/
 
-## Próximos pasos (en orden de prioridad)
-- [ ] **Must:** [completar con el roadmap aprobado]
-- [ ] **Must:** [completar con el roadmap aprobado]
-- [ ] **Should:** [completar]
+---
 
-## Completado recientemente
-- $TODAY — Estructura base creada (CLAUDE.md, docs/, .env.example, .gitignore)
+## Next Steps
+
+- [ ] **Must:** Copy IDEA_DRAFT.md to docs/
+- [ ] **Must:** Copy ROADMAP.md + ARCHITECTURE.md to docs/
+- [ ] **Must:** Run /new-project to initialize from docs
+- [ ] **Should:** Create .env.local with values from CREDENCIALES.md
+
+---
+
+## Blockers
+- None
+
+---
+
+## Recent Changes (last 3–5)
+- $TODAY — Project structure created via nuevo-proyecto.sh
+
+---
+
+## Sync Status
+
+- Branch: work/setup
+- Compared to main: ahead
+- Ready to merge: NO
+
+---
+
+## Rules
+
+- This + codebase = source of truth
+- Updated on /progress
+- Do NOT infer state from chat
+
+---
+
+## Priority Rule
+
+1. PROJECT_STATE.md
+2. Codebase
+3. ROADMAP.md
+4. ARCHITECTURE.md
 STATEEOF
 
 # ── COPIAR TEMPLATE DE PROBLEMS ──────────────────────────────
 
 cp "$TEMPLATE_DIR/PROBLEMS_TEMPLATE.md" "$PROJECT_DIR/docs/PROBLEMS.md"
 sed -i "s/\[NOMBRE DEL PROYECTO\]/$PROJECT_NAME/g" "$PROJECT_DIR/docs/PROBLEMS.md"
-
-# ── CREAR PLACEHOLDERS DE DOCS DE PLANNING ──────────────────
-
-cat > "$PROJECT_DIR/docs/IDEA_DRAFT.md" << 'IDEAEOF'
-# Idea Draft — [PROJECT_NAME]
-
-> Type: Static (locked after validation)
-> Used: /new-project
-> Status: PENDING — fill using templates/RESEARCH_PROMPT.md
-
-See: Projects/dupla-workflow/templates/RESEARCH_PROMPT.md
-IDEAEOF
-
-cat > "$PROJECT_DIR/docs/ROADMAP.md" << 'ROADMAPEOF'
-# Roadmap — [PROJECT_NAME]
-
-> Type: Dynamic (update if direction changes)
-> Used: /new-session, /update-context
-> Status: PENDING — generate using templates/PLAN_PROMPT.md
-
-See: Projects/dupla-workflow/templates/PLAN_PROMPT.md
-ROADMAPEOF
-
-cat > "$PROJECT_DIR/docs/ARCHITECTURE.md" << 'ARCHEOF'
-# Architecture — [PROJECT_NAME]
-
-> Type: Dynamic (updated via /progress and /update-context)
-> Used: building + system changes
-> Status: PENDING — generate using templates/PLAN_PROMPT.md
-
-See: Projects/dupla-workflow/templates/PLAN_PROMPT.md
-ARCHEOF
 
 # ── GENERAR .env.example ────────────────────────────────────
 
@@ -328,9 +358,9 @@ if [ -f "$GH" ] && [ -n "$GH_TOKEN_VAL" ]; then
   GH_TOKEN="$GH_TOKEN_VAL" "$GH" repo create "leo1z/$PROJECT_NAME" \
     --private --source=. --remote=origin --push -q 2>/dev/null \
     && echo "  ✓ Repo creado: github.com/leo1z/$PROJECT_NAME" \
-    || echo "  ⚠ GitHub falló — hazlo manual después (ver GUIAS_TRABAJO.md)"
+    || echo "  ⚠ GitHub falló — hazlo manual después (ver New_Project_Guide.md)"
 else
-  echo "  ⚠ Token no encontrado — hazlo manual: ver GUIAS_TRABAJO.md → Guía 1 → Paso 2"
+  echo "  ⚠ Token no encontrado — hazlo manual: ver docs/New_Project_Guide.md"
 fi
 
 # ── RESUMEN DE CONEXIONES ────────────────────────────────────
@@ -356,12 +386,14 @@ echo "Branch:   work/setup (activo)"
 echo ""
 echo "Próximos pasos:"
 echo "  1. Abre VS Code:  code \"$PROJECT_DIR\""
-echo "  2. Llena:         docs/IDEA_DRAFT.md  (usa templates/RESEARCH_PROMPT.md como guía)"
-echo "  3. En Claude Plan Mode: pega templates/PLAN_PROMPT.md → genera ROADMAP.md + ARCHITECTURE.md"
-echo "  4. En Claude:     /new-project   (inicializa PROJECT_STATE.md con los primeros pasos)"
-echo "  5. Crea:          .env.local con los valores de CREDENCIALES.md"
-echo "  6. Inicia sesión: /new-session"
+echo "  2. Copia tus docs de planning a docs/:"
+echo "     cp [ruta]/IDEA_DRAFT.md    \"$PROJECT_DIR/docs/\""
+echo "     cp [ruta]/ROADMAP.md       \"$PROJECT_DIR/docs/\""
+echo "     cp [ruta]/ARCHITECTURE.md  \"$PROJECT_DIR/docs/\""
+echo "  3. En Claude:     /new-project   (inicializa PROJECT_STATE.md)"
+echo "  4. Crea:          .env.local con los valores de CREDENCIALES.md"
+echo "  5. Inicia sesión: /new-session"
 echo ""
 echo "  Docs creados en docs/:"
-echo "  → IDEA_DRAFT.md  ROADMAP.md  ARCHITECTURE.md  PROJECT_STATE.md  PROBLEMS.md"
+echo "  → PROJECT_STATE.md  PROBLEMS.md  (+ los que copies: IDEA_DRAFT, ROADMAP, ARCHITECTURE)"
 echo ""

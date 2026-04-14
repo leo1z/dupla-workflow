@@ -15,11 +15,15 @@ Ejecuta en este orden:
 4. Haz UNA sola pregunta antes de actualizar:
    "¿Hay algo que no quedó en los commits que deba recordar para la próxima sesión? (Enter para omitir)"
 
-5. Con todo eso, actualiza docs/PROJECT_STATE.md:
-   - "En progreso ahora": branch actual + qué quedó pendiente REAL (no solo lo que dicen los commits)
-   - "Completado recientemente": lo que se hizo hoy — incluye tanto commits como trabajo sin commitear relevante
-   - "Próximos pasos": ajusta con lo que quedó pendiente, errores sin resolver, bloqueadores detectados
-   - Si hubo errores resueltos que no están en PROBLEMS.md → agregarlos a docs/PROBLEMS.md automáticamente
+5. Con todo eso, actualiza docs/PROJECT_STATE.md (usar estructura del template):
+   - "Current Goal": objetivo actual de la sesión
+   - "Status": estado en 1-2 líneas
+   - "In Progress": branch actual + qué quedó pendiente REAL
+   - "Next Steps": Must/Should/Could — ajusta con pendientes, errores sin resolver, bloqueadores
+   - "Blockers": bloqueos reales
+   - "Recent Changes": agrega lo completado hoy (últimos 3-5)
+   - "Sync Status": branch, comparado con main, ready to merge
+   - Si hubo errores resueltos que no están en PROBLEMS.md → agregarlos automáticamente
 
 Responde con máximo 10 líneas:
 
