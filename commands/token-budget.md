@@ -90,11 +90,79 @@ When warning:
 - [Opción más ligera que logra el mismo objetivo]
 - [Opción 2 si aplica]
 
+**Para el resto de esta sesión — prompts que funcionan bien:**
+[Lista de 2–3 tipos de prompts eficientes según el budget restante y la meta — ver tabla de Prompt Guide]
+
+**Evitar hasta la próxima sesión:**
+[Lista de 1–3 cosas concretas que no conviene hacer con el budget restante]
+
 ¿Procedemos con la original o usamos la alternativa? [original/alt1/alt2]
 ---
 
 When budget is healthy (action < 25% of remaining):
 → Execute directly, no warning needed.
+
+---
+
+## Prompt Guide by budget level
+
+Use this to fill "prompts que funcionan bien" and "evitar" in warnings.
+
+### Budget 75–100% — Sin restricciones
+**Prompts OK:**
+- Cualquier tipo de tarea
+- Subagents para exploración amplia
+- Refactors grandes, lectura de muchos archivos
+- "Explora el codebase y dime..."
+
+**Evitar:** nada en particular
+
+---
+
+### Budget 50–74% — Uso consciente
+**Prompts OK:**
+- Tareas enfocadas en 1–3 archivos
+- "Edita [archivo] para que..." (en lugar de "revisa todo el módulo")
+- Preguntas directas con contexto ya cargado
+- Fixes puntuales con archivo + línea especificados
+
+**Evitar:**
+- Subagents de exploración (Explore/Plan agents)
+- "Revisa todo el proyecto y busca..."
+- Cambiar de tema drásticamente (acumula contexto)
+
+---
+
+### Budget 25–49% — Modo conservador
+**Prompts OK:**
+- Un solo cambio por prompt ("cambia X en archivo Y")
+- Preguntas que no requieren leer archivos nuevos
+- Commits, git status, comandos cortos
+- "En [archivo]:[línea], cambia [X] por [Y]"
+
+**Evitar:**
+- Cualquier subagent
+- Leer archivos nuevos que no sean estrictamente necesarios
+- Tareas con múltiples pasos encadenados en un solo prompt
+- Preguntas abiertas ("¿cómo mejorarías...?")
+
+**Diferir a próxima sesión:**
+- Refactors
+- Revisiones de arquitectura
+- Cualquier tarea que requiera explorar código desconocido
+
+---
+
+### Budget < 25% — Solo cierre de sesión
+**Prompts OK:**
+- Commits y git push
+- Actualizar PROJECT_STATE.md (para /progress)
+- Preguntas de 1 línea con respuesta de 1 línea
+- "¿Qué quedó pendiente para la próxima sesión?"
+
+**Evitar todo lo demás.** Correr `/progress` y cerrar.
+
+**Diferir a próxima sesión:** todo lo que no sea guardar estado.
 
 ---
 
@@ -107,14 +175,4 @@ When budget is healthy (action < 25% of remaining):
 - Subagents (Agent tool) always classify as H or C — always warn
 - Reading files with Glob that returns 50+ results → classify as H
 - Parallel tool calls count as sum of individual costs
-
----
-
-## Budget conservation tips (show only when budget < 30%)
-
-- Use Grep instead of reading full files
-- Read specific line ranges instead of full files
-- Avoid spawning subagents — do searches inline
-- Use Glob patterns to filter before reading
-- Keep context focused — /clear if switching topics completely
-- Prefer Edit over Write (smaller diff = fewer tokens)
+- Prompt Guide se muestra SOLO en warnings — no en ejecución normal
