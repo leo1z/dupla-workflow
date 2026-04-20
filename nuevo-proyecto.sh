@@ -2,12 +2,42 @@
 # nuevo-proyecto.sh — Setup completo de proyecto nuevo con preguntas o config file
 # Uso interactivo:  bash nuevo-proyecto.sh
 # Uso con config:   bash nuevo-proyecto.sh --config mi-proyecto.config
-# Requiere: git. gh.exe en C:/Program Files/GitHub CLI/
+# Requiere: git, gh (GitHub CLI)
 
-BASE_DIR="C:/Users/Leo Borjas/Projects"
+# ── AUTO-DETECT PATHS ───────────────────────────────────────
+
+HOME="${HOME:=$USERPROFILE}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR=$(echo "$SCRIPT_DIR" | sed 's|\\|/|g')
+
+# Detectar carpeta Projects: si el script está dentro de Projects/dupla-workflow, usa eso
+if [[ "$SCRIPT_DIR" =~ /[Pp]rojects/ ]]; then
+  # Extrae la ruta hasta Projects: /Users/X/Projects
+  BASE_DIR=$(echo "$SCRIPT_DIR" | sed -E 's|(/[Pp]rojects).*|\1|')
+else
+  # Fallback: busca dupla-workflow en el árbol (hasta 3 niveles hacia arriba)
+  DUPLA_FOUND=$(find "$SCRIPT_DIR" -maxdepth 2 -name "dupla-workflow" -type d 2>/dev/null | head -1)
+  if [ -n "$DUPLA_FOUND" ]; then
+    BASE_DIR=$(dirname "$DUPLA_FOUND")
+  else
+    # Último recurso: asume $HOME/Projects
+    BASE_DIR="$HOME/Projects"
+  fi
+fi
+
 TEMPLATE_DIR="$BASE_DIR/dupla-workflow/templates"
-GH="/c/Program Files/GitHub CLI/gh.exe"
-CREDS="C:/Users/Leo Borjas/.claude/CREDENCIALES.md"
+CREDS="$HOME/.claude/CREDENCIALES.md"
+
+# Auto-detect GitHub CLI
+if command -v gh &>/dev/null; then
+  GH="gh"
+elif [ -f "/c/Program Files/GitHub CLI/gh.exe" ]; then
+  GH="/c/Program Files/GitHub CLI/gh.exe"
+elif [ -f "C:\\Program Files\\GitHub CLI\\gh.exe" ]; then
+  GH="C:\\Program Files\\GitHub CLI\\gh.exe"
+else
+  GH="gh"  # Espera que esté en PATH
+fi
 
 echo ""
 echo "======================================"

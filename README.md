@@ -2,6 +2,8 @@
 
 Skills para trabajar con Claude Code de forma estructurada: inicio/cierre de sesión, contexto de proyecto cacheado, estado dinámico y detección de ciclos. Incluye flujo de planificación y setup automático de proyectos nuevos.
 
+**Compatible con**: cualquier carpeta de proyectos (Projects, Dev, src, etc.) y cualquier usuario. Auto-detecta rutas y configuración.
+
 ## Instalación
 
 ```bash
@@ -10,7 +12,30 @@ cd sistema-trabajo
 bash instalar.sh
 ```
 
-Instala los skills en `~/.claude/commands/`, copia `nuevo-proyecto.sh` a `~/Projects/`, y los templates a `~/Projects/AI_CONTEXT_TEMPLATE/`.
+Instala los skills en `~/.claude/commands/` y los templates globales en `~/.claude/`.
+
+### Para colaboradores
+
+1. **Instala dependencias** (una sola vez):
+   ```bash
+   # Git y Claude Code ya deben estar instalados
+   # Clona el repo en tu carpeta de proyectos (puede ser cualquier nombre)
+   git clone https://github.com/leo1z/sistema-trabajo ~/MisProyectos/dupla-workflow
+   cd ~/MisProyectos/dupla-workflow
+   bash instalar.sh
+   ```
+
+2. **Setup inicial** (una sola vez):
+   - Abre cualquier proyecto en VS Code + Claude Code
+   - Escribe `/setup`
+   - Responde las preguntas → genera `~/.claude/CLAUDE.md` personalizado
+
+3. **Crea proyectos nuevos**:
+   ```bash
+   # Desde cualquier carpeta
+   bash ~/MisProyectos/dupla-workflow/nuevo-proyecto.sh
+   ```
+   El script auto-detecta dónde está dupla-workflow y dónde guardar el proyecto.
 
 ---
 
@@ -27,29 +52,27 @@ Instala los skills en `~/.claude/commands/`, copia `nuevo-proyecto.sh` a `~/Proj
 
 ## Crear un proyecto nuevo
 
-### Flujo recomendado: planificar primero
-
-**Paso 1 — Planificar en Claude o ChatGPT**
-
-Abre `AI_CONTEXT_TEMPLATE/PLANNING_PROMPT.md`, copia el prompt y pégalo en Claude o ChatGPT. El AI te guía con preguntas y al final te entrega un bloque `proyecto.config`.
-
-**Paso 2 — Guardar el config**
-
-Guarda el bloque como `[nombre].config` en cualquier carpeta.
-
-**Paso 3 — Correr el script**
-
-```bash
-bash ~/Projects/nuevo-proyecto.sh --config [nombre].config
-```
-
 ### Flujo rápido: interactivo
 
 ```bash
-bash ~/Projects/nuevo-proyecto.sh
+bash /ruta/a/dupla-workflow/nuevo-proyecto.sh
 ```
 
-El script te hace las preguntas directamente en la terminal.
+El script te hace las preguntas directamente en la terminal y crea el proyecto en tu carpeta actual (o pregunta dónde).
+
+### Flujo planificado: config file (opcional)
+
+**Paso 1 — Planificar en Claude**
+
+Usa el PLANNING_PROMPT.md para generar un bloque `proyecto.config`.
+
+**Paso 2 — Correr con config**
+
+```bash
+bash /ruta/a/dupla-workflow/nuevo-proyecto.sh --config mi-proyecto.config
+```
+
+El script auto-detecta dónde guardar el proyecto sin preguntar rutas.
 
 ---
 
@@ -69,32 +92,34 @@ Además: git init, branch `main` + `work/setup`, y repo privado en GitHub (requi
 
 ---
 
-## Configuración inicial
+## Configuración inicial (una sola vez por usuario)
 
-### 1. CLAUDE.md global
+Después de instalar con `bash instalar.sh`:
 
-```bash
-cp templates/CLAUDE.global.md ~/.claude/CLAUDE.md
-```
-
-Edita el archivo: quién eres, tus proyectos, tu stack base.
-
-### 2. Credenciales
-
-```bash
-cp templates/CREDENCIALES.template.md ~/.claude/CREDENCIALES.md
-```
-
-Llena los valores. **Nunca subas este archivo a git.**
-
-### 3. Verifica
+### 1. Setup automático
 
 Abre VS Code con cualquier proyecto y escribe:
 ```
-/goal "test"
+/setup
 ```
 
-Si Claude responde con el estado del proyecto → todo funciona.
+Responde las preguntas y Claude genera automáticamente:
+- `~/.claude/CLAUDE.md` — tu configuración global personalizada
+- `~/.claude/CONTEXTO_[nombre].md` — perfil tuyo
+- `~/.claude/STACK_GLOBAL.md` — tus herramientas y servicios
+- `~/.claude/PROJECTS_SKILLS.md` — tus proyectos activos
+
+### 2. Credenciales (opcional pero recomendado)
+
+```bash
+nano ~/.claude/CREDENCIALES.md
+```
+
+Llena tokens de GitHub, Supabase, etc. **Nunca subas este archivo a git.**
+
+### 3. Verifica
+
+Escribe `/health-check` en cualquier proyecto. Debe reportar: skills instalados, CLAUDE.md presente, etc.
 
 ---
 
