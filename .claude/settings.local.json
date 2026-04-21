@@ -14,7 +14,16 @@
       "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/new-project.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/new-project.md\")",
       "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/progress.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/progress.md\")",
       "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/health-check.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/health-check.md\")",
-      "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/goal.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/goal.md\")"
+      "Bash(cp \"C:/Users/Leo Borjas/.claude/commands/goal.md\" \"C:/Users/Leo Borjas/Projects/dupla-workflow/commands/goal.md\")",
+      "Bash(cp \"/c/Users/Leo Borjas/.claude/commands/setup.md\" \"/c/Users/Leo Borjas/Projects/dupla-workflow/commands/setup.md\")",
+      "Bash(cp \"/c/Users/Leo Borjas/.claude/commands/adopt.md\" \"/c/Users/Leo Borjas/Projects/dupla-workflow/commands/adopt.md\")",
+      "WebSearch",
+      "WebFetch(domain:support.claude.com)",
+      "WebFetch(domain:portkey.ai)",
+      "WebFetch(domain:www.faros.ai)",
+      "Bash(cp \"/c/Users/Leo Borjas/.claude/commands/add-skill.md\" \"/c/Users/Leo Borjas/Projects/dupla-workflow/commands/add-skill.md\")",
+      "Bash(cp \"/c/Users/Leo Borjas/.claude/commands/health-check.md\" \"/c/Users/Leo Borjas/Projects/dupla-workflow/commands/health-check.md\")",
+      "WebFetch(domain:antigravity.google)"
     ]
   }
 }

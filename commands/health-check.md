@@ -9,9 +9,8 @@ Ejecuta en este orden:
    - Lista todos los archivos en ~/.claude/commands/
    - Lee ~/.claude/PROJECTS_SKILLS.md → extrae nombres de skills en tablas "Core Skills" e "Installed Plugins"
    - Compara: skills en commands/ vs skills registrados en PROJECTS_SKILLS.md
-   - **Sin registrar:** skills en commands/ que NO están en PROJECTS_SKILLS.md → ⚠️ "correr /add-skill <nombre>"
-   - **Skills core mínimos requeridos:** new-session.md, new-project.md, progress.md, update-context.md, health-check.md, add-skill.md
-   - goal.md e init-context.md son legacy — no son error
+   - **Sin registrar:** skills en commands/ que NO están en PROJECTS_SKILLS.md → ⚠️ "agregar manualmente a ~/.claude/PROJECTS_SKILLS.md"
+   - **Skills core mínimos requeridos:** new-session.md, new-project.md, progress.md, update-context.md, health-check.md, setup.md, adopt.md, token-budget.md
    - Plugins de terceros (ui-ux-pro-max, etc.) solo son error si están en PROJECTS_SKILLS.md pero no en commands/
 
 3. **PROYECTO ACTIVO** (si hay carpeta de proyecto abierta)

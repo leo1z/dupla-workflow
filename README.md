@@ -43,10 +43,14 @@ Instala los skills en `~/.claude/commands/` y los templates globales en `~/.clau
 
 | Comando | Qué hace | Cuándo |
 |---|---|---|
-| `/goal "objetivo"` | Lee PROJECT_STATE.md, da plan en 10 líneas | Al INICIAR sesión |
-| `/progress` | Actualiza PROJECT_STATE.md con lo completado | Al CERRAR sesión |
-| `/init-context` | Genera CLAUDE.md + PROJECT_STATE.md para proyecto nuevo | Una vez por proyecto |
+| `/new-session [objetivo]` | Lee PROJECT_STATE, define próximos pasos | Al INICIAR sesión — siempre |
+| `/progress` | Actualiza PROJECT_STATE con lo completado | Al CERRAR sesión — siempre |
+| `/new-project` | Inicializa PROJECT_STATE desde docs del proyecto | Una vez por proyecto nuevo |
 | `/update-context` | Actualiza solo la sección afectada de CLAUDE.md | Cuando cambia arquitectura o stack |
+| `/health-check` | Auditoría: credenciales, skills, coherencia | Cada 2–4 semanas |
+| `/setup` | Setup del sistema por primera vez en una máquina | Una vez por máquina |
+| `/adopt` | Adopta proyecto existente al workflow | Una vez por proyecto existente |
+| `/token-budget` | Conciencia de tokens + alertas de presupuesto | En sesiones largas |
 
 ---
 
@@ -126,7 +130,7 @@ Escribe `/health-check` en cualquier proyecto. Debe reportar: skills instalados,
 ## Flujo de trabajo por sesión
 
 ```
-Inicio:   git pull → /goal "objetivo del día"
+Inicio:   git pull → /new-session
 Trabajo:  commits frecuentes en work/*
 Cierre:   git push → /progress
 ```
@@ -146,9 +150,11 @@ bash instalar.sh
 ## Estructura del repo
 
 ```
-sistema-trabajo/
+dupla-workflow/
 ├── commands/          ← skills de Claude Code (.md)
-├── templates/         ← CLAUDE.global.md, PLANNING_PROMPT.md, otros templates
+├── templates/         ← PROJECT_STATE, GUIA_COLABORADOR, PLAN_PROMPT, otros templates
+├── global-templates/  ← templates para setup inicial (~/.claude/)
+├── docs/              ← guías del sistema (New_Project_Guide, WORKFLOW_IDEAL)
 ├── nuevo-proyecto.sh  ← script de setup (interactivo o --config)
 └── instalar.sh        ← instala todo en la máquina local
 ```

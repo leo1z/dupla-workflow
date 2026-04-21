@@ -26,6 +26,9 @@ Each project has its own CLAUDE.md — read it before touching anything.
 | progress | /progress | Close every session |
 | update-context | /update-context | When stack or architecture changes |
 | health-check | /health-check | Every 2–4 weeks |
+| setup | /setup | First-time system setup on new machine |
+| adopt | /adopt | Onboard existing project to dupla-workflow |
+| token-budget | /token-budget | Session token awareness + budget warnings |
 
 ---
 
@@ -35,15 +38,6 @@ Each project has its own CLAUDE.md — read it before touching anything.
 |---|---|---|
 | UI/UX Pro Max | /ui-ux-pro-max | UI design, components, layouts |
 | Frontend Slides | /frontend-slides | Presentation generation |
-
----
-
-## Legacy Skills (keep, don't use)
-
-| Skill | Replaced by |
-|---|---|
-| /goal | /new-session |
-| /init-context | /new-project |
 
 ---
 
@@ -57,3 +51,4 @@ Each project has its own CLAUDE.md — read it before touching anything.
 
 1. Install via Claude Code marketplace or `/plugin`
 2. Add row to Installed Plugins table above
+3. Copy skill file to `~/.claude/commands/` and `dupla-workflow/commands/`

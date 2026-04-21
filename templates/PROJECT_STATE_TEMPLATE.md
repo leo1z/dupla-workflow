@@ -49,6 +49,14 @@
 
 ---
 
+## Session
+
+- **Active LLM:** [Claude / Gemini / other]
+- **Last action:** [1-line summary of what the model did last session]
+- **Pending for next session:** [concrete next step — specific enough to resume cold]
+
+---
+
 ## Rules
 
 - This + codebase = source of truth

@@ -1,4 +1,4 @@
-# Workflow Ideal para Desarrollar un Proyecto
+﻿# Workflow Ideal para Desarrollar un Proyecto
 > Síntesis de Best Practices + Dupla Workflow + Sistema de Trabajo  
 > **Última actualización:** 2026-04-13
 
@@ -155,7 +155,7 @@ Cada fase cierra con un checkpoint de decisión antes de avanzar.
 #### Inicio de sprint
 - [ ] Leer `ROADMAP.md` → features del sprint
 - [ ] Abrir branch: `git checkout -b work/[feature]`
-- [ ] Comando: `/goal "agregar feature X"`
+- [ ] Comando: `/new-session "agregar feature X"`
 
 #### Durante sprint
 | Práctica | Por qué | Cómo |
@@ -243,16 +243,16 @@ main branch
 | Fase | Comando | Qué hace |
 |---|---|---|
 | Discovery | (manual) | Creas IDEA.md |
-| Planning | `/init-context` | Genera estructura + CLAUDE.md |
-| Design | `/goal "diseñar X"` | Claude lee y propone arquitectura |
-| Development | `/goal "agregar feature"` | Claude inicia rama + plan |
+| Planning | `/new-project` | Genera estructura + CLAUDE.md |
+| Design | `/new-session "disenar X"` | Claude lee y propone arquitectura |
+| Development | `/new-session "agregar feature"` | Claude inicia rama + plan |
 | Validation | `/progress` | Actualiza PROJECT_STATE.md con lecciones |
 
 ### Git workflow (siempre)
 
 ```bash
 # Iniciar sesión
-/goal "agregar feature X"
+/new-session "agregar feature X"
 
 # Trabajar
 git checkout -b work/feature-x

@@ -6,8 +6,9 @@ Usage: /new-session [optional goal]
 
 ## Execution
 
+0. Read `~/.claude/MODEL_ROUTING.md` — confirm which LLM is active and apply routing rules for this session.
 1. Run: `git branch --show-current`, `git log --oneline -5`, `git status --short`
-2. Read: `docs/PROJECT_STATE.md` (always)
+2. Read: `docs/PROJECT_STATE.md` (always) — check the `## Session` block for active LLM and last action
 3. If planning → read `docs/ROADMAP.md`
 4. If building → read `docs/ARCHITECTURE.md`
 5. If debugging → read `docs/PROBLEMS.md`
@@ -23,6 +24,7 @@ Do NOT read all files. Load only what the session requires.
 
 **Goal:** [what the user wants / inferred from PROJECT_STATE]
 **Branch:** [current] [⚠️ if main]
+**LLM:** [active model from SESSION block, or Claude if not set]
 
 **State:**
 [1–2 lines from PROJECT_STATE + git log. If conflict → trust git log.]
