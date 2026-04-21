@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dupla Workflow — Guía de inicio rápido</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f10;
+      --surface: #1a1a1d;
+      --surface2: #222226;
+      --border: #2a2a2d;
+      --text: #ffffff;
+      --muted: #a0a0a0;
+      --accent: #D97757;
+      --accent-muted: rgba(217,119,87,0.13);
+      --accent2: #5b8cf5;
+      --accent2-muted: rgba(91,140,245,0.12);
+      --green: #4ade80;
+      --green-muted: rgba(74,222,128,0.12);
+      --radius: 12px;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; font-size: 15px; }
+    .page { max-width: 1000px; margin: 0 auto; padding: 0 24px 100px; }
+
+    /* HERO */
+    .hero { padding: 72px 0 56px; text-align: center; }
+    .hero-tag { display: inline-block; background: var(--accent-muted); color: var(--accent); border: 1px solid rgba(217,119,87,0.3); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 17px; color: var(--muted); max-width: 600px; margin: 0 auto 32px; }
+
+    /* SECTION */
+    section { margin-bottom: 72px; }
+    .section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+    .section-label .pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+    .section-label .line { flex: 1; height: 1px; background: var(--border); }
+    h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .section-intro { color: var(--muted); margin-bottom: 28px; max-width: 680px; }
+
+    /* CARDS GRID */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .card-icon { font-size: 28px; margin-bottom: 12px; }
+    .card-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .card.accent-card { border-color: rgba(217,119,87,0.3); background: var(--accent-muted); }
+    .card.blue-card { border-color: rgba(91,140,245,0.3); background: var(--accent2-muted); }
+    .card.success-card { border-color: rgba(74,222,128,0.3); background: var(--green-muted); }
+
+    /* STEPS */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step { display: flex; gap: 20px; align-items: flex-start; position: relative; padding: 20px 0; }
+    .step:not(:last-child)::after { content: ''; position: absolute; left: 19px; top: 50px; width: 2px; height: calc(100% - 10px); background: var(--border); }
+    .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-muted); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; color: var(--accent); z-index: 1; }
+    .step-body { padding: 4px 0; }
+    .step-title { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+    .step-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .step-cmd { display: inline-block; margin-top: 8px; font-family: monospace; font-size: 12px; color: var(--accent); background: var(--accent-muted); padding: 4px 10px; border-radius: 5px; border: 1px solid rgba(217,119,87,0.3); }
+
+    /* CALLOUT */
+    .callout { border-left: 3px solid var(--accent); background: var(--accent-muted); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 20px; margin: 20px 0; }
+    .callout.blue { border-left-color: var(--accent2); background: var(--accent2-muted); }
+    .callout.success { border-left-color: var(--green); background: var(--green-muted); }
+    .callout-title { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+    .callout-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* CODE */
+    .code-block { background: #13131a; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; font-family: monospace; font-size: 12px; line-height: 1.7; color: #cdd6f4; overflow-x: auto; }
+    .code-comment { color: #6c7086; }
+    .code-key { color: #89b4fa; }
+    .code-val { color: #a6e3a1; }
+
+    /* AFTER */
+    .after-box { background: var(--surface); border: 2px solid rgba(74,222,128,0.3); border-radius: var(--radius); padding: 20px; margin-top: 24px; }
+    .after-title { font-weight: 700; font-size: 14px; color: var(--green); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+    /* FOOTER */
+    .footer { text-align: center; padding-top: 48px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+
+    /* BADGE */
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .badge-new { background: var(--accent-muted); color: var(--accent); }
+    .badge-daily { background: var(--green-muted); color: var(--green); }
+    .badge-rare { background: var(--accent2-muted); color: var(--accent2); }
+
+    @media (max-width: 680px) {
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Para nuevos usuarios</div>
+    <h1>Empezar con <span>Dupla Workflow</span></h1>
+    <p>Guía paso a paso para configurar tu sistema en 15 minutos y tener el primer proyecto en marcha.</p>
+  </div>
+
+  <!-- ANTES DE EMPEZAR -->
+  <section>
+    <div class="section-label"><span class="pill">Requisitos</span><span class="line"></span></div>
+    <h2>Antes de empezar</h2>
+    <p class="section-intro">Necesitas tres cosas instaladas en tu máquina:</p>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon">💻</div>
+        <div class="card-title">Git</div>
+        <div class="card-desc">Control de versiones. Verifica: <code style="font-family:monospace;font-size:12px;color:var(--accent)">git --version</code></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Claude Code o Antigravity</div>
+        <div class="card-desc">El IDE donde corres los comandos del sistema. Recomienda Claude Code para primeras veces.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Acceso a Claude API</div>
+        <div class="card-desc">Para que los comandos funcionen. Usa tu token personal de Anthropic.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASO 1: INSTALAR -->
+  <section>
+    <div class="section-label"><span class="pill">Paso 1 de 5</span><span class="line"></span></div>
+    <h2>Descargar Dupla Workflow</h2>
+    <p class="section-intro">Clona el repositorio en tu máquina. Es el "sistema base".</p>
+    <div class="code-block">
+$ git clone https://github.com/leo1z/dupla-workflow.git
+$ cd dupla-workflow
+$ bash bin/install.sh</div>
+    <div class="callout blue">
+      <div class="callout-title">¿Qué hace install.sh?</div>
+      <div class="callout-text">Copia los 14 comandos del sistema a tu máquina (~/.claude/skills/). Despliega hooks automáticos. Marca la versión. Después puedes olvidarte de este paso.</div>
+    </div>
+  </section>
+
+  <!-- PASO 2: CONFIGURAR -->
+  <section>
+    <div class="section-label"><span class="pill">Paso 2 de 5</span><span class="line"></span></div>
+    <h2>Configurar tu máquina</h2>
+    <p class="section-intro">Una sola vez. Responde 4 preguntas simples en un chat. El sistema genera tu perfil global.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Abre Claude Code (o Antigravity)</div>
+          <div class="step-desc">Puedes estar en cualquier directorio.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Escribe el comando de setup</div>
+          <div class="step-desc">En el input (abajo), escribe:</div>
+          <div class="step-cmd">/setup-dupla</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Responde el mini-cuestionario</div>
+          <div class="step-desc">Claude te hará preguntas agrupadas. Responde todo de una vez (no hay vuelta). Temas: quién eres, tu stack tech, proyectos activos, plugins.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Recibe confirmación</div>
+          <div class="step-desc">El sistema genera 3 archivos en <code style="font-family:monospace;font-size:11px">~/.claude/</code>: CLAUDE.md (tu identidad), SYSTEM.md (tu stack), PROBLEMS_GLOBAL.md (aprendizajes compartidos).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="after-box">
+      <div class="after-title">✅ Listo — tu máquina ya conoce quién eres</div>
+      <div style="font-size:13px;color:var(--muted);">Los archivos generados se leen automáticamente en cada proyecto. Puedes editarlos si algo cambia (stack nuevo, proyecto nuevo, etc.).</div>
+    </div>
+  </section>
+
+  <!-- PASO 3: CREAR PROYECTO -->
+  <section>
+    <div class="section-label"><span class="pill">Paso 3 de 5</span><span class="line"></span></div>
+    <h2>Crear tu primer proyecto</h2>
+    <p class="section-intro">Cada proyecto es una carpeta con su propia estructura. Dupla Workflow le enseña a Claude cómo encontrar información.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Crea una carpeta nueva</div>
+          <div class="step-desc">En tu terminal:</div>
+          <div class="step-cmd" style="display:block;">mkdir mi-proyecto && cd mi-proyecto && git init</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Abre Claude Code en esa carpeta</div>
+          <div class="step-desc">Navega a <code style="font-family:monospace;font-size:11px">mi-proyecto/</code> en Claude Code.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Describe tu proyecto en texto</div>
+          <div class="step-desc">En un chat normal (no comando), cuéntale al LLM: qué es tu proyecto, quién lo va a usar, cuál es el MVP (lo mínimo viable), qué riesgos ves, y cuáles son tus restricciones (tiempo, presupuesto).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Corre el comando de inicialización</div>
+          <div class="step-desc">Una vez que ya explicaste el proyecto:</div>
+          <div class="step-cmd">/new-project</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Revisa lo que se generó</div>
+          <div class="step-desc">Dupla Workflow crea automáticamente: CLAUDE.md (contexto del proyecto), docs/PROJECT_STATE.md (estado actual), docs/ROADMAP.md (plan), docs/ARCHITECTURE.md (decisiones técnicas).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="after-box">
+      <div class="after-title">✅ Tu proyecto está inicializado</div>
+      <div style="font-size:13px;color:var(--muted);">Ahora tienes una estructura clara. En cada sesión, el sistema sabe dónde estás sin que tengas que re-explicar.</div>
+    </div>
+  </section>
+
+  <!-- PASO 4: PRIMERA SESIÓN -->
+  <section>
+    <div class="section-label"><span class="pill">Paso 4 de 5</span><span class="line"></span></div>
+    <h2>Primera sesión de trabajo</h2>
+    <p class="section-intro">Cada vez que abras Claude Code en tu proyecto, este es el flujo.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Iniciar sesión</div>
+          <div class="step-desc">Escribe:</div>
+          <div class="step-cmd">/new-session</div>
+          <div style="margin-top:8px;font-size:13px;color:var(--muted);">Claude leerá automáticamente dónde quedaste. Te dirá: qué hacer, con cuál LLM trabajar, qué está bloqueando.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Trabajar</div>
+          <div class="step-desc">Haz lo que el sistema te indicó. Edita archivos, ejecuta comandos, resuelve problemas.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Guardar progreso</div>
+          <div class="step-desc">Antes de cerrar la sesión:</div>
+          <div class="step-cmd">/checkpoint</div>
+          <div style="margin-top:8px;font-size:13px;color:var(--muted);">Actualiza PROJECT_STATE.md con lo que hiciste. Propone un commit. Dice si debería cambiar de LLM (Claude → Gemini o al revés).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Hacer commit y push</div>
+          <div class="step-desc">Git push. Listo. La próxima sesión sabrá exactamente dónde quedaste.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="after-box">
+      <div class="after-title">✅ Sesión guardada</div>
+      <div style="font-size:13px;color:var(--muted);">PROJECT_STATE.md es tu "memoria": qué se hizo, qué sigue, qué está bloqueando. Sin esto, cada sesión sería como empezar de cero.</div>
+    </div>
+  </section>
+
+  <!-- PASO 5: MANTENIMIENTO -->
+  <section>
+    <div class="section-label"><span class="pill">Paso 5 de 5</span><span class="line"></span></div>
+    <h2>Mantener el sistema actualizado</h2>
+    <p class="section-intro">Ocasionalmente, revisa que todo esté coherente. Es rápido.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Cada 2-4 semanas</div>
+        <div class="card-desc">Corre <code style="font-family:monospace;font-size:12px;color:var(--accent)">/health-check</code> para verificar que todos los docs del proyecto estén actualizados y el stack coincida con el código.</div>
+        <div style="margin-top:10px;"><span class="badge badge-rare">Mantenimiento</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cuando cambia algo importante</div>
+        <div class="card-desc">Si cambias el stack, agregar un nuevo LLM, o tomas una decisión arquitectónica grande: <code style="font-family:monospace;font-size:12px;color:var(--accent)">/update-context</code>. Actualiza CLAUDE.md automáticamente.</div>
+        <div style="margin-top:10px;"><span class="badge badge-rare">Según necesidad</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOS 4 ARCHIVOS CLAVE -->
+  <section>
+    <div class="section-label"><span class="pill">Referencia</span><span class="line"></span></div>
+    <h2>Los 4 archivos que todo proyecto tiene</h2>
+    <p class="section-intro">Después de /new-project, cada proyecto se ve así:</p>
+    <div class="grid-1">
+      <div class="card accent-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="font-size:24px;">📋</div>
+          <div>
+            <div class="card-title" style="margin-bottom:0;">PROJECT_STATE.md</div>
+            <div style="font-size:11px;color:var(--muted);">El más importante</div>
+          </div>
+        </div>
+        <div class="card-desc" style="margin-bottom:12px;">Tu "fuente de verdad". Dice: dónde estás ahora, qué estás haciendo, qué sigue, qué te bloquea. Se actualiza con /checkpoint cada sesión. <strong>Lee esto primero cada mañana.</strong></div>
+        <div style="background:#13131a;padding:12px;border-radius:6px;font-family:monospace;font-size:11px;color:#cdd6f4;line-height:1.6;">
+<span style="color:#6c7086">## Status</span>
+<span style="color:#89b4fa">Updated:</span> <span style="color:#a6e3a1">2026-04-21</span>
+<span style="color:#89b4fa">Next:</span> <span style="color:#a6e3a1">Implementar login con Google</span>
+        </div>
+      </div>
+      <div class="card success-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="font-size:24px;">🗺️</div>
+          <div>
+            <div class="card-title" style="margin-bottom:0;">ROADMAP.md</div>
+            <div style="font-size:11px;color:var(--muted);">Plan completo</div>
+          </div>
+        </div>
+        <div class="card-desc">Divide el proyecto en fases (2 semanas cada una). Cada fase tiene un GO/NO-GO: condiciones para continuar. Te dice si estás en camino o necesitas ajustar.</div>
+      </div>
+      <div class="card blue-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="font-size:24px;">🏗️</div>
+          <div>
+            <div class="card-title" style="margin-bottom:0;">ARCHITECTURE.md</div>
+            <div style="font-size:11px;color:var(--muted);">Decisiones técnicas</div>
+          </div>
+        </div>
+        <div class="card-desc">Stack elegido, diagramas, decisiones de diseño. "¿Por qué usamos Supabase en lugar de Firebase?" Respuestas acá. Para cuando necesites refactorar o agregar un nuevo dev.</div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="font-size:24px;">⚙️</div>
+          <div>
+            <div class="card-title" style="margin-bottom:0;">CLAUDE.md</div>
+            <div style="font-size:11px;color:var(--muted);">Contexto del proyecto</div>
+          </div>
+        </div>
+        <div class="card-desc">Lo que Claude necesita saber para trabajar en este proyecto: cómo el stack se conecta, dónde viven los archivos críticos, reglas especiales (no tocar la base de datos en esta etapa), etc.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA LA MAGIA -->
+  <section>
+    <div class="section-label"><span class="pill">Comprensión</span><span class="line"></span></div>
+    <h2>¿Cómo funciona sin que yo tenga que pedirlo?</h2>
+    <p class="section-intro">Cada comando de Dupla Workflow lee archivos automáticamente. No necesitas decir "lee PROJECT_STATE".</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">/new-session</div>
+        <div class="card-desc">Lee PROJECT_STATE.md + git log → te dice dónde estás sin preguntar.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">💾</div>
+        <div class="card-title">/checkpoint</div>
+        <div class="card-desc">Pregunta qué hiciste, actualiza PROJECT_STATE automáticamente, propone commit.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">/health-check</div>
+        <div class="card-desc">Revisa que PROJECT_STATE no esté desactualizado. Si lo está, avisa.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🆕</div>
+        <div class="card-title">/new-project</div>
+        <div class="card-desc">Lee ROADMAP + ARCHITECTURE y crea PROJECT_STATE basado en eso.</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-title">Analogía</div>
+      <div class="callout-text">Dupla Workflow es como tener un asistente que sabe exactamente dónde archivas todo. Cuando dices "necesito trabajar en el login", el asistente sabe dónde está el código, qué se hizo antes, y qué sigue — sin que tengas que explicarlo cada vez.</div>
+    </div>
+  </section>
+
+  <!-- PREGUNTAS COMUNES -->
+  <section>
+    <div class="section-label"><span class="pill">FAQ</span><span class="line"></span></div>
+    <h2>Preguntas frecuentes</h2>
+    <div class="grid-1">
+      <div class="card">
+        <div class="card-title">¿Y si tengo un proyecto que ya existe?</div>
+        <div class="card-desc">Corre <code style="font-family:monospace;font-size:12px;color:var(--accent)">/adapt-project</code> en lugar de /new-project. El sistema detecta qué docs faltan y genera solo lo necesario — sin pisar lo que ya existe.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Cuánto se tarda en /new-project?</div>
+        <div class="card-desc">2-3 minutos máximo. El sistema genera 4 archivos. Luego puedes editarlos si quieres ser más específico.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Puedo usar Gemini en lugar de Claude?</div>
+        <div class="card-desc">Sí. El sistema tiene modelo-routing: defines quién hace qué. MODEL_ROUTING.md te dice cuándo usar Gemini (investigación, code review) y cuándo usar Claude (código, arquitectura).</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Qué pasa si no corro /checkpoint?</div>
+        <div class="card-desc">La próxima sesión no sabrá qué pasó. Dupla Workflow puede reconstruir desde git log, pero es más lento. /checkpoint toma 30 segundos — úsalo.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Los archivos se pushen a Git?</div>
+        <div class="card-desc">Sí, PROJECT_STATE.md, ROADMAP.md, y otros se pushean. Así tu equipo (o tu yo del futuro) ve el estado. CREDENTIALS.md nunca se pushea — está en .gitignore.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGUIENTE PASO -->
+  <section>
+    <div class="section-label"><span class="pill">Sigueinte</span><span class="line"></span></div>
+    <h2>Listo para empezar</h2>
+    <div class="card success-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <span style="font-size:24px;">🚀</span>
+        <span style="font-weight:700;font-size:16px;">Ya tienes todo lo que necesitas</span>
+      </div>
+      <div style="color:var(--muted);font-size:13px;line-height:1.6;">
+        Instalaste Dupla Workflow. Configuraste tu máquina. Creaste tu primer proyecto. Ahora solo necesitas hacer la primera sesión con /new-session. <br/><br/>
+        El sistema va a guiarte en cada paso. No hay más que memorizar. Solo: <strong>/new-session → trabajar → /checkpoint → git push</strong> cada día.
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    Dupla Workflow · Guía para nuevos usuarios · v2.0.0
+  </div>
+
+</div>
+</body>
+</html>
