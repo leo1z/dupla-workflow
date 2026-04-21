@@ -4,14 +4,15 @@ Usage: /setup-dupla
 
 ---
 
-## Pre-Check
+## Phase 0 — Detect Existing Config
 
 Check ~/.claude/ for existing files:
-- CLAUDE.md
-- SYSTEM.md
-- PROBLEMS_GLOBAL.md
+- CLAUDE.md? → "Found CLAUDE.md. Update with new answers or keep current? [update/keep]"
+- SYSTEM.md? → "Found SYSTEM.md. Merge new projects or replace? [merge/replace]"
+- PROBLEMS_GLOBAL.md? → "Keep existing learnings? [y/n]"
 
-For each that exists → ask: "Found [file]. Overwrite? [s/n]" → skip if "n"
+Also check ~/Projects/ or ~/projects/ for existing projects with docs/:
+- If found: "Detected X projects. Include in SYSTEM.md registry? [y/n]"
 
 Detect IDEs:
 - ~/.claude/ exists? → Claude Code

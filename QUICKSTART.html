@@ -106,78 +106,82 @@
     <p>Guía paso a paso para configurar tu sistema en 15 minutos y tener el primer proyecto en marcha.</p>
   </div>
 
-  <!-- ANTES DE EMPEZAR -->
+  <!-- ANTES DE EMPEZAR: IDE SELECTION -->
   <section>
     <div class="section-label"><span class="pill">Requisitos</span><span class="line"></span></div>
-    <h2>Antes de empezar</h2>
-    <p class="section-intro">Necesitas tres cosas instaladas en tu máquina:</p>
+    <h2>Antes de empezar: elige tu IDE</h2>
+    <p class="section-intro">Dupla Workflow funciona en 3 IDEs. Elige UNO e instálalo primero.</p>
     <div class="grid-3">
-      <div class="card">
-        <div class="card-icon">💻</div>
-        <div class="card-title">Git</div>
-        <div class="card-desc">Control de versiones. Verifica: <code style="font-family:monospace;font-size:12px;color:var(--accent)">git --version</code></div>
+      <div class="card success-card">
+        <div style="font-size:24px;margin-bottom:8px;">⚡</div>
+        <div class="card-title">VS Code + Claude Code</div>
+        <div class="card-desc"><strong>Instala:</strong> VS Code, luego extensión "Claude Code" en marketplace. <strong>Mejor para:</strong> desarrolladores que ya usan VS Code.</div>
       </div>
-      <div class="card">
-        <div class="card-icon">🧠</div>
-        <div class="card-title">Claude Code o Antigravity</div>
-        <div class="card-desc">El IDE donde corres los comandos del sistema. Recomienda Claude Code para primeras veces.</div>
+      <div class="card accent-card">
+        <div style="font-size:24px;margin-bottom:8px;">🔀</div>
+        <div class="card-title">Antigravity</div>
+        <div class="card-desc"><strong>Instala:</strong> Antigravity (Google's agent IDE). <strong>Mejor para:</strong> cambiar entre Claude y Gemini sin cerrar la app.</div>
       </div>
-      <div class="card">
-        <div class="card-icon">🌐</div>
-        <div class="card-title">Acceso a Claude API</div>
-        <div class="card-desc">Para que los comandos funcionen. Usa tu token personal de Anthropic.</div>
+      <div class="card blue-card">
+        <div style="font-size:24px;margin-bottom:8px;">💻</div>
+        <div class="card-title">Claude Desktop</div>
+        <div class="card-desc"><strong>Instala:</strong> Claude.ai desktop app (Anthropic official). <strong>Mejor para:</strong> algo simple y directo.</div>
       </div>
+    </div>
+    <div class="callout success" style="margin-top:24px;">
+      <div class="callout-title">💡 Si no sabes cuál elegir</div>
+      <div class="callout-text">Recomendado: <strong>VS Code + Claude Code.</strong> Es lo más usado. O <strong>Antigravity</strong> si quieres cambiar entre Claude y Gemini en la misma sesión.</div>
     </div>
   </section>
 
   <!-- PASO 1: INSTALAR -->
   <section>
     <div class="section-label"><span class="pill">Paso 1 de 5</span><span class="line"></span></div>
-    <h2>Descargar Dupla Workflow</h2>
-    <p class="section-intro">Clona el repositorio en tu máquina. Es el "sistema base".</p>
+    <h2>Instalar Dupla Workflow (terminal)</h2>
+    <p class="section-intro">Una sola vez. Abre tu terminal/command line y ejecuta estos comandos:</p>
     <div class="code-block">
 $ git clone https://github.com/leo1z/dupla-workflow.git
 $ cd dupla-workflow
 $ bash bin/install.sh</div>
     <div class="callout blue">
-      <div class="callout-title">¿Qué hace install.sh?</div>
-      <div class="callout-text">Copia los 14 comandos del sistema a tu máquina (~/.claude/skills/). Despliega hooks automáticos. Marca la versión. Después puedes olvidarte de este paso.</div>
+      <div class="callout-title">¿Qué hace bin/install.sh?</div>
+      <div class="callout-text"><strong>Detecta:</strong> ¿tienes VS Code? ¿Antigravity? ¿Claude Desktop?<br/><strong>Instala:</strong> 9 comandos (skills) en tu IDE (~/.claude/skills/ o ~/.agent/skills/).<br/><strong>Configura:</strong> automaciones (hooks) y versión del sistema.<br/><strong>Resultado:</strong> El sistema está listo. Después no tocas más la terminal hasta /new-project.</div>
     </div>
   </section>
 
   <!-- PASO 2: CONFIGURAR -->
   <section>
     <div class="section-label"><span class="pill">Paso 2 de 5</span><span class="line"></span></div>
-    <h2>Configurar tu máquina</h2>
-    <p class="section-intro">Una sola vez. Responde 4 preguntas simples en un chat. El sistema genera tu perfil global.</p>
+    <h2>Configurar tu máquina (IDE)</h2>
+    <p class="section-intro">Una sola vez, en tu IDE. Si ya tienes CLAUDE.md o SYSTEM.md, el sistema lo detecta y pregunta si actualizar.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-body">
-          <div class="step-title">Abre Claude Code (o Antigravity)</div>
-          <div class="step-desc">Puedes estar en cualquier directorio.</div>
+          <div class="step-title">Abre tu IDE</div>
+          <div class="step-desc">VS Code + Claude Code, Antigravity, o Claude Desktop. En cualquier carpeta (puede ser tu Downloads). <span style="color:var(--muted);font-size:13px;">Si en Antigravity, puedes elegir Claude o Gemini aquí — cualquiera funciona.</span></div>
         </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-body">
-          <div class="step-title">Escribe el comando de setup</div>
-          <div class="step-desc">En el input (abajo), escribe:</div>
+          <div class="step-title">Escribe el comando (IDE input)</div>
+          <div class="step-desc">En el input de chat (abajo), escribe:</div>
           <div class="step-cmd">/setup-dupla</div>
         </div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
-          <div class="step-title">Responde el mini-cuestionario</div>
-          <div class="step-desc">Claude te hará preguntas agrupadas. Responde todo de una vez (no hay vuelta). Temas: quién eres, tu stack tech, proyectos activos, plugins.</div>
+          <div class="step-title">Responde preguntas (si las hay)</div>
+          <div class="step-desc"><strong>Si es primera vez:</strong> Preguntas agrupadas (quién eres, stack, proyectos, plugins). Responde todo de una vez.<br/><strong>Si ya existe CLAUDE.md/SYSTEM.md:</strong> El sistema pregunta "Encontré CLAUDE.md, ¿actualizar? [s/n]". Elige sí o no para cada archivo.</div>
         </div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-body">
-          <div class="step-title">Recibe confirmación</div>
-          <div class="step-desc">El sistema genera 3 archivos en <code style="font-family:monospace;font-size:11px">~/.claude/</code>: CLAUDE.md (tu identidad), SYSTEM.md (tu stack), PROBLEMS_GLOBAL.md (aprendizajes compartidos).</div>
+          <div class="step-title">Confirmación</div>
+          <div class="step-desc">El sistema genera o actualiza: ~/.claude/CLAUDE.md (identidad), ~/.claude/SYSTEM.md (stack + proyectos), ~/.claude/PROBLEMS_GLOBAL.md (aprendizajes). Listo.</div>
         </div>
       </div>
     </div>
@@ -295,10 +299,10 @@ $ bash bin/install.sh</div>
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
-          <div class="step-title">Guardar progreso</div>
-          <div class="step-desc">Antes de cerrar la sesión:</div>
+          <div class="step-title">Guardar progreso (/checkpoint)</div>
+          <div class="step-desc">Antes de cerrar la sesión o cambiar de modelo:</div>
           <div class="step-cmd">/checkpoint</div>
-          <div style="margin-top:8px;font-size:13px;color:var(--muted);">Actualiza PROJECT_STATE.md con lo que hiciste. Propone un commit. Dice si debería cambiar de LLM (Claude → Gemini o al revés).</div>
+          <div style="margin-top:8px;font-size:13px;color:var(--muted);"><strong>Qué hace:</strong><br/>1. <strong>Quick save (mid-sesión):</strong> "¿Qué hiciste?" → actualiza PROJECT_STATE.md<br/>2. <strong>Close (end of day):</strong> idem + pregunta por resolver problemas → archiva en PROBLEMS.md<br/>3. <strong>Handoff (cambiar LLM):</strong> idem + genera bloque de traspaso + propone push<br/><br/>En todos los casos: propone mensaje de commit + recomienda próximo modelo.</div>
         </div>
       </div>
       <div class="step">
