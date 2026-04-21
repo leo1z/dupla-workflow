@@ -102,6 +102,12 @@ If YES → proceed to generation
 - Generate .mcp.json for project-level MCP server setup
 - Requires Node.js installed
 
+### 4. Install Dupla Infrastructure
+- Execute: `bash ~/Projects/dupla-workflow/bin/install.sh` (or detect dupla-workflow location)
+- Copies hooks to ~/.claude/hooks/
+- Configures hooks in settings.json
+- Creates DUPLA_VERSION marker
+
 ---
 
 ## Phase 5 — Output (max 12 lines)
@@ -114,9 +120,10 @@ If YES → proceed to generation
 - ~/.claude/SYSTEM.md (stack + projects)
 - ~/.claude/PROBLEMS_GLOBAL.md (empty, ready)
 
-**IDE Configuration:**
-- ✓ Claude Code (~/.claude/skills/)
-[if Antigravity] - ✓ Antigravity (~/.agent/skills/ + CLAUDE.md)
+**Infrastructure installed:**
+- ✓ Skills deployed (14 v2 commands)
+- ✓ Hooks configured (guard-project-state, suggest-checkpoint, session-reminder)
+- ✓ DUPLA_VERSION 2.0.0
 
 **Next:** /health-check to verify
 ```

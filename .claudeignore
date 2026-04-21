@@ -1,0 +1,9 @@
+node_modules/
+.next/
+dist/
+build/
+*.log
+.env*
+coverage/
+.git/
+skills-backup/
