@@ -1,0 +1,103 @@
+{
+  "project": "dupla-workflow",
+  "generated": "2026-04-21T11:06:31Z",
+  "lastCommit": "709ea1e",
+  "structure": {
+    "root": "/c/Users/Leo Borjas/Projects/dupla-workflow",
+    "folders": [
+      {
+        "path": "skills/",
+        "files": 8,
+        "purpose": "v2 workflow commands",
+        "stability": "stable",
+        "riskLevel": "low"
+      },
+      {
+        "path": "templates/",
+        "files": 10,
+        "purpose": "project documentation templates",
+        "stability": "stable",
+        "riskLevel": "low"
+      },
+      {
+        "path": "hooks/",
+        "files": 3,
+        "purpose": "automation hooks (guard, checkpoint, session)",
+        "stability": "new",
+        "riskLevel": "medium"
+      },
+      {
+        "path": "bin/",
+        "files": 2,
+        "purpose": "installation + utilities",
+        "stability": "stable",
+        "riskLevel": "medium"
+      },
+      {
+        "path": "docs/",
+        "files": 2,
+        "purpose": "system documentation",
+        "stability": "stable",
+        "riskLevel": "low"
+      }
+    ],
+    "fileCounts": {
+      "markdown": 28,
+      "typescript": 0,
+      "json": 2,
+      "shell": 5
+    }
+  },
+  "riskZones": [
+    {
+      "path": "bin/install.sh",
+      "reason": "multi-IDE deployment (Claude Code + Antigravity)",
+      "changeFrequency": "low",
+      "riskLevel": "high",
+      "impact": "breaks setup for all users"
+    },
+    {
+      "path": "skills/setup-dupla.md",
+      "reason": "first-time onboarding - sets up global config",
+      "changeFrequency": "medium",
+      "riskLevel": "high",
+      "impact": "broken onboarding experience"
+    },
+    {
+      "path": "skills/new-project.md",
+      "reason": "project initialization with 7-question assessment",
+      "changeFrequency": "medium",
+      "riskLevel": "high",
+      "impact": "broken project setup"
+    },
+    {
+      "path": "skills/new-session.md",
+      "reason": "SESSION block parsing - context reconstruction",
+      "changeFrequency": "medium",
+      "riskLevel": "medium",
+      "impact": "context loss across sessions"
+    },
+    {
+      "path": "hooks/guard-project-state.sh",
+      "reason": "prevents accidental writes without PROJECT_STATE.md",
+      "changeFrequency": "low",
+      "riskLevel": "medium",
+      "impact": "blocks legitimate workflow or allows unguarded changes"
+    }
+  ],
+  "dependencies": {
+    "install.sh": ["skills/", "hooks/", "templates/", "bin/", "CHANGELOG.md", "VERSION"],
+    "setup-dupla.md": ["global-templates/CLAUDE_GLOBAL_TEMPLATE.md", "global-templates/SYSTEM_TEMPLATE.md", "bin/install.sh"],
+    "new-project.md": ["templates/PROJECT_STATE_TEMPLATE.md", "templates/ROADMAP_TEMPLATE.md", "templates/ARCHITECTURE_TEMPLATE.md", "templates/PLAN_TEMPLATE.md", "templates/PROBLEMS_TEMPLATE.md"],
+    "new-session.md": ["templates/PROJECT_STATE_TEMPLATE.md"],
+    "checkpoint.md": ["skills/new-session.md"],
+    "guard-project-state.sh": ["templates/PROJECT_STATE_TEMPLATE.md"],
+    "README.md": ["QUICKSTART.html", "VERSION", "CHANGELOG.md"]
+  },
+  "metadata": {
+    "system": "dupla-workflow v2",
+    "purpose": "pre-compiled structure analysis for audits and refactoring impact",
+    "regenerate": "after significant structural changes (new skills, hook changes, template updates)",
+    "usage": "reference only - query via /project-audit or review manually for impact analysis"
+  }
+}
