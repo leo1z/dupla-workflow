@@ -4,6 +4,24 @@ Usage: /new-project
 
 ---
 
+## Phase 0 — Maturity Check (optional)
+
+Before starting: detect if idea already has research + MVP defined.
+
+Ask: "¿Dónde está tu idea en este momento?
+  1 — Idea nueva (nunca investigada)
+  2 — Ya investigada (tengo research, pero sin MVP definido)
+  3 — MVP ya definido (sé exactamente qué construir)
+  4 — En construcción (ya estoy haciendo esto, quiero integrar al workflow)"
+
+Based on answer:
+- **1 (Nueva)** → continue with Phase 1, include research phase
+- **2 (Investigada)** → skip Phase 4 research, ask "¿Dónde está el research?" (copy file path)
+- **3 (MVP definido)** → skip Phase 2 + 4, ask "¿Dónde están docs ROADMAP + ARCHITECTURE?" (copy paths)
+- **4 (En construcción)** → redirect to `/adapt-project`
+
+---
+
 ## Phase 1 — Project Type
 
 "¿Qué tipo de proyecto?
@@ -188,11 +206,29 @@ If YES → proceed to generation.
    - Key constraints
 
 ### Folder Structure:
-Create based on type:
-- Software: src/, docs/, tests/, public/
-- Negocio: docs/, content/, assets/
-- Contenido: posts/, assets/, media/
-- Investigación: research/, notes/, data/
+Create based on type and initialize git:
+
+```bash
+# For Software
+mkdir -p src docs tests public
+git init
+git add .
+git commit -m "chore: initialize project structure"
+
+# For Negocio
+mkdir -p docs content assets
+git init && git add . && git commit -m "chore: init"
+
+# For Contenido
+mkdir -p posts assets media
+git init && git add . && git commit -m "chore: init"
+
+# For Investigación
+mkdir -p research notes data
+git init && git add . && git commit -m "chore: init"
+```
+
+Execute structure creation BEFORE generating docs.
 
 ---
 
@@ -222,9 +258,13 @@ Create based on type:
 
 ## Rules
 
-- All 7 questions must be answered before Clarity Check
-- Clarity Check = 5 binary validations (no maybe)
-- IML Score = subjective: 1 (idea only), 5 (ready to build)
-- Research runs in parallel (don't block on speed)
-- Roadmap must have GO/NO-GO at each phase
-- NEVER create docs with empty placeholders — infer from answers
+- **Phase 0:** Always ask maturity check first
+- **If Phase 3 (Clarity Check) failed:** Auto-refine, don't abandon
+- **All 7 questions** must be answered before Clarity Check (unless skipped via Phase 0)
+- **Clarity Check = 5 binary validations** (no maybe)
+- **IML Score = subjective:** 1 (idea only), 5 (ready to build)
+- **Research runs in parallel** (don't block on speed)
+- **Roadmap must have GO/NO-GO** at each phase
+- **NEVER create docs with empty placeholders** — infer from answers
+- **Always create folder structure FIRST** (before docs generation)
+- **Always init git** after folder creation (git init + commit)
