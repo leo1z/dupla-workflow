@@ -188,11 +188,42 @@ $ bash bin/install.sh</div>
     </div>
   </section>
 
+  <!-- MULTI-IDE & MODELOS -->
+  <section>
+    <div class="section-label"><span class="pill">Importante</span><span class="line"></span></div>
+    <h2>Multi-IDE y cambiar de modelo (Claude ↔ Gemini)</h2>
+    <p class="section-intro">Funciona en Antigravity, Claude Desktop, VS Code. Puedes cambiar de LLM entre sesiones.</p>
+    <div class="grid-2">
+      <div class="card success-card">
+        <div class="card-title">3 IDEs soportados</div>
+        <div class="card-desc"><strong>Antigravity:</strong> Claude + Gemini en el mismo lugar. <strong>Claude Desktop:</strong> app nativa de Anthropic. <strong>VS Code:</strong> extensión Claude Code. Elige uno. El sistema funciona igual en los tres.</div>
+      </div>
+      <div class="card blue-card">
+        <div class="card-title">Model Routing</div>
+        <div class="card-desc"><strong>Usa Claude para:</strong> implementar, hacer cambios de arquitectura, debug. <strong>Usa Gemini para:</strong> research, análisis, segunda opinión. /checkpoint te dirá cuál modelo es mejor para lo siguiente.</div>
+      </div>
+    </div>
+    <div class="callout blue">
+      <div class="callout-title">💡 Flujo típico</div>
+      <div class="callout-text">Idea nueva → Gemini (/new-project + research) → Claude (roadmap + arquitectura) → Cualquiera (implementación) → /checkpoint (qué hacer después).</div>
+    </div>
+  </section>
+
   <!-- PASO 3: CREAR PROYECTO -->
   <section>
     <div class="section-label"><span class="pill">Paso 3 de 5</span><span class="line"></span></div>
     <h2>Crear tu primer proyecto</h2>
-    <p class="section-intro">Cada proyecto es una carpeta con su propia estructura. Dupla Workflow le enseña a Claude cómo encontrar información.</p>
+    <p class="section-intro">Dos opciones: proyecto nuevo desde cero, o integrar uno existente. Dupla Workflow se adapta a dónde estés.</p>
+    <div class="grid-2" style="margin-bottom:28px;">
+      <div class="card accent-card">
+        <div class="card-title">Proyecto nuevo</div>
+        <div class="card-desc">Idea fresca. /new-project te pregunta: ¿problema, usuario, MVP, riesgos? Genera docs + carpetas automáticamente. Puedes empezar desde cualquier punto de madurez (idea nueva, ya investigada, MVP definido).</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Proyecto existente</div>
+        <div class="card-desc">Ya tienes código, docs, historia. /adapt-project lee tu estructura actual, mapea docs viejos, genera lo que falta. Nada se borra, todo se integra.</div>
+      </div>
+    </div>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
@@ -212,8 +243,8 @@ $ bash bin/install.sh</div>
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
-          <div class="step-title">Describe tu proyecto en texto</div>
-          <div class="step-desc">En un chat normal (no comando), cuéntale al LLM: qué es tu proyecto, quién lo va a usar, cuál es el MVP (lo mínimo viable), qué riesgos ves, y cuáles son tus restricciones (tiempo, presupuesto).</div>
+          <div class="step-title">¿De dónde estás partiendo?</div>
+          <div class="step-desc"><strong>Idea nueva:</strong> cuéntale todo (problema, usuarios, MVP, riesgos, restricciones). <strong>Ya investigada:</strong> menciona dónde está tu research. <strong>MVP definido:</strong> comparte dónde está tu roadmap. /new-project se adapta y salta pasos que ya hiciste.</div>
         </div>
       </div>
       <div class="step">
@@ -391,6 +422,48 @@ $ bash bin/install.sh</div>
     </div>
   </section>
 
+  <!-- PROYECTOS EXISTENTES -->
+  <section>
+    <div class="section-label"><span class="pill">Referencia</span><span class="line"></span></div>
+    <h2>¿Tengo un proyecto que ya existe?</h2>
+    <p class="section-intro">Integra tu código actual sin perder nada. /adapt-project lo hace automático.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Ve a tu carpeta de proyecto</div>
+          <div class="step-desc">En tu terminal: <code style="font-family:monospace;font-size:11px">cd mi-proyecto-existente</code></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Corre el comando de adaptación</div>
+          <div class="step-desc">En Claude Code (abierto en esa carpeta):</div>
+          <div class="step-cmd">/adapt-project</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Revisa qué encuentra</div>
+          <div class="step-desc">Te mostrará: archivos actuales, docs que faltan, cómo mapear docs viejos a la nueva estructura. Todo se preserva, nada se borra.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Aprueba la integración</div>
+          <div class="step-desc">Verifica los cambios. Si está todo bien, continúa. Los docs nuevos se generan automáticamente.</div>
+        </div>
+      </div>
+    </div>
+    <div class="after-box">
+      <div class="after-title">✅ Tu proyecto existente está integrado</div>
+      <div style="font-size:13px;color:var(--muted);">Ahora tienes PROJECT_STATE.md, ROADMAP.md, y el sistema sabe dónde estás en el código.</div>
+    </div>
+  </section>
+
   <!-- PREGUNTAS COMUNES -->
   <section>
     <div class="section-label"><span class="pill">FAQ</span><span class="line"></span></div>
@@ -415,6 +488,22 @@ $ bash bin/install.sh</div>
       <div class="card">
         <div class="card-title">¿Los archivos se pushen a Git?</div>
         <div class="card-desc">Sí, PROJECT_STATE.md, ROADMAP.md, y otros se pushean. Así tu equipo (o tu yo del futuro) ve el estado. CREDENTIALS.md nunca se pushea — está en .gitignore.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Qué es MCP?</div>
+        <div class="card-desc">Opcional. File system access para Claude (solo en Claude Desktop/Code). /setup-dupla te pregunta si quieres habilitarlo. Si no sabes qué es, elige "no". No lo necesitas para usar Dupla Workflow.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Puedo cambiar de Gemini a Claude durante un proyecto?</div>
+        <div class="card-desc">Sí, en Antigravity. /checkpoint te recomienda cuál modelo es mejor para lo siguiente. Si quieres cambiar: /checkpoint, cambia de LLM en Antigravity, luego /new-session en el nuevo modelo.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Mi idea ya está investigada, ¿qué hago?</div>
+        <div class="card-desc">/new-project lo detecta en Phase 0. Responde cuál es tu estado (idea nueva, investigada, MVP definido). El sistema salta pasos que ya completaste.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Funciona en equipo?</div>
+        <div class="card-desc">Sí. PROJECT_STATE.md se pushea, así todos ven dónde está el proyecto. CLAUDE.md del proyecto tiene reglas compartidas. Si hay conflictos, /health-check los detecta.</div>
       </div>
     </div>
   </section>
