@@ -2,7 +2,7 @@ Auditoría rápida del sistema. Sin preguntas — analiza y reporta.
 
 Ejecuta en este orden:
 
-1. **CREDENCIALES** — Lee ~/.claude/CREDENCIALES.md
+1. **CREDENCIALES** — Lee ~/.claude/CREDENTIALS.md
    - Lista todas las líneas con ⚠️
 
 2. **SKILLS** — Auditoría de skills
