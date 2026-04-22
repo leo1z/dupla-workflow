@@ -5,6 +5,10 @@ CREDENCIALES.md
 *.local.json
 settings.local.json
 
+# Claude Code — project-local settings (personal permissions, paths)
+.claude/settings.local.json
+.claude/*.local.json
+
 # Dependencies
 node_modules/
 __pycache__/

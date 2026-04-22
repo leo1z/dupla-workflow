@@ -7,3 +7,11 @@ build/
 coverage/
 .git/
 skills-backup/
+
+# Large generated files — no leer en contexto
+docs/code-review-graph.json
+QUICKSTART.html
+
+# Personal / local
+.claude/settings.local.json
+CREDENTIALS.md
