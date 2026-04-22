@@ -87,27 +87,32 @@ Complete session closure with state update + next-session prep + new chat guidan
    - If phase is NOT complete → show remaining outcomes (1 line)
    - Do NOT touch adjacent phases or other sections of ROADMAP
 
-2.6. **Architecture sync** (lightweight):
-   - Ask: "¿Cambió alguna decisión técnica esta sesión? (stack, estructura, APIs, integraciones) [s/n]"
-   - If yes: "¿Qué cambió? →" append to ARCHITECTURE.md:
+2.6. **Architecture sync** (signal-based — do NOT ask by default):
+   - Run: `git diff HEAD~1 --name-only 2>/dev/null` (files changed this session)
+   - If changed files include architecture-relevant patterns (DB schemas, config files, main entry points, API route definitions, environment files, dependency files like package.json/requirements.txt/go.mod) → THEN ask: "Detecté cambios en [file]. ¿Actualizo ARCHITECTURE.md? [s/n]"
+   - If yes: append to ARCHITECTURE.md:
      ```
-     ## [Date] — Session update
-     [User's description of what changed]
+     ## [Date] — [brief description inferred from git diff]
+     [Changes inferred from diff + user confirmation]
      ```
-   - If no: skip silently
+   - If no architecture-relevant files changed → skip entirely, no prompt
 
-3. Ask: "¿Hay algo para PROBLEMS.md? (Enter para omitir)"
-4. Check: cross-project issue? → offer "Agregar a ~/.claude/PROBLEMS_GLOBAL.md? [s/n]"
-5. Recommend next model:
+2.7. **Problems detection** (signal-based — do NOT ask by default):
+   - Scan git commit messages from this session for: "fix", "error", "bug", "workaround", "hotfix", "revert"
+   - If found → ask: "Detecté un fix en los commits. ¿Agrego algo a PROBLEMS.md? (Enter para omitir)"
+   - If no fix signals in commits → skip entirely, no prompt
+   - Cross-project issue? → only offer PROBLEMS_GLOBAL if PROBLEMS.md was updated
+
+3. Recommend next model:
    - Next contains "plan", "research", "review", "decidir" → suggest Gemini
    - Next contains "implement", "debug", "code", "build" → suggest Claude
    - No clear signal → "Claude o Gemini según qué hagas primero"
-6. **Team:** show dependency status for next dev:
+4. **Team:** show dependency status for next dev:
    ```
    Dev B puede continuar (esperaba tu API) ✅
    Dev C ya terminó DB ✅
    ```
-7. **Always end with new chat guidance:**
+5. **Always end with new chat guidance:**
 ```
 ✅ Sesión cerrada — [fecha]
 
