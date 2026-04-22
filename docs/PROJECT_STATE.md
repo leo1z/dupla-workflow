@@ -8,12 +8,12 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-04-22 (sesión 3)
+Updated: 2026-04-22 (sesión 4)
 Status: ACTIVE
 Phase: N/A
 Phase_Status: N/A
-Done: v2.3.1 publicado · CLAUDE.md proyecto creado · quick-start skill instalado · flujo new-session verificado
-Next: Usar el sistema en proyectos activos — abrir dupla-conecta u otro proyecto y correr /adapt-project o /new-session
+Done: CLAUDE.md repo creado · quick-start instalado · adapt-project clarificado en QUICKSTART + SYSTEM_MAP · pushed a master
+Next: Usar el sistema en un proyecto activo real — correr /new-session o /adapt-project en dupla-conecta u otro proyecto
 Blockers: none
 Branch: master
 Model: claude
@@ -44,6 +44,7 @@ Framework listo para distribución y uso diario en todos los proyectos.
 
 ## Recent Changes
 
+- 2026-04-22 — sesión 4: CLAUDE.md repo + quick-start fix + adapt-project clarificado en guías
 - 2026-04-22 — v2.3.0 sesión 2: QUICKSTART.html + SYSTEM_MAP.html + graph lifecycle en skills
 - 2026-04-22 — v2.3.0: micro mode, roadmap phase awareness, handoff persistence, hooks throttle
 - 2026-04-22 — v2.2.0: team mode, 18 gaps, hooks deployment, slash commands
