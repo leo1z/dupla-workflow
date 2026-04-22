@@ -161,7 +161,7 @@ El sistema detectará el formato v1 y actualizará los docs.
 ✅ Migración v1 → v2 completada
 
 Backup en: ~/.claude/v1-backup/
-Skills v2 instalados: 12 commands
+Skills v2 instalados: 13 commands
 Hooks configurados: guard, suggest-checkpoint, session-reminder
 
 Siguiente:

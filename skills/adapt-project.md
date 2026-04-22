@@ -71,6 +71,8 @@ Preserve: don't delete, archive instead.
   - `Next:` → inferred from README/git (mark as [inferred])
   - `Status: ACTIVE`
   - `Branch:` → `git branch --show-current`
+  - `Phase:` → if ROADMAP.md exists, read first active phase and set `Phase: Phase [N] — [name]`; if no ROADMAP → `Phase: N/A`
+  - `Phase_Status:` → `In Progress` if ROADMAP found, `N/A` if not
 - Mark inferred vs confirmed
 
 ### docs/PROBLEMS.md (if missing)
