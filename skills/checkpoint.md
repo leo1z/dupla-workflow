@@ -103,6 +103,15 @@ Complete session closure with state update + next-session prep + new chat guidan
    - If no fix signals in commits → skip entirely, no prompt
    - Cross-project issue? → only offer PROBLEMS_GLOBAL if PROBLEMS.md was updated
 
+2.8. **Code-review graph** (signal-based — silent otherwise):
+   - Run: `git diff HEAD~1 --name-only 2>/dev/null`
+   - If changed files include `skills/` or `templates/` → show once:
+     ```
+     📊 Cambios en skills/ o templates/ detectados.
+        Considera regenerar el grafo: bash bin/generate-code-review-graph.sh
+     ```
+   - If no changes in those paths → skip entirely
+
 3. Recommend next model:
    - Next contains "plan", "research", "review", "decidir" → suggest Gemini
    - Next contains "implement", "debug", "code", "build" → suggest Claude
