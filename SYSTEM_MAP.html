@@ -531,7 +531,8 @@
             <div class="card-title">CLAUDE.md — contexto de comportamiento</div>
             <div class="card-desc" style="margin-top:6px;">
               Global (~/.claude/CLAUDE.md): identidad, reglas de trabajo, model routing. Proyecto (./CLAUDE.md): cómo el stack se conecta, reglas específicas del proyecto ("no tocar la DB en esta etapa"), dónde están los archivos críticos. Siempre cargado — no requiere invocación.<br/><br/>
-              <strong>Cargado automáticamente</strong> por Claude Code en cada sesión. Define cómo actuar — los otros documentos definen dónde estás.
+              <strong>Cargado automáticamente</strong> por Claude Code en cada sesión. Define cómo actuar — los otros documentos definen dónde estás.<br/><br/>
+              <strong>¿Cuándo actualizarlo?</strong> CLAUDE.md es configuración — no cambia en cada sesión. Si el stack cambia significativamente o las reglas del proyecto evolucionan, corre <code style="font-family:monospace;font-size:11px">/adapt-project</code>: detecta el drift entre el código actual y CLAUDE.md, y propone actualizaciones con diff y aprobación. <em>No se auto-actualiza en checkpoint.</em>
             </div>
           </div>
         </div>

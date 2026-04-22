@@ -524,7 +524,7 @@ $ bash bin/install.sh</div>
   <section>
     <div class="section-label"><span class="pill">Referencia</span><span class="line"></span></div>
     <h2>¿Tengo un proyecto que ya existe?</h2>
-    <p class="section-intro">Integra tu código actual sin perder nada. /adapt-project lo hace automático.</p>
+    <p class="section-intro">Para onboarding inicial <em>y</em> para re-sincronizar cuando el proyecto evoluciona. /adapt-project nunca borra — muestra diff y pide aprobación antes de cada cambio.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
@@ -601,8 +601,8 @@ $ bash bin/install.sh</div>
           </tr>
           <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
             <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/adapt-project</code></td>
-            <td style="padding:12px 16px;color:var(--muted);">Para integrar un proyecto existente. Lee tu estructura actual y genera los docs que faltan sin borrar nada.</td>
-            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--accent2-muted);color:var(--accent2);">Por proyecto</span></td>
+            <td style="padding:12px 16px;color:var(--muted);">Para integrar un proyecto existente <em>o</em> para actualizar CLAUDE.md cuando el stack o contexto del proyecto cambia significativamente. Nunca borra — muestra diff y pide aprobación.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--accent2-muted);color:var(--accent2);">Onboarding · Refresh</span></td>
           </tr>
           <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
             <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/quick-start</code></td>
@@ -658,7 +658,7 @@ $ bash bin/install.sh</div>
     <div class="grid-1">
       <div class="card">
         <div class="card-title">¿Y si tengo un proyecto que ya existe?</div>
-        <div class="card-desc">Corre <code style="font-family:monospace;font-size:12px;color:var(--accent)">/adapt-project</code> en lugar de /new-project. El sistema detecta qué docs faltan y genera solo lo necesario — sin pisar lo que ya existe.</div>
+        <div class="card-desc">Corre <code style="font-family:monospace;font-size:12px;color:var(--accent)">/adapt-project</code> en lugar de /new-project. El sistema detecta qué docs faltan y genera solo lo necesario — sin pisar lo que ya existe.<br/><br/><strong>También úsalo cuando el proyecto evoluciona:</strong> si cambias el stack, agregas una dependencia importante, o el CLAUDE.md ya no refleja el estado real del proyecto — /adapt-project detecta el drift y propone actualizaciones con diff y aprobación.</div>
       </div>
       <div class="card">
         <div class="card-title">¿Para qué sirve /quick-start?</div>
