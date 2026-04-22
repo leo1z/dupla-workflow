@@ -34,9 +34,12 @@ mkdir -p "$CLAUDE_DIR/skills" "$CLAUDE_DIR/templates"
 
 # Deploy skills
 echo "📦 Deploying skills..."
+mkdir -p "$CLAUDE_DIR/skills" "$CLAUDE_DIR/commands"
 cp "$SKILLS_SOURCE"/*.md "$CLAUDE_DIR/skills/" 2>/dev/null || true
+cp "$SKILLS_SOURCE"/*.md "$CLAUDE_DIR/commands/" 2>/dev/null || true
 [ "$HAS_ANTIGRAVITY" = true ] && cp "$SKILLS_SOURCE"/*.md "$AGENT_DIR/skills/" 2>/dev/null || true
-echo "   ✓ Skills deployed to ~/.claude/skills/"
+echo "   ✓ Skills deployed to ~/.claude/skills/ (Antigravity)"
+echo "   ✓ Skills deployed to ~/.claude/commands/ (Claude Code slash commands)"
 [ "$HAS_ANTIGRAVITY" = true ] && echo "   ✓ Skills deployed to ~/.agent/skills/"
 
 # Deploy templates reference (for projects)
