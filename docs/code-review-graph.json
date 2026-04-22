@@ -1,20 +1,20 @@
 {
-  "project": "dupla-workflow",
-  "generated": "2026-04-21T11:06:31Z",
-  "lastCommit": "709ea1e",
+  "project": ".",
+  "generated": "2026-04-22T09:34:46Z",
+  "lastCommit": "1bcb4d3",
   "structure": {
-    "root": "/c/Users/Leo Borjas/Projects/dupla-workflow",
+    "root": ".",
     "folders": [
       {
         "path": "skills/",
-        "files": 8,
+        "files": 13,
         "purpose": "v2 workflow commands",
         "stability": "stable",
         "riskLevel": "low"
       },
       {
         "path": "templates/",
-        "files": 10,
+        "files": 13,
         "purpose": "project documentation templates",
         "stability": "stable",
         "riskLevel": "low"
@@ -35,14 +35,14 @@
       },
       {
         "path": "docs/",
-        "files": 2,
+        "files": 3,
         "purpose": "system documentation",
         "stability": "stable",
         "riskLevel": "low"
       }
     ],
     "fileCounts": {
-      "markdown": 28,
+      "markdown": 38,
       "typescript": 0,
       "json": 2,
       "shell": 5
