@@ -4,21 +4,32 @@ Usage: /new-project
 
 ---
 
-## Phase 0 — Maturity Check (optional)
+## Phase 0 — Project Setup
 
-Before starting: detect if idea already has research + MVP defined.
+Ask TWO questions upfront (in same message):
 
-Ask: "¿Dónde está tu idea en este momento?
+**Maturity:**
+"¿Dónde está tu idea?
   1 — Idea nueva (nunca investigada)
-  2 — Ya investigada (tengo research, pero sin MVP definido)
+  2 — Ya investigada (tengo research, sin MVP definido)
   3 — MVP ya definido (sé exactamente qué construir)
-  4 — En construcción (ya estoy haciendo esto, quiero integrar al workflow)"
+  4 — En construcción (ya existe, quiero integrar al workflow)"
 
-Based on answer:
-- **1 (Nueva)** → continue with Phase 1, include research phase
-- **2 (Investigada)** → skip Phase 4 research, ask "¿Dónde está el research?" (copy file path)
-- **3 (MVP definido)** → skip Phase 2 + 4, ask "¿Dónde están docs ROADMAP + ARCHITECTURE?" (copy paths)
-- **4 (En construcción)** → redirect to `/adapt-project`
+**Team:**
+"¿Trabajas solo o en equipo?
+  1 — Individual (solo tú)
+  2 — Equipo (2+ personas, con un lead que aprueba cambios)"
+
+Based on Maturity:
+- **1** → continue with Phase 1, include research
+- **2** → skip Phase 4 research, ask "¿Dónde está el research?"
+- **3** → skip Phase 2 + 4, ask "¿Dónde están ROADMAP + ARCHITECTURE?"
+- **4** → redirect to `/adapt-project`
+
+Based on Team:
+- **Individual** → use CLAUDE_TEMPLATE.md + PROJECT_STATE_TEMPLATE.md
+- **Equipo** → after Phase 6 (Clarity Check), ask team questions (Phase 6B)
+  then use CLAUDE_TEAM_TEMPLATE.md + PROJECT_STATE_TEAM_TEMPLATE.md
 
 ---
 
@@ -168,97 +179,129 @@ Proceed to docs? [s/n]
 ```
 
 If NO → ask "¿Qué revisar?" and go back to Phase 3.
-If YES → proceed to generation.
+If YES → proceed to Phase 6B (if team) or Phase 7 (if individual).
+
+---
+
+## Phase 6B — Team Setup (only if Equipo selected in Phase 0)
+
+Ask in ONE message:
+
+```
+Configuración del equipo:
+
+1. ¿Quién es el Lead? (nombre)
+   → Aprueba PRs, mergea a main, actualiza estado compartido
+
+2. ¿Cuántos miembros? Lista cada uno:
+   [Nombre] — [Rol: Backend/Frontend/DB/Design/etc]
+
+3. ¿Cómo dividirían las fases del roadmap?
+   (Puede editarse después — solo una idea inicial)
+```
+
+From answers → auto-generate:
+- Team section in CLAUDE.md (members, roles, git strategy)
+- Role Assignments in ROADMAP.md (per phase, based on roles)
+- Branch naming: `work/phase1-[role]` for each dev
+- Merge order: infer from dependencies (DB → Backend → Frontend)
 
 ---
 
 ## Phase 7 — Generate Project Docs
 
-### Docs to Create:
-1. **docs/PROJECT_STATE.md** (from template)
-   - Goal: Phase 1 from roadmap
-   - Status: "Ready to start Phase 1"
-   - Next: First 3 tasks from Phase 1
-
-2. **docs/ROADMAP.md** (from template)
-   - Hypothesis Principal: the main risk assumption
-   - Phase 1: MVP (2 weeks max)
-   - Phase 2+: growth phases
-   - GO/NO-GO checkpoints at each phase
-
-3. **docs/ARCHITECTURE.md** (if software)
-   - Tech stack rationale
-   - Core modules
-   - Data model sketch
-   - [inferred] tag where uncertain
-
-4. **docs/PLAN.md** (if non-software)
-   - Goals, channels, timeline
-   - Content calendar or process
-   - Success metrics
-
-5. **docs/PROBLEMS.md** (empty, ready for issues)
-
-6. **CLAUDE.md** (project-level)
-   - Project description
-   - Current Phase
-   - Stack summary
-   - Key constraints
-
-### Folder Structure:
-Create based on type and initialize git:
+### Folder Structure first:
 
 ```bash
 # For Software
 mkdir -p src docs tests public
+
+# For Negocio
+mkdir -p docs content assets
+
+# For Contenido
+mkdir -p posts assets media
+
+# For Investigación
+mkdir -p research notes data
+
+# All types:
 git init
 git add .
 git commit -m "chore: initialize project structure"
 
-# For Negocio
-mkdir -p docs content assets
-git init && git add . && git commit -m "chore: init"
-
-# For Contenido
-mkdir -p posts assets media
-git init && git add . && git commit -m "chore: init"
-
-# For Investigación
-mkdir -p research notes data
-git init && git add . && git commit -m "chore: init"
+# If TEAM: create work branches
+git checkout -b work/phase1-[role-a]
+git checkout main
+git checkout -b work/phase1-[role-b]
+git checkout main
 ```
 
-Execute structure creation BEFORE generating docs.
+Execute BEFORE generating docs.
+
+### Docs to Create:
+
+**Individual:**
+1. **docs/PROJECT_STATE.md** — from PROJECT_STATE_TEMPLATE.md (`project_type: individual`)
+2. **docs/ROADMAP.md** — from ROADMAP_TEMPLATE.md (no role assignments section)
+3. **docs/ARCHITECTURE.md** (if software) or **docs/PLAN.md** (if non-software)
+4. **docs/PROBLEMS.md** (empty)
+5. **CLAUDE.md** — from CLAUDE_TEMPLATE.md
+
+**Team (all of above PLUS):**
+1. **docs/PROJECT_STATE.md** — from PROJECT_STATE_TEAM_TEMPLATE.md (`project_type: team`)
+   - Fill Dev sections with names and roles from Phase 6B
+2. **docs/ROADMAP.md** — from ROADMAP_TEMPLATE.md WITH Role Assignments filled per phase
+3. **CLAUDE.md** — from CLAUDE_TEAM_TEMPLATE.md
+   - Fill Team section (leader, members, branches)
+   - Fill Git Strategy (branch names, merge order)
 
 ---
 
 ## Output (max 15 lines)
 
+**Individual:**
 ```
 ✅ Project Initialized — [name]
 
-**Phase:** [1 of roadmap]
-**Type:** [Software/Negocio/Contenido/Investigación]
+**Type:** Individual · [Software/Negocio/Contenido/Investigación]
 **IML Score:** [1-5]
 
-**Created:**
+Created:
 - docs/PROJECT_STATE.md
-- docs/ROADMAP.md
+- docs/ROADMAP.md (hypothesis → Phase 1 MVP → GO/NO-GO)
 - [docs/ARCHITECTURE.md | docs/PLAN.md]
 - docs/PROBLEMS.md
 - CLAUDE.md
 
-**Stack:** [summary]
-**First checkpoint:** 2 weeks (Phase 1 MVP)
+Next: /new-session to start Phase 1
+```
 
-**Next:** /new-session to start building
+**Team:**
+```
+✅ Project Initialized — [name] (Team: [N] devs)
+
+**Type:** Team · [Software/Negocio/Contenido/Investigación]
+**Lead:** [name] · **Members:** [Dev A (Role)], [Dev B (Role)]
+**IML Score:** [1-5]
+
+Created:
+- docs/PROJECT_STATE.md (## Team Status with Dev sections)
+- docs/ROADMAP.md (with Role Assignments per phase)
+- [docs/ARCHITECTURE.md | docs/PLAN.md]
+- docs/PROBLEMS.md
+- CLAUDE.md (git strategy + team structure)
+
+Branches created: work/phase1-[role-a], work/phase1-[role-b]
+Next: each dev runs /new-session on their branch
+Lead: /checkpoint approve-pr [branch] to review and merge
 ```
 
 ---
 
 ## Rules
 
-- **Phase 0:** Always ask maturity check first
+- **Phase 0:** Always ask maturity + individual/team in same message
 - **If Phase 3 (Clarity Check) failed:** Auto-refine, don't abandon
 - **All 7 questions** must be answered before Clarity Check (unless skipped via Phase 0)
 - **Clarity Check = 5 binary validations** (no maybe)

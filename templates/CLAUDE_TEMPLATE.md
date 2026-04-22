@@ -3,6 +3,7 @@ doc: CLAUDE
 type: Semi-static
 updated: YYYY-MM-DD
 purpose: Project-specific instructions and constraints
+project_type: individual
 ---
 
 # Context — [PROJECT_NAME]
@@ -31,7 +32,6 @@ purpose: Project-specific instructions and constraints
 
 - Do NOT modify: [areas]
 - No credentials in repo
-- Follow work/* branches only
 - [specific gotchas or non-obvious rules]
 
 ---
@@ -60,7 +60,6 @@ purpose: Project-specific instructions and constraints
 
 - /new-session → read docs/PROJECT_STATE.md
 - /checkpoint → save session + update state
-- /update-context → align CLAUDE.md with reality
 - /restore → revert to numbered save point
 
 ---
@@ -68,7 +67,7 @@ purpose: Project-specific instructions and constraints
 ## Docs Map
 
 - State → docs/PROJECT_STATE.md (always — read <session> block first)
-- Roadmap → docs/ROADMAP.md (strategic direction)
+- Roadmap → docs/ROADMAP.md (strategic direction + phases)
 - Architecture → docs/ARCHITECTURE.md (technical decisions)
 - Problems → docs/PROBLEMS.md (debug only if stuck)
 

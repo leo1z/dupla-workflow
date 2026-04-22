@@ -430,26 +430,80 @@ $ bash bin/install.sh</div>
   <section>
     <div class="section-label"><span class="pill">Workflow</span><span class="line"></span></div>
     <h2>Individual vs Equipo</h2>
-    <p class="section-intro">Mismo sistema, flujo ligeramente diferente.</p>
-    <div class="grid-2">
+    <p class="section-intro">Mismo sistema, flujo adaptado. Defines el modo cuando creas el proyecto — y puedes cambiar después.</p>
+    <div class="grid-2" style="margin-bottom:24px;">
       <div class="card accent-card">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
           <div style="font-size:28px;">👤</div>
           <div class="card-title" style="margin-bottom:0;">Individual</div>
         </div>
-        <div class="card-desc" style="font-size:13px;line-height:1.6;"><strong>Flujo típico:</strong><br/>1. /new-session → Leo dónde quedé<br/>2. Trabajo<br/>3. /checkpoint → guardo estado<br/>4. git push<br/><br/><strong>Quién es el "dueño"?</strong> Tú. /checkpoint actualiza PROJECT_STATE.md y propone commit.<br/><br/><strong>Cambiar de LLM:</strong> /checkpoint handoff → abre en Gemini → /new-session. El sistema sincroniza automáticamente.</div>
+        <div class="card-desc" style="font-size:13px;line-height:1.6;">
+          <strong>Flujo diario:</strong><br/>
+          1. <code style="font-size:11px;color:var(--accent)">/new-session</code> → lee dónde quedaste (~60 tokens)<br/>
+          2. Trabaja en tu rama<br/>
+          3. <code style="font-size:11px;color:var(--accent)">/checkpoint</code> → guarda estado (auto-detecta qué hiciste del git log)<br/>
+          4. git push<br/><br/>
+          <strong>PROJECT_STATE.md:</strong> 1 bloque &lt;session&gt; que /checkpoint actualiza automáticamente.<br/><br/>
+          <strong>Cambiar LLM:</strong> /checkpoint → opción 3 (Handoff) → genera bloque de traspaso → nuevo chat.
+        </div>
       </div>
       <div class="card success-card">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
           <div style="font-size:28px;">👥</div>
           <div class="card-title" style="margin-bottom:0;">Equipo (2-4 personas)</div>
         </div>
-        <div class="card-desc" style="font-size:13px;line-height:1.6;"><strong>Flujo típico:</strong><br/>1. /new-session (tu turno)<br/>2. Trabajo en tu rama<br/>3. /checkpoint close (final del día)<br/>4. git push → merge a main<br/>5. Siguiente dev: git pull → /new-session<br/><br/><strong>Quién es el "dueño"?</strong> El equipo. PROJECT_STATE.md es compartido en main.<br/><br/><strong>TEAM section:</strong> PROJECT_STATE.md tiene campo "Owner" + "Last handoff". Cada dev ve quién está de turno.</div>
+        <div class="card-desc" style="font-size:13px;line-height:1.6;">
+          <strong>Flujo diario (Dev):</strong><br/>
+          1. <code style="font-size:11px;color:var(--accent)">/new-session</code> → lee TU sección + dependencias (~60 tokens total)<br/>
+          2. Trabaja en <strong>tu rama</strong> (work/fase-rol)<br/>
+          3. <code style="font-size:11px;color:var(--accent)">/checkpoint</code> → actualiza TU sección (auto del git log)<br/>
+          4. Push a tu rama<br/><br/>
+          <strong>Flujo Lead:</strong><br/>
+          <code style="font-size:11px;color:var(--accent)">/checkpoint approve-pr work/[rama]</code> → ve diff + ROADMAP → aprueba → mergea a main.
+        </div>
       </div>
     </div>
+
+    <!-- Git Strategy -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title" style="margin-bottom:12px;">🌿 Estrategia de ramas (sugerida automáticamente)</div>
+      <div style="background:#13131a;padding:14px;border-radius:8px;font-family:monospace;font-size:12px;color:#cdd6f4;line-height:1.8;margin-bottom:12px;">
+        <span style="color:#6c7086"># Estructura generada automáticamente en /new-project (Team)</span><br/>
+        main                    <span style="color:#6c7086">← producción (Lead aprueba)</span><br/>
+        ├─ work/phase1-backend  <span style="color:#6c7086">← Dev A</span><br/>
+        ├─ work/phase1-frontend <span style="color:#6c7086">← Dev B</span><br/>
+        └─ work/phase1-db       <span style="color:#6c7086">← Dev C (empezar aquí)</span>
+      </div>
+      <div class="card-desc">Cada dev en su propia rama = sin conflictos. El sistema dice en qué orden hacer merge según las dependencias del ROADMAP.</div>
+    </div>
+
+    <!-- PROJECT_STATE Team -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title" style="margin-bottom:12px;">📋 PROJECT_STATE.md en equipo (secciones por dev)</div>
+      <div style="background:#13131a;padding:14px;border-radius:8px;font-family:monospace;font-size:12px;color:#cdd6f4;line-height:1.8;margin-bottom:12px;">
+        <span style="color:#89b4fa">## Team Status</span><br/><br/>
+        <span style="color:#a6e3a1">### Dev A (Backend) — work/phase1-backend</span><br/>
+        Updated: 2026-04-21<br/>
+        Done: <span style="color:#6c7086">auto del git log</span><br/>
+        Next: Implementar login endpoint<br/>
+        Dependencies: Espera Dev C (DB schema)<br/><br/>
+        <span style="color:#a6e3a1">### Dev B (Frontend) — work/phase1-frontend</span><br/>
+        Done: Login form UI<br/>
+        Next: Integración con API<br/>
+        Dependencies: Espera Dev A (API lista)<br/><br/>
+        <span style="color:#f38ba8">## Shared Status (Lead only)</span><br/>
+        Last Merge: Dev C — DB schema — hoy
+      </div>
+      <div class="card-desc"><strong>/new-session lee solo tu sección</strong> (~30 tokens). Done se genera automáticamente del git log — sin escribir nada. Dos devs pueden pushear al mismo tiempo sin conflicto porque cada uno tiene su sección.</div>
+    </div>
+
     <div class="callout blue">
-      <div class="callout-title">💡 Clave diferencia</div>
-      <div class="callout-text"><strong>Individual:</strong> guardas en tu rama local. <strong>Equipo:</strong> mergeas a main, así el siguiente dev ve el estado actualizado. El sistema no necesita comandos nuevos — solo /checkpoint close hace que el estado sea compartido.</div>
+      <div class="callout-title">💡 ¿Cómo empieza un equipo?</div>
+      <div class="callout-text">
+        <strong>Proyecto nuevo:</strong> En /new-project, elige "Equipo" → pregunta quién es Lead + miembros + roles → genera todo (docs, ramas, estrategia git).<br/><br/>
+        <strong>Proyecto individual ya existente:</strong> <code style="font-family:monospace;font-size:11px">/adapt-to-team</code> → hace backup → agrega Team sections a docs existentes → crea ramas de trabajo.<br/><br/>
+        <strong>Agregar dev a mitad del proyecto:</strong> <code style="font-family:monospace;font-size:11px">/add-team-member</code> → actualiza todos los docs + crea su rama.
+      </div>
     </div>
   </section>
 
@@ -534,7 +588,15 @@ $ bash bin/install.sh</div>
       </div>
       <div class="card">
         <div class="card-title">¿Funciona en equipo?</div>
-        <div class="card-desc">Sí. PROJECT_STATE.md se pushea, así todos ven dónde está el proyecto. CLAUDE.md del proyecto tiene reglas compartidas. Si hay conflictos, /health-check los detecta.</div>
+        <div class="card-desc">Sí. En /new-project elige "Equipo". El sistema genera ramas por dev, secciones individuales en PROJECT_STATE.md, y estrategia git. Lead usa /checkpoint approve-pr para revisar y mergear. Ver sección "Individual vs Equipo" arriba.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Cómo convierto mi proyecto individual a equipo?</div>
+        <div class="card-desc"><code style="font-family:monospace;font-size:12px;color:var(--accent)">/adapt-to-team</code> — hace backup automático, agrega Team sections a todos los docs existentes, crea ramas de trabajo. Nada se pierde.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">¿Cómo agrego un nuevo dev a mitad del proyecto?</div>
+        <div class="card-desc"><code style="font-family:monospace;font-size:12px;color:var(--accent)">/add-team-member</code> — agrega su sección en PROJECT_STATE, actualiza CLAUDE.md y ROADMAP, crea su rama. También sirve para cambiar roles.</div>
       </div>
     </div>
   </section>

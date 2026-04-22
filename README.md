@@ -1,20 +1,21 @@
 # Dupla-Workflow v2
 
-AI-assisted project workflow system. Portable, newbie-friendly, multi-IDE. Works for software projects, business planning, content, research—anything.
+AI-assisted project workflow system. Portable, multi-IDE, works for individuals and teams. Covers software, business, content, and research projects.
 
 **Key features:**
-- ✅ Single repo, deploy to Claude Code + Antigravity
-- ✅ Structured interviews (Patrón Estándar)
-- ✅ Context-efficient SESSION blocks (~60 tokens vs 300)
+- ✅ Individual and team workflows (seamlessly switch between them)
+- ✅ Context-efficient SESSION blocks (~60 tokens vs 3000+ without workflow)
+- ✅ Auto-reconstruct state from git log (no manual discipline required)
+- ✅ GO/NO-GO checkpoints for idea validation → prototype → scale
 - ✅ Clean model handoffs (Claude ↔ Gemini)
-- ✅ Human-readable save points (numbered, not hashes)
-- ✅ GO/NO-GO checkpoints for validation
+- ✅ Multi-IDE: Claude Code (VS Code) + Antigravity + Claude Desktop
+- ✅ Human-readable save points (/restore)
 
 ---
 
 ## Quick Start
 
-### 1. Install
+### 1. Install (terminal — once per machine)
 
 ```bash
 git clone https://github.com/leo1z/dupla-workflow.git
@@ -22,270 +23,198 @@ cd dupla-workflow
 bash bin/install.sh
 ```
 
-This deploys skills to:
-- `~/.claude/skills/` (Claude Code)
-- `~/.agent/skills/` (Antigravity, if detected)
+Deploys skills to `~/.claude/skills/` (Claude Code) and `~/.agent/skills/` (Antigravity, if detected).
 
-### 2. First Setup
+### 2. Configure (IDE — once per machine)
 
 In Claude Code or Antigravity:
-
 ```
 /setup-dupla
 ```
+Creates `~/.claude/CLAUDE.md`, `~/.claude/SYSTEM.md`, `~/.claude/PROBLEMS_GLOBAL.md`.
+If files already exist → system asks to update or keep each one.
 
-Answer questions about your name, role, stack, and active projects.
-Creates:
-- `~/.claude/CLAUDE.md` (your identity + behavior rules)
-- `~/.claude/SYSTEM.md` (tech stack + projects registry)
-- `~/.claude/PROBLEMS_GLOBAL.md` (cross-project issues)
-
-### 3. Create a Project
-
-In your project root:
+### 3. Create a Project (IDE)
 
 ```
 /new-project
 ```
-
-Guided discovery:
-- Answer 7 questions (problem, user, MVP, risk, constraints)
-- Binary clarity check
-- Optional market research (parallel subagents)
-- Auto-generates docs + folder structure
-
-Creates:
-- `docs/PROJECT_STATE.md` (current state, saved checkpoints)
-- `docs/ROADMAP.md` (phases + GO/NO-GO checkpoints)
-- `docs/ARCHITECTURE.md` or `docs/PLAN.md` (design or strategy)
-- `docs/PROBLEMS.md` (issues + solutions)
-- `CLAUDE.md` (project-specific rules)
+Asks: project maturity + **Individual or Team** + 7 IML questions.
+Generates docs + folder structure + git branches automatically.
 
 ### 4. Daily Workflow
 
-**Start session:**
 ```
-/new-session
+/new-session     → reads state, tells you what to do next
+[work]
+/checkpoint      → saves state, suggests next model
+git push
 ```
-Shows: goal, current branch, state summary, next 3 steps + save points.
 
-**Work:**
-Edit files, run commands, implement features.
+---
 
-**Save checkpoint (mid-session):**
+## Individual vs Team
+
+### Individual Workflow
 ```
-/checkpoint
+/new-session → work → /checkpoint → git push
 ```
-Menu:
-1. Quick save (update state)
-2. Full close (end of day)
-3. Handoff (switch to Gemini/another model)
+- /new-session reads SESSION block (~60 tokens)
+- /checkpoint updates PROJECT_STATE + suggests commit
+
+### Team Workflow
+```
+Each dev:    /new-session → work on work/[branch] → /checkpoint → push
+Lead only:   /checkpoint approve-pr [branch] → review → merge to main
+```
+- /new-session reads ONLY your Dev section (~30 tokens) + dependencies (~20 tokens)
+- /checkpoint auto-generates Done from your git log (no typing)
+- Lead reviews changes vs ROADMAP before merging
+- No conflicts: each dev on their own branch + their own section in PROJECT_STATE
+
+### Convert Individual → Team
+```
+/adapt-to-team
+```
+Backs up current state, adds Team sections to existing docs, creates work branches.
+
+### Add Team Member Mid-Project
+```
+/add-team-member
+```
+Adds dev section to PROJECT_STATE, updates CLAUDE.md + ROADMAP, creates branch.
+
+---
+
+## Roadmap Philosophy
+
+Each project follows: **Validate → Prototype → GO/NO-GO → Scale**
+
+```
+Phase 0: Research (if needed) → GO/NO-GO
+Phase 1: MVP / Prototype (2 weeks max) → GO/NO-GO → Continue / Adapt / Kill
+Phase 2: Core Features / Scale → GO/NO-GO
+Phase 3+: Production / Expansion
+```
+
+Kill criteria defined upfront. No sunk cost fallacy.
 
 ---
 
 ## IDE Setup
 
 ### Claude Code (VS Code)
+1. Install VS Code + Claude Code extension
+2. `bash bin/install.sh`
+3. Skills in `~/.claude/skills/`
 
-1. Install Claude Code CLI
-2. Run `bash bin/install.sh`
-3. Skills available immediately in VS Code command palette
+### Antigravity
+1. Install Antigravity (Google's Agent IDE)
+2. `bash bin/install.sh` (auto-detects `~/.agent/`)
+3. Skills in `~/.agent/skills/`
+4. CLAUDE.md synced to `~/.agent/CLAUDE.md`
 
-### Antigravity (Google's Agent IDE)
-
-1. Install Antigravity
-2. Run `bash bin/install.sh` (auto-detects ~/.agent/)
-3. Skills in `.agent/skills/`
-4. Your CLAUDE.md synced to `~/.agent/CLAUDE.md`
-
----
-
-## Project Types
-
-Dupla-Workflow adapts to ANY project type:
-
-| Type | Focus | Example |
-|---|---|---|
-| **Software/SaaS** | Build → validate → scale | Web app, mobile app, API |
-| **Negocio** | Strategy → implementation → metrics | Service, process, business model |
-| **Contenido** | Audience → channels → distribution | Newsletter, blog, podcast, TikTok |
-| **Investigación** | Question → methodology → sources | Research paper, data analysis |
+### Claude Desktop
+1. Install Claude Desktop (Anthropic official)
+2. `bash bin/install.sh`
+3. Skills in `~/.claude/skills/`
 
 ---
 
 ## Model Routing
 
-**Use Claude (this) for:**
-- Code writing + debugging
-- Architecture decisions
-- Auth/DB modifications
+| Use Claude | Use Gemini |
+|-----------|-----------|
+| Writing code, debugging | Planning, strategy |
+| Architecture decisions | Code review (second opinion) |
+| Auth/DB changes | Research, market analysis |
+| Multi-file changes | Generating docs/copy |
 
-**Use Gemini for:**
-- Planning + strategy
-- Code review (second opinion)
-- Research + market analysis
-
-How: `/checkpoint` suggests next model based on your work.
+`/checkpoint` suggests which model to use next based on your `Next` field.
 
 ---
 
 ## Command Reference
 
-| Command | When | Output |
-|---------|------|--------|
-| `/new-session [goal]` | Start any work session | State summary + next steps |
-| `/checkpoint` | Save progress | Menu: quick/close/handoff |
-| `/restore` | Undo to a save point | Human-readable checkpoint list |
-| `/update-context` | Stack/architecture changed | Suggests CLAUDE.md updates |
-| `/adapt-project` | Onboard existing project | Checks what's missing, creates docs |
-| `/setup-dupla` | First-time setup | Guided interview, creates ~/.claude/ |
-| `/update-dupla` | New version available | Auto-backup, update, sync IDEs |
-| `/health-check` | Verify system state | OK/warnings/errors |
+| Command | When | Notes |
+|---------|------|-------|
+| `/setup-dupla` | First-time machine setup | Reads existing config, updates or keeps |
+| `/new-project` | Start any new project | Individual or Team, any maturity level |
+| `/new-session` | Start any work session | Reads state + suggests branch (team) |
+| `/checkpoint` | Save progress | Modes: quick / close / handoff / approve-pr |
+| `/checkpoint approve-pr [branch]` | Lead: review + merge | Compares vs ROADMAP, shows diff |
+| `/adapt-to-team` | Convert individual → team | Backs up, adds Team sections |
+| `/add-team-member` | Add dev or change role | Updates all docs + creates branch |
+| `/adapt-project` | Onboard existing project | Detects what's missing, creates docs |
+| `/restore` | Revert to save point | Human-readable checkpoint list |
+| `/update-dupla` | Update to latest version | Auto-backup, update, sync IDEs |
+| `/health-check` | Verify system state | OK / warnings / errors |
+| `/project-audit` | Impact analysis before changes | Uses pre-compiled graph (low tokens) |
 | `/token-budget [%]` | Monitor session burn | Cost estimate + lighter alternatives |
+
+---
+
+## Token Efficiency
+
+|  | Without workflow | With workflow |
+|--|-----------------|---------------|
+| Per session (individual) | 3,000–5,000 tokens | ~110 tokens |
+| Per session (team, per dev) | 3,000–5,000 tokens | ~60 tokens |
+| Daily (3 devs, 5 sessions each) | ~45,000 tokens | ~1,650 tokens |
+| **Savings** | — | **96–97%** |
+
+Key: SESSION block + selective doc loading (never load all docs upfront).
 
 ---
 
 ## Troubleshooting
 
-### "docs/PROJECT_STATE.md not found"
-→ Run `/adapt-project` to onboard existing project, or `/new-project` for new project.
+**"docs/PROJECT_STATE.md not found"**
+→ `/adapt-project` (existing project) or `/new-project` (new project)
 
-### Session state is stale (> 48 hours)
-→ Run `/new-session` — it will reconstruct state from git log + PROJECT_STATE.
+**Session state stale (>24h)**
+→ `/new-session` auto-reconstructs from git log
 
-### Need to switch models (Claude → Gemini)
-→ Run `/checkpoint handoff` — generates transfer block for Gemini chat.
+**Need to switch models**
+→ `/checkpoint` → option 3 (Handoff) → generates transfer block
 
-### Lost work (wrong branch, uncommitted changes)
-→ Run `/restore` to revert to last numbered save point.
+**Lost work**
+→ `/restore` → numbered save points with readable descriptions
 
-### IDEs out of sync
-→ Run `/update-dupla` — auto-syncs skills + CLAUDE.md to both Claude Code + Antigravity.
+**IDEs out of sync**
+→ `/update-dupla` → auto-syncs skills + CLAUDE.md to all IDEs
+
+**Team: conflict in PROJECT_STATE.md**
+→ Each dev has their own `### Dev Name` section — resolve by keeping both sections
+
+---
+
+## Project Types
+
+| Type | Docs Generated | Focus |
+|------|---------------|-------|
+| Software/SaaS | PROJECT_STATE, ROADMAP, ARCHITECTURE, PROBLEMS, CLAUDE | Build → validate → scale |
+| Negocio | PROJECT_STATE, ROADMAP, PLAN, PROBLEMS, CLAUDE | Strategy → ops → metrics |
+| Contenido | PROJECT_STATE, ROADMAP, PLAN, PROBLEMS, CLAUDE | Audience → channels → distribution |
+| Investigación | PROJECT_STATE, ROADMAP, PLAN, PROBLEMS, CLAUDE | Question → methodology → answer |
 
 ---
 
 ## Version
 
+**v2.1.0** — 2026-04-21
+- Team mode: individual vs team detection, team templates, git strategy
+- /adapt-to-team: convert individual projects to team
+- /add-team-member: add devs + edit roles mid-project
+- /checkpoint Mode 4: approve-pr for Lead (review + merge + GO/NO-GO)
+- /new-session: auto-detect project_type, identify dev, suggest branch
+- /new-project: Phase 6B team setup, auto-generate branches
+- ROADMAP: Role Assignments per phase with sprint suggestions
+- PROJECT_STATE_TEAM_TEMPLATE: per-dev sections, auto-generated from git log
+
 **v2.0.0** — 2026-04-20
-- Complete redesign: plugin system → GitHub repo
-- New commands: checkpoint, restore, setup-dupla
-- IML assessment + GO/NO-GO checkpoints
+- Complete redesign: GitHub repo deployment
+- SESSION block context efficiency (~60 tokens)
+- GO/NO-GO checkpoints on ROADMAP
 - Multi-IDE support (Claude Code + Antigravity)
-- SESSION block context efficiency
 - Model routing (Claude vs Gemini)
-
----
-
-**Questions?** Check `/health-check` for system state, or read the skill files in `skills/` for detailed behavior.
-
-Good luck! 🚀
-| `/setup` | Setup del sistema por primera vez en una máquina | Una vez por máquina |
-| `/adopt` | Adopta proyecto existente al workflow | Una vez por proyecto existente |
-| `/token-budget` | Conciencia de tokens + alertas de presupuesto | En sesiones largas |
-
----
-
-## Crear un proyecto nuevo
-
-### Flujo rápido: interactivo
-
-```bash
-bash /ruta/a/dupla-workflow/nuevo-proyecto.sh
-```
-
-El script te hace las preguntas directamente en la terminal y crea el proyecto en tu carpeta actual (o pregunta dónde).
-
-### Flujo planificado: config file (opcional)
-
-**Paso 1 — Planificar en Claude**
-
-Usa el PLANNING_PROMPT.md para generar un bloque `proyecto.config`.
-
-**Paso 2 — Correr con config**
-
-```bash
-bash /ruta/a/dupla-workflow/nuevo-proyecto.sh --config mi-proyecto.config
-```
-
-El script auto-detecta dónde guardar el proyecto sin preguntar rutas.
-
----
-
-## Qué crea el script
-
-```
-mi-proyecto/
-├── CLAUDE.md                  ← contexto para la AI (stack, arquitectura, reglas)
-├── docs/
-│   ├── PROJECT_STATE.md       ← estado dinámico: dónde estamos, qué sigue
-│   └── PROBLEMS.md            ← errores ya resueltos (no repetir)
-├── .env.example               ← variables sin valores — sí a git
-└── .gitignore
-```
-
-Además: git init, branch `main` + `work/setup`, y repo privado en GitHub (requiere token en `~/.claude/CREDENCIALES.md`).
-
----
-
-## Configuración inicial (una sola vez por usuario)
-
-Después de instalar con `bash instalar.sh`:
-
-### 1. Setup automático
-
-Abre VS Code con cualquier proyecto y escribe:
-```
-/setup
-```
-
-Responde las preguntas y Claude genera automáticamente:
-- `~/.claude/CLAUDE.md` — tu configuración global personalizada
-- `~/.claude/CONTEXTO_[nombre].md` — perfil tuyo
-- `~/.claude/STACK_GLOBAL.md` — tus herramientas y servicios
-- `~/.claude/PROJECTS_SKILLS.md` — tus proyectos activos
-
-### 2. Credenciales (opcional pero recomendado)
-
-```bash
-nano ~/.claude/CREDENCIALES.md
-```
-
-Llena tokens de GitHub, Supabase, etc. **Nunca subas este archivo a git.**
-
-### 3. Verifica
-
-Escribe `/health-check` en cualquier proyecto. Debe reportar: skills instalados, CLAUDE.md presente, etc.
-
----
-
-## Flujo de trabajo por sesión
-
-```
-Inicio:   git pull → /new-session
-Trabajo:  commits frecuentes en work/*
-Cierre:   git push → /progress
-```
-
----
-
-## Actualizaciones
-
-```bash
-cd sistema-trabajo
-git pull
-bash instalar.sh
-```
-
----
-
-## Estructura del repo
-
-```
-dupla-workflow/
-├── commands/          ← skills de Claude Code (.md)
-├── templates/         ← PROJECT_STATE, GUIA_COLABORADOR, PLAN_PROMPT, otros templates
-├── global-templates/  ← templates para setup inicial (~/.claude/)
-├── docs/              ← guías del sistema (New_Project_Guide, WORKFLOW_IDEAL)
-├── nuevo-proyecto.sh  ← script de setup (interactivo o --config)
-└── instalar.sh        ← instala todo en la máquina local
-```

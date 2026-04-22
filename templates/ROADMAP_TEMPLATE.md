@@ -23,9 +23,19 @@ status: CURRENT
 
 **Timeline:** [X days/weeks]
 
+**Tasks:**
 - Research item 1
 - Research item 2
 - Setup task 1
+
+<!-- TEAM: Add role assignments if team project
+### Role Assignments
+- [Dev A — Role]: [specific tasks]
+- [Dev B — Role]: [specific tasks]
+### Merge Order
+1. [Dev X] first (others depend on this)
+2. [Dev Y] second
+-->
 
 **GO/NO-GO Checkpoint:**
 - ✅ Learning validated: [specific decision this phase informs]
@@ -42,6 +52,27 @@ status: CURRENT
 2. [Second deliverable]
 3. [Third deliverable]
 
+**Tasks:**
+- [ ] [Task 1]
+- [ ] [Task 2]
+- [ ] [Task 3]
+
+<!-- TEAM: Add role assignments if team project
+### Role Assignments
+- [Dev A — Backend]: work/phase1-backend
+  - [ ] [Task A1]
+  - [ ] [Task A2]
+- [Dev B — Frontend]: work/phase1-frontend
+  - [ ] [Task B1] — depends on Dev A
+- [Dev C — DB]: work/phase1-db
+  - [ ] [Task C1] ← do this first (others depend on it)
+### Merge Order
+1. Dev C (DB schema) → Dev A (needs schema) → Dev B (needs API)
+### Sprint Suggestion (editable)
+Week 1: Dev C completes DB. Dev A starts API structure.
+Week 2: Dev A finishes API. Dev B integrates frontend.
+-->
+
 **GO/NO-GO Checkpoint:**
 - ✅ Continue if: [working feature + validation signal]
 - ⚠️ Adapt if: [which assumptions need revision]
@@ -57,6 +88,16 @@ status: CURRENT
 1. [Feature 1]
 2. [Feature 2]
 3. [Integration with Phase 1]
+
+**Tasks:**
+- [ ] [Task 1]
+- [ ] [Task 2]
+
+<!-- TEAM: Role assignments for Phase 2
+### Role Assignments
+- [Dev A]: work/phase2-[role]
+- [Dev B]: work/phase2-[role]
+-->
 
 **GO/NO-GO Checkpoint:**
 - ✅ Continue if: [user adoption / metric target]

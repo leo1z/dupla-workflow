@@ -2,6 +2,7 @@
 doc: PROJECT_STATE
 updated: YYYY-MM-DD HH:MM
 status: CURRENT
+project_type: individual
 ---
 
 # Project State — [PROJECT_NAME]
@@ -22,15 +23,6 @@ Handoff: no | [destination model if switching]
 ## Current Goal
 
 [1 clear objective]
-
----
-
-## Team (optional)
-
-- Owner: [name or model]
-- Current handler: [who's working on it]
-- Last handoff: [date + direction]
-- Shared branch: [work/feature-name]
 
 ---
 
@@ -77,6 +69,5 @@ Handoff: no | [destination model if switching]
 ## Rules
 
 - Source of truth: this file + codebase (trust git over PROJECT_STATE if conflict)
-- Updated on: /progress command
-- SESSION block read first (max ~60 tokens for context efficiency)
+- SESSION block read first (~60 tokens for context efficiency)
 - Do NOT infer state from chat — trust git and docs
