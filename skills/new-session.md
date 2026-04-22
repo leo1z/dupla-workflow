@@ -25,6 +25,15 @@ If no `QUICKSTATE.md`, read YAML header of docs/PROJECT_STATE.md:
    - Check for `<handoff>` block in PROJECT_STATE.md → if found, read it (Date, From, Done, Next) and use as context BEFORE reading SESSION
    - Extract: Updated, Done, Next, Blockers, Branch, Model, **Phase, Phase_Status**
    - If Updated > 24h OR git log is newer → auto-reconstruct from git log (silent)
+   - **Check for missed checkpoint:** compare `SESSION.Updated` vs date of latest commit
+     - If git has commits newer than SESSION.Updated AND Phase ≠ "N/A" → missed checkpoint detected
+     - Run ROADMAP phase sync inline (same as checkpoint step 2.5):
+       - Compare those commits vs current phase Outcomes
+       - Mark any delivered Outcomes as `[x]` in ROADMAP.md
+       - If GO/NO-GO criteria now met → set `Phase_Status: GO/NO-GO Pending`
+     - Update SESSION.Done from git log, SESSION.Updated to now
+     - Note in output: `📌 Sesión anterior sin checkpoint — ROADMAP sincronizado desde git`
+     - This runs silently if nothing changed in the phase
 
 2. **Read current Roadmap phase** (always, lightweight — ~100 tokens):
    - If Phase ≠ "N/A" AND docs/ROADMAP.md exists:
@@ -150,6 +159,7 @@ Bienvenido al equipo. Día 1:
 | handoff block found | Read it first, use as additional context |
 | Phase ≠ "N/A" | Read current phase section from ROADMAP (~100 tokens) |
 | Phase = "N/A" or no ROADMAP | Skip roadmap read |
+| git commits newer than SESSION.Updated AND Phase ≠ "N/A" | Missed checkpoint — run ROADMAP sync inline, note in output |
 | Phase_Status = "GO/NO-GO Pending" | ⚠️ Alert: GO/NO-GO evaluation needed before continuing |
 | Next has planning keywords | Load full ROADMAP (adjacent phases too) |
 | Next has building keywords | Load ARCHITECTURE (relevant section) |
