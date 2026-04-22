@@ -255,7 +255,12 @@ Execute BEFORE generating docs.
 
 **Individual:**
 1. **docs/PROJECT_STATE.md** — from PROJECT_STATE_TEMPLATE.md (`project_type: individual`)
+   - Set `Phase: Phase 1 — [first phase name from ROADMAP]`
+   - Set `Phase_Status: In Progress`
+   - Set `Next: [first concrete action toward Phase 1 MVP]`
 2. **docs/ROADMAP.md** — from ROADMAP_TEMPLATE.md (no role assignments section)
+   - Fill Phase 1 Outcomes from IML answers (MVP flow = Phase 1 deliverables)
+   - Fill GO/NO-GO criteria from Risk answer (IML Q6)
 3. **docs/ARCHITECTURE.md** (if software) or **docs/PLAN.md** (if non-software)
 4. **docs/PROBLEMS.md** (empty)
 5. **CLAUDE.md** — from CLAUDE_TEMPLATE.md
@@ -263,6 +268,7 @@ Execute BEFORE generating docs.
 **Team (all of above PLUS):**
 1. **docs/PROJECT_STATE.md** — from PROJECT_STATE_TEAM_TEMPLATE.md (`project_type: team`)
    - Fill Dev sections with names and roles from Phase 6B
+   - Shared Status: set `Phase: Phase 1 — [name]`, `Status: In Progress`
 2. **docs/ROADMAP.md** — from ROADMAP_TEMPLATE.md WITH Role Assignments filled per phase
 3. **CLAUDE.md** — from CLAUDE_TEAM_TEMPLATE.md
    - Fill Team section (leader, members, branches)

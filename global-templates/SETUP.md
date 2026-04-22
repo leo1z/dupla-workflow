@@ -1,67 +1,91 @@
-# Setup Guide — Dupla Workflow
+# Setup Guide — Dupla-Workflow
 
 > For: New machine setup or new collaborator onboarding
-> Time: ~15 minutes
-
----
-
-## What this repo is
-
-A structured development workflow system for Claude Code.
-All commands, templates, and guides to develop projects consistently.
+> Time: ~10 minutes
 
 ---
 
 ## Prerequisites
 
-- Claude Code installed: https://claude.ai/code
+- [Claude Code](https://claude.ai/code) installed
 - Git installed
-- GitHub CLI: https://cli.github.com/
+- GitHub CLI (optional): https://cli.github.com/
+
+> **Windows:** use Git Bash or WSL to run bash commands. In VS Code, set the integrated terminal to Git Bash first.
 
 ---
 
-## Step 1 — Clone the repo
+## Step 1 — Clone and install
 
 ```bash
-git clone https://github.com/leo1z/dupla-workflow "C:/Users/YOUR_USER/Projects/dupla-workflow"
+git clone https://github.com/leo1z/dupla-workflow
+cd dupla-workflow
+bash bin/install.sh
 ```
 
+This deploys skills, hooks, and registers hooks in `~/.claude/settings.json`.
+
 ---
 
-## Step 2 — Install commands (skills)
+## Step 2 — Configure (one-time, in Claude Code)
 
-```bash
-bash "C:/Users/YOUR_USER/Projects/dupla-workflow/instalar.sh"
+```
+/setup-dupla
 ```
 
-This copies all commands to ~/.claude/commands/
+Asks who you are, your stack, and your active projects.
+Generates `~/.claude/CLAUDE.md`, `~/.claude/SYSTEM.md`, `~/.claude/PROBLEMS_GLOBAL.md`.
 
 ---
 
-## Step 3 — Create global config files in ~/.claude/
+## Step 3 — Verify
 
-Copy and fill each template from global-templates/:
-
-| Template | Destination | Notes |
-|---|---|---|
-| CLAUDE_GLOBAL_TEMPLATE.md | ~/.claude/CLAUDE.md | Behavior config — edit to your preferences |
-| STACK_GLOBAL_TEMPLATE.md | ~/.claude/STACK_GLOBAL.md | Your tech stack |
-| PROBLEMS_GLOBAL_TEMPLATE.md | ~/.claude/PROBLEMS_GLOBAL.md | Start empty |
-| PROJECTS_SKILLS_TEMPLATE.md | ~/.claude/PROJECTS_SKILLS.md | Your projects + skills |
-| CONTEXTO_USER_TEMPLATE.md | ~/.claude/CONTEXTO_[YOUR_NAME].md | Who you are |
-| CREDENTIALS_TEMPLATE.md → | ~/.claude/CREDENCIALES.md | Your credentials (NEVER commit) |
-
----
-
-## Step 4 — Verify
-
-In Claude Code, run:
 ```
 /health-check
 ```
 
 ---
 
+## Step 4 — Start working
+
+**New project:**
+```
+/new-project
+```
+
+**Existing project:**
+```
+/adapt-project
+```
+
+**Small task / casual session (no project needed):**
+```
+/quick-start
+```
+
+---
+
 ## Daily workflow
 
-See: docs/New_Project_Guide.md and templates/GUIA_COLABORADOR.md
+```
+/new-session     → reads state, tells you where you are and what to do
+[work]
+/checkpoint      → saves state, updates roadmap, closes session
+```
+
+---
+
+## Reference
+
+| Skill | When to use |
+|---|---|
+| `/new-session` | Start of every work session |
+| `/checkpoint` | End of session (or mid-session to save) |
+| `/new-project` | Initialize a new project with IML assessment |
+| `/adapt-project` | Onboard an existing project |
+| `/quick-start` | Lightweight session — no full project setup needed |
+| `/health-check` | Verify system is working correctly |
+| `/restore` | Revert to a previous save point |
+| `/update-dupla` | Update system to latest version |
+
+→ Full system map: [docs/SYSTEM_MAP.md](../docs/SYSTEM_MAP.md)

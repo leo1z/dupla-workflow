@@ -48,9 +48,10 @@ mkdir -p "$CLAUDE_DIR/templates"
 echo "Templates are located in: $TEMPLATES_SOURCE" > "$CLAUDE_DIR/templates/README.md"
 echo "   ✓ Templates reference created"
 
-# Create .claudeignore
-echo "🔒 Creating .claudeignore..."
-cat > "$SCRIPT_DIR/.claudeignore" << 'EOF'
+# Create .claudeignore (only if it doesn't exist — never overwrite user's file)
+if [ ! -f "$SCRIPT_DIR/.claudeignore" ]; then
+  echo "🔒 Creating .claudeignore..."
+  cat > "$SCRIPT_DIR/.claudeignore" << 'EOF'
 node_modules/
 .next/
 dist/
@@ -61,7 +62,10 @@ coverage/
 .git/
 skills-backup/
 EOF
-echo "   ✓ .claudeignore created"
+  echo "   ✓ .claudeignore created"
+else
+  echo "   ✓ .claudeignore already exists — skipped"
+fi
 
 # Check if Antigravity needs CLAUDE.md
 if [ "$HAS_ANTIGRAVITY" = true ]; then

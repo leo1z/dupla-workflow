@@ -156,7 +156,7 @@ If YES → generate based on IDE detected:
 **Infrastructure installed:**
 - ✓ Skills deployed (14 v2 commands)
 - ✓ Hooks configured (guard-project-state, suggest-checkpoint, session-reminder)
-- ✓ DUPLA_VERSION 2.0.0
+- ✓ DUPLA_VERSION [from VERSION file]
 
 **Next:** /health-check to verify
 ```

@@ -23,7 +23,7 @@ Run ALL checks silently. Output only warnings and errors, plus a summary.
 ~/.claude/skills/ → list .md files → check that CORE skills are present:
   new-project, new-session, checkpoint, restore, setup-dupla,
   update-dupla, adapt-project, adapt-to-team, add-team-member,
-  health-check, token-budget, project-audit
+  health-check, token-budget, project-audit, quick-start
   → ✅ core skills present / ⚠️ missing: [list only missing core ones]
   → Extra .md files not in core list → ℹ️ Custom skills found: [list] (not an error)
 
@@ -61,6 +61,10 @@ docs/PROJECT_STATE.md header:
   project_type: individual|team → ✅ / ⚠️ missing field (assume individual)
   status: CURRENT|STALE         → ✅ / ⚠️ STALE (run /new-session to update)
   updated: [date]               → ✅ / ⚠️ missing
+
+SESSION block fields:
+  Phase: [value]        → ✅ present / ⚠️ missing (add Phase + Phase_Status fields)
+  Phase_Status: [value] → ✅ present / ⚠️ missing
 
 # Staleness
 SESSION Updated field → compare to today

@@ -1,5 +1,37 @@
 # Changelog — Dupla-Workflow
 
+## [2.3.0] — 2026-04-22
+
+### New Features
+- **Micro mode** — `/quick-start` for small projects and casual sessions. Creates `QUICKSTATE.md` in any folder. No `docs/`, no git branches, no roadmap required.
+- **System Map** — `docs/SYSTEM_MAP.md`: Mermaid diagram + token cost table showing how all documents connect and what loads when.
+- **Roadmap phase awareness** — `/new-session` always reads the current phase section from ROADMAP.md (~100 tokens), shows phase status and GO/NO-GO criteria at session start.
+- **ROADMAP auto-sync** — `/checkpoint close` compares git commits vs phase Outcomes and marks them `[x]` automatically. Flags `GO/NO-GO Pending` when criteria are met.
+- **Missed checkpoint recovery** — If user skips `/checkpoint`, `/new-session` detects commits newer than SESSION.Updated and runs ROADMAP sync inline.
+- **Handoff persistence** — `/checkpoint handoff` writes `<handoff>` block to PROJECT_STATE.md so next model reads it via `/new-session` even if chat closes.
+
+### Fixed
+- **install.sh** — No longer overwrites existing `.claudeignore` (was destroying user's custom ignore file)
+- **suggest-checkpoint.sh** — Throttled to every 3 stops + only speaks when meaningful (was injecting ~150 tokens of noise on every response)
+- **session-reminder.sh** — Fires once per session via `.tmp/` marker (was firing on every user message)
+- **checkpoint close** — Architecture sync and Problems detection are now signal-based (reads git diff / commit messages) — no longer asks questions by default in every session
+- **global-templates/SETUP.md** — Completely rewritten to reflect current install flow (`bin/install.sh` → `/setup-dupla`)
+
+### Removed from repo (privacy + cleanliness)
+- `.claude/settings.local.json` — contained personal paths and permissions (untracked, stays local)
+- `docs/dupla-workflow.json` — orphan visualization file with hardcoded personal name
+
+### Updated
+- **SESSION block template** — Added `Phase` and `Phase_Status` fields
+- **new-session** — Keyword detection for conditional doc loading (planning/building/debugging signals)
+- **new-session** — Team flow reads Phase from Shared Status
+- **checkpoint** — Steps renumbered; ROADMAP and Architecture sync added as 2.5/2.6/2.7
+- **health-check** — Added `quick-start` to core skills; added Phase field verification
+- **.claudeignore** — Excludes `docs/code-review-graph.json` and `QUICKSTART.html` from Claude context
+- **.gitignore** — Explicit rules for `.claude/*.local.json`
+
+---
+
 ## [2.2.0] — 2026-04-21
 
 ### New Features
