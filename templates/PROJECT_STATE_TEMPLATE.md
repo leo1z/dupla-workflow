@@ -10,6 +10,8 @@ project_type: individual
 <session>
 Updated: YYYY-MM-DD HH:MM
 Status: ACTIVE | PAUSED | BLOCKED
+Phase: Phase [N] — [name] | N/A
+Phase_Status: In Progress | GO/NO-GO Pending | Complete
 Done: item1 · item2 · item3
 Next: one sentence describing the immediate next action
 Blockers: none | description of blocking issue

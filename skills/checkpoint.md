@@ -72,6 +72,30 @@ Complete session closure with state update + next-session prep + new chat guidan
    **Team:** Update your Dev section in PROJECT_STATE.md:
    - `Next: [ONE sentence]`, `Blockers: [if any]`
    - Update `Dependencies:` if something changed
+
+2.5. **ROADMAP phase sync** (if Phase ≠ "N/A"):
+   - Read current phase section from ROADMAP.md (from `## Phase [N]` to next `##`)
+   - Compare this session's git log vs phase **Outcomes** (not daily tasks)
+   - If any phase Outcome was delivered this session → mark `[x]` in ROADMAP.md
+   - Check GO/NO-GO criteria: if all "Continue if" conditions appear met → set `Phase_Status: GO/NO-GO Pending` in SESSION block and show:
+     ```
+     ⚠️ Phase [N] criteria met — GO/NO-GO evaluation needed
+        Continue if: [criteria]
+        Kill if: [criteria]
+        → Decide before next session
+     ```
+   - If phase is NOT complete → show remaining outcomes (1 line)
+   - Do NOT touch adjacent phases or other sections of ROADMAP
+
+2.6. **Architecture sync** (lightweight):
+   - Ask: "¿Cambió alguna decisión técnica esta sesión? (stack, estructura, APIs, integraciones) [s/n]"
+   - If yes: "¿Qué cambió? →" append to ARCHITECTURE.md:
+     ```
+     ## [Date] — Session update
+     [User's description of what changed]
+     ```
+   - If no: skip silently
+
 3. Ask: "¿Hay algo para PROBLEMS.md? (Enter para omitir)"
 4. Check: cross-project issue? → offer "Agregar a ~/.claude/PROBLEMS_GLOBAL.md? [s/n]"
 5. Recommend next model:
@@ -132,6 +156,12 @@ Context: Read docs/PROJECT_STATE.md first, then <session> block
 [Team only: Your Dev section is ### [Dev Name]]
 </handoff>
 ```
+
+3.5. **Persist handoff block to PROJECT_STATE.md:**
+   - Write `<handoff>...</handoff>` block to PROJECT_STATE.md immediately after `</session>`
+   - If a `<handoff>` block already exists → replace it
+   - Update SESSION field: `Handoff: [destination]`
+   - This ensures the next model can read it via `/new-session` even if the current chat is closed
 
 4. Push if uncommitted:
 ```

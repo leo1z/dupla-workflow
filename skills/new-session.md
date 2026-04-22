@@ -23,15 +23,27 @@ If no `QUICKSTATE.md`, read YAML header of docs/PROJECT_STATE.md:
 1. **Read <session> block** from docs/PROJECT_STATE.md
    - If SESSION contains placeholder values (e.g., `Updated: YYYY-MM-DD`, `Done: -`, `Next: [...]`) → treat as first session, skip staleness check, go to output
    - Check for `<handoff>` block in PROJECT_STATE.md → if found, read it (Date, From, Done, Next) and use as context BEFORE reading SESSION
-   - Extract: Updated, Done, Next, Blockers, Branch, Model
+   - Extract: Updated, Done, Next, Blockers, Branch, Model, **Phase, Phase_Status**
    - If Updated > 24h OR git log is newer → auto-reconstruct from git log (silent)
 
-2. **Load conditionally** (do NOT load all):
-   - If planning → read docs/ROADMAP.md (current phase only)
-   - If building → read docs/ARCHITECTURE.md (relevant section)
-   - If debugging → read docs/PROBLEMS.md
+2. **Read current Roadmap phase** (always, lightweight — ~100 tokens):
+   - If Phase ≠ "N/A" AND docs/ROADMAP.md exists:
+     - Read ONLY the section matching `## Phase [N]` from ROADMAP.md (from that heading to the next `##`)
+     - Extract: Outcomes, GO/NO-GO criteria (Continue if / Kill if)
+     - Do NOT read the full ROADMAP — only the current phase
+   - This tells you: where we are strategically, what this phase needs to deliver, and when to trigger GO/NO-GO
+   - The Roadmap is the strategic compass — it defines what "done" means for the phase, not the daily task list
 
-3. **Show 3 most recent save points:**
+3. **Load conditionally** based on keywords in `Next` field:
+
+   | Signal in Next | Load |
+   |---|---|
+   | "plan", "decide", "fase", "roadmap", "evaluar", "definir", "investigar" | Full docs/ROADMAP.md (adjacent phases too) |
+   | "implement", "build", "code", "crear", "desarrollar", "conectar", "integrar" | docs/ARCHITECTURE.md (relevant section) |
+   | "fix", "error", "bug", "no funciona", "problema", "roto", "broken" | docs/PROBLEMS.md |
+   | None of the above | No additional load — session block + phase section is sufficient |
+
+4. **Show 3 most recent save points:**
 ```
 Save points:
   3 · hace 2h   → "Conecta auth"
@@ -60,9 +72,10 @@ Bienvenido al equipo. Día 1:
    - If not found → ask: "¿Tu nombre? (para saber tu sección en el proyecto)"
    - Check for `<handoff>` block in PROJECT_STATE.md → if found and `To:` matches your name/role, read it before Dev section
 
-2. **Read ONLY your Dev section** in docs/PROJECT_STATE.md:
+2. **Read your Dev section + Shared Status** in docs/PROJECT_STATE.md:
    - Search for `### [Your First Name]` section (partial match — "Leo" matches "### Leo (Backend)")
    - Extract: Updated, Done, Next, Blockers, Dependencies
+   - Also read `## Shared Status` → extract Phase and Phase_Status (~10 tokens)
    - If Updated > 24h OR git log of your branch is newer → auto-reconstruct from git log
 
 3. **Check dependencies:**
@@ -89,18 +102,20 @@ Bienvenido al equipo. Día 1:
 ```
 ## Session — [date]
 
+**Phase:** [Phase N — name] · [🟡 In Progress / ⚠️ GO/NO-GO Pending / ✅ Complete / N/A]
 **Goal:** [from user arg / inferred from Next / ask if missing]
 **Branch:** [current] [⚠️ if on main]
 **LLM:** [from Model field / Claude]
 
 **State:** [Done + Next in 1–2 lines]
+**Phase progress:** [what this phase needs to deliver — 1 line from ROADMAP]
 
 **Plan:**
-1. [concrete step]
+1. [concrete step — aligned with phase outcome]
 2. [concrete step]
 3. [if needed]
 
-**Alert:** [blocker / stale state / conflict — if any]
+**Alert:** [blocker / stale state / GO/NO-GO criteria met / conflict — if any]
 ```
 
 **Team:**
@@ -129,9 +144,16 @@ Bienvenido al equipo. Día 1:
 
 | Condition | Action |
 |-----------|--------|
+| QUICKSTATE.md found | Micro flow — delegate to /quick-start |
 | project_type missing | Assume Individual (fallback) |
 | SESSION has placeholder values | First session — show output, skip staleness |
 | handoff block found | Read it first, use as additional context |
+| Phase ≠ "N/A" | Read current phase section from ROADMAP (~100 tokens) |
+| Phase = "N/A" or no ROADMAP | Skip roadmap read |
+| Phase_Status = "GO/NO-GO Pending" | ⚠️ Alert: GO/NO-GO evaluation needed before continuing |
+| Next has planning keywords | Load full ROADMAP (adjacent phases too) |
+| Next has building keywords | Load ARCHITECTURE (relevant section) |
+| Next has debug keywords | Load PROBLEMS.md |
 | No goal provided (individual) | Ask: "¿Cuál es el objetivo?" |
 | Next field is clear | Don't ask goal — use Next |
 | SESSION > 24h OR git log newer | Auto-reconstruct (no prompt) |
