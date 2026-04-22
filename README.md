@@ -120,7 +120,7 @@ Kill criteria defined upfront. No sunk cost fallacy.
 
 ### Claude Code (VS Code)
 1. Install VS Code + Claude Code extension
-2. `bash bin/install.sh`
+2. `bash bin/install.sh` (macOS/Linux: Terminal · Windows: Git Bash)
 3. Skills in `~/.claude/skills/` (for Antigravity) and `~/.claude/commands/` (for slash commands)
 
 > **Slash commands not showing?** In Claude Code, type `/` and check if `/new-session`, `/checkpoint` appear.
@@ -129,9 +129,10 @@ Kill criteria defined upfront. No sunk cost fallacy.
 
 ### Antigravity
 1. Install Antigravity (Google's Agent IDE)
-2. `bash bin/install.sh` (auto-detects `~/.agent/`)
+2. `bash bin/install.sh` (auto-detects `~/.agent/` on macOS/Linux or `%USERPROFILE%\.agent\` on Windows)
 3. Skills in `~/.agent/skills/`
 4. CLAUDE.md synced to `~/.agent/CLAUDE.md`
+5. **Skills activation:** in Antigravity write the skill name as instruction (e.g. "Ejecuta /new-session") — not slash commands
 
 ### Claude Desktop
 1. Install Claude Desktop (Anthropic official)

@@ -7,11 +7,12 @@
 
 ## Prerequisites
 
-- [Claude Code](https://claude.ai/code) installed
+- [Claude Code](https://claude.ai/code) installed (or Antigravity / Claude Desktop)
 - Git installed
 - GitHub CLI (optional): https://cli.github.com/
 
-> **Windows:** use Git Bash or WSL to run bash commands. In VS Code, set the integrated terminal to Git Bash first.
+> **macOS / Linux:** Terminal nativo — funciona directo.
+> **Windows:** Usa Git Bash (no PowerShell). En VS Code: terminal → ∨ → Git Bash.
 
 ---
 
@@ -77,15 +78,19 @@ Generates `~/.claude/CLAUDE.md`, `~/.claude/SYSTEM.md`, `~/.claude/PROBLEMS_GLOB
 
 ## Reference
 
-| Skill | When to use |
+| Skill | Cuando usar |
 |---|---|
-| `/new-session` | Start of every work session |
-| `/checkpoint` | End of session (or mid-session to save) |
-| `/new-project` | Initialize a new project with IML assessment |
-| `/adapt-project` | Onboard an existing project |
-| `/quick-start` | Lightweight session — no full project setup needed |
-| `/health-check` | Verify system is working correctly |
-| `/restore` | Revert to a previous save point |
-| `/update-dupla` | Update system to latest version |
+| `/new-session` | Inicio de cada sesión |
+| `/new-session standup` | Lead del equipo — vista consolidada del equipo |
+| `/checkpoint` | Fin de sesión (o mid-sesión para guardar) |
+| `/checkpoint close` | Cierre explícito |
+| `/checkpoint handoff` | Cambiar de modelo (Claude ↔ Gemini) |
+| `/new-project` | Proyecto nuevo con assessment IML |
+| `/adapt-project` | Onboarding de proyecto existente |
+| `/quick-start` | Sesión ligera — sin estructura de proyecto |
+| `/quick-start save` | Guardar y cerrar sesión micro explícitamente |
+| `/health-check` | Verificar que el sistema esté OK |
+| `/restore` | Revertir a un save point anterior |
+| `/update-dupla` | Actualizar a la última versión |
 
 → Full system map: [docs/SYSTEM_MAP.md](../docs/SYSTEM_MAP.md)
