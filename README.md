@@ -23,6 +23,8 @@ cd dupla-workflow
 bash bin/install.sh
 ```
 
+> **Windows:** use Git Bash or WSL to run `bash bin/install.sh`. In VS Code, open the integrated terminal and set it to Git Bash first.
+
 Deploys skills to `~/.claude/skills/` (Claude Code) and `~/.agent/skills/` (Antigravity, if detected).
 
 ### 2. Configure (IDE — once per machine)
