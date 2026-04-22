@@ -1,6 +1,28 @@
 Start work session. Read state, define next steps.
 
-Usage: /new-session [optional goal]
+Usage:
+  /new-session              → start or resume session
+  /new-session [goal]       → start with specific goal
+  /new-session standup      → Team Lead: consolidated team status table
+
+---
+
+## ⚡ Handoff Reception (when you receive a <handoff> block)
+
+If the user's message contains a `<handoff>` block (pasted from another model/session):
+
+1. Read the block: `Date`, `From`, `To`, `Project`, `Goal`, `Branch`, `Done`, `Next`
+2. Confirm you received it:
+   ```
+   ✅ Handoff recibido — [From] → [To]
+   Proyecto: [Project] · Branch: [Branch]
+   Continuando desde: [Next]
+   ```
+3. Locate the project: the `Project:` field contains the path — navigate there mentally
+4. Proceed with `/new-session` flow below (the handoff block replaces a stale SESSION read)
+5. In the output, show `**Handoff from:** [From model/dev]` instead of save points
+
+> This is the protocol for Claude ↔ Gemini ↔ dev handoffs. The handoff block is the bridge.
 
 ---
 

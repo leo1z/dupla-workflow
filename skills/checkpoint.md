@@ -196,37 +196,56 @@ Context: Read docs/PROJECT_STATE.md first, then <session> block
 
 **If Gemini (Antigravity):**
 ```
-✅ Handoff listo → Gemini
+✅ Handoff listo → Gemini en Antigravity
 
-Pasos:
+Pasos exactos:
   1. Abre Antigravity
-  2. Selecciona Gemini como modelo
-  3. Nuevo chat (ícono +)
-  4. Pega este bloque AL INICIO del chat:
+  2. Selecciona Gemini como modelo (menú desplegable arriba)
+  3. Crea nuevo chat (botón + o icono nuevo chat)
+  4. Pega este bloque EXACTAMENTE así al inicio del chat:
 
 [handoff block]
 
-  5. Escribe: /new-session
-  6. Gemini leerá tu estado y continuará
+  5. Después del bloque, escribe en el mismo mensaje:
+     "Lee el bloque handoff y corre /new-session"
+
+  ℹ️ Nota Antigravity: los skills NO son slash commands aquí.
+     Gemini los lee como instrucciones al escribir su nombre.
+     Si /new-session no funciona como comando, escribe:
+     "Ejecuta el skill new-session" o simplemente "Haz /new-session"
+
+  6. Gemini leerá el handoff + PROJECT_STATE.md y continuará
+
+Qué hará Gemini al recibir el handoff:
+  → Lee el bloque <handoff> → identifica proyecto y branch
+  → Lee docs/PROJECT_STATE.md → bloque <session>
+  → Te muestra estado + plan para continuar
+  → Trabaja en lo que dice “Next:” del handoff
 
 Cuándo volver a Claude:
   → Cuando empieces a implementar código
-  → /checkpoint handoff → selecciona Claude → repite el proceso
+  → Haz /checkpoint handoff → selecciona Claude → repite el proceso
 ```
 
-**If Claude Opus (same IDE):**
+**If Claude Opus / otro modelo (mismo IDE o diferente):**
 ```
-✅ Handoff listo → Claude Opus
+✅ Handoff listo → [modelo]
 
-Pasos:
+Pasos exactos:
   1. Cierra este chat
-  2. Abre nuevo chat en VS Code / Antigravity
-  3. Selecciona Claude Opus como modelo
-  4. Pega este bloque AL INICIO:
+  2. Abre nuevo chat (en VS Code / Antigravity / Claude Desktop)
+  3. Selecciona el modelo destino
+  4. Pega este bloque AL INICIO del nuevo chat:
 
 [handoff block]
 
-  5. Escribe: /new-session
+  5. En Claude Code / Claude Desktop: escribe /new-session
+     En Antigravity con Gemini: escribe "Ejecuta /new-session"
+
+Qué hará el modelo al recibir el handoff:
+  → Lee el bloque <handoff> → identifica proyecto + branch
+  → Lee docs/PROJECT_STATE.md automáticamente
+  → Te muestra estado actual + plan para continuar desde donde quedaste
 ```
 
 **If another dev (Team):**

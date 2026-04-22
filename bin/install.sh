@@ -20,7 +20,21 @@ HAS_CLAUDE=false
 HAS_ANTIGRAVITY=false
 
 [ -d "$CLAUDE_DIR" ] && HAS_CLAUDE=true
+
+# Antigravity detection — check Unix path AND Windows paths (Git Bash)
 [ -d "$AGENT_DIR" ] && HAS_ANTIGRAVITY=true
+
+# Windows fallback: USERPROFILE/.agent (Git Bash maps ~ to USERPROFILE)
+if [ "$HAS_ANTIGRAVITY" = false ] && [ -n "$USERPROFILE" ]; then
+  WIN_AGENT_DIR=$(echo "$USERPROFILE" | sed 's|\\|/|g')"/.agent"
+  [ -d "$WIN_AGENT_DIR" ] && AGENT_DIR="$WIN_AGENT_DIR" && HAS_ANTIGRAVITY=true
+fi
+
+# AppData fallback (some Antigravity versions on Windows)
+if [ "$HAS_ANTIGRAVITY" = false ] && [ -n "$APPDATA" ]; then
+  APPDATA_AGENT=$(echo "$APPDATA" | sed 's|\\|/|g')"/Antigravity"
+  [ -d "$APPDATA_AGENT" ] && AGENT_DIR="$APPDATA_AGENT" && HAS_ANTIGRAVITY=true
+fi
 
 if [ "$HAS_CLAUDE" = false ] && [ "$HAS_ANTIGRAVITY" = false ]; then
   echo "❌ Neither Claude Code nor Antigravity detected."
