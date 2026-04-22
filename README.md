@@ -3,13 +3,15 @@
 AI-assisted project workflow system. Portable, multi-IDE, works for individuals and teams. Covers software, business, content, and research projects.
 
 **Key features:**
-- ✅ Individual and team workflows (seamlessly switch between them)
+- ✅ Individual, team, and micro (lightweight) workflows
 - ✅ Context-efficient SESSION blocks (~60 tokens vs 3000+ without workflow)
 - ✅ Auto-reconstruct state from git log (no manual discipline required)
 - ✅ GO/NO-GO checkpoints for idea validation → prototype → scale
 - ✅ Clean model handoffs (Claude ↔ Gemini)
 - ✅ Multi-IDE: Claude Code (VS Code) + Antigravity + Claude Desktop
 - ✅ Human-readable save points (/restore)
+
+→ [How the system works — document map + token costs](docs/SYSTEM_MAP.md)
 
 ---
 
@@ -73,6 +75,17 @@ Lead only:   /checkpoint approve-pr [branch] → review → merge to main
 - /checkpoint auto-generates Done from your git log (no typing)
 - Lead reviews changes vs ROADMAP before merging
 - No conflicts: each dev on their own branch + their own section in PROJECT_STATE
+
+### Micro Workflow (small projects + casual sessions)
+```
+/quick-start     → creates QUICKSTATE.md in current folder, asks 2 questions
+[work]
+/quick-start     → update state (or just edit QUICKSTATE.md directly)
+```
+- No `docs/` folder, no git branches, no roadmap — just one file
+- Works in any folder: scripts, notes, experiments, research
+- `/new-session` auto-detects `QUICKSTATE.md` and switches to micro mode
+- Upgrade anytime: `/new-project` or `/adapt-project`
 
 ### Convert Individual → Team
 ```

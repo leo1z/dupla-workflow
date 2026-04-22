@@ -8,7 +8,10 @@ Usage: /new-session [optional goal]
 
 ### Step 1 — Detect Project Type
 
-Read YAML header of docs/PROJECT_STATE.md:
+First, check for `QUICKSTATE.md` in the current directory:
+- **Found** → Micro flow: delegate entirely to `/quick-start` skill and stop here
+
+If no `QUICKSTATE.md`, read YAML header of docs/PROJECT_STATE.md:
 - `project_type: individual` → Individual flow (below)
 - `project_type: team` → Team flow (below)
 - No YAML / missing field → assume Individual (fallback)
