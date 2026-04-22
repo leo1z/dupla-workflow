@@ -43,6 +43,8 @@ Cambios:
 
 ### Step 4 — Backup + Update
 
+Show commands to user — they must run these in terminal (Claude cannot execute bash directly):
+
 ```bash
 # Backup current skills
 mkdir -p ~/.claude/skills-backup/v[old-version]
@@ -68,6 +70,8 @@ fi
 # Cleanup
 rm -rf /tmp/dupla-new
 ```
+
+Tell user: "Copia y pega estos comandos en tu terminal. Cuando terminen, vuelve aquí y escribe /health-check"
 
 ### Step 5 — Output
 
@@ -141,6 +145,15 @@ For project docs (v1 format):
 
 Para migrar cada proyecto: ve a la carpeta del proyecto y corre /adapt-project
 El sistema detectará el formato v1 y actualizará los docs.
+```
+
+**If user had custom hooks in v1:**
+```
+⚠️ Si tenías hooks personalizados en ~/.claude/hooks/ (no los de dupla-workflow):
+  - Fueron copiados al backup en ~/.claude/v1-backup/
+  - Los nuevos hooks de v2 fueron instalados encima
+  - Revisa el backup si necesitas recuperar lógica personalizada
+  - Los hooks v2 son: guard-project-state.sh, suggest-checkpoint.sh, session-reminder.sh
 ```
 
 **Migration output:**

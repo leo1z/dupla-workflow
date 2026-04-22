@@ -33,12 +33,19 @@ echo "   /checkpoint quick — guardado rápido (mid-sesión)"
 echo "   /checkpoint close — cierre completo + nuevo chat recomendado"
 echo ""
 
-# Long chat signal: approximate via commit activity density
-# If many commits exist but session feels long, suggest new chat
+# Long chat signal: commits OR tool call volume proxy (file modification count)
 if [ "$commits_since_main" -gt 10 ]; then
   echo "💡 Sesión larga detectada ($commits_since_main commits en esta rama)."
   echo "   Considera: /checkpoint close → nuevo chat → /new-session"
   echo "   (Chats largos consumen más tokens — dividir mejora velocidad)"
+  echo ""
+fi
+
+# Detect frequent file saves without commits (many changes, few commits)
+files_modified=$(git diff --name-only 2>/dev/null | wc -l | tr -d ' ')
+if [ "$files_modified" -gt 8 ] && [ "$commits_since_main" -lt 2 ]; then
+  echo "💡 Muchos archivos modificados sin commit ($files_modified archivos)."
+  echo "   Considera: /checkpoint quick → commit → continúa"
   echo ""
 fi
 

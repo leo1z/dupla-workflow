@@ -20,11 +20,12 @@ Run ALL checks silently. Output only warnings and errors, plus a summary.
 ~/.claude/DUPLA_VERSION      → ✅ v[X.Y.Z] / ❌ MISSING
 
 # Skills installed?
-~/.claude/skills/ → list .md files → compare against expected:
+~/.claude/skills/ → list .md files → check that CORE skills are present:
   new-project, new-session, checkpoint, restore, setup-dupla,
   update-dupla, adapt-project, adapt-to-team, add-team-member,
   health-check, token-budget, project-audit
-  → ✅ all present / ⚠️ missing: [list]
+  → ✅ core skills present / ⚠️ missing: [list only missing core ones]
+  → Extra .md files not in core list → ℹ️ Custom skills found: [list] (not an error)
 
 # CLAUDE.md has required fields?
 grep "Name:" ~/.claude/CLAUDE.md    → ✅ / ⚠️ empty
@@ -33,6 +34,13 @@ grep "Stack" ~/.claude/SYSTEM.md    → ✅ / ⚠️ empty
 # Antigravity: if ~/.agent/ exists
 ~/.agent/skills/ → same skills present? → ✅ / ⚠️ out of sync
 ~/.agent/CLAUDE.md matches ~/.claude/CLAUDE.md? → ✅ / ⚠️ different
+
+# Hooks installed?
+~/.claude/hooks/guard-project-state.sh   → ✅ / ⚠️ MISSING
+~/.claude/hooks/suggest-checkpoint.sh   → ✅ / ⚠️ MISSING
+~/.claude/hooks/session-reminder.sh     → ✅ / ⚠️ MISSING
+# Hooks registered in settings?
+~/.claude/settings.json → contains "Stop", "PreToolUse", "UserPromptSubmit" hooks? → ✅ / ⚠️ hooks not wired (run /setup-dupla to re-add)
 
 # Security
 CREDENTIALS.md in project .gitignore? → ✅ / ❌ RISK

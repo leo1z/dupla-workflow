@@ -60,10 +60,17 @@ Preserve: don't delete, archive instead.
 
 ## Phase 4 — Generate Missing Docs
 
-### docs/PROJECT_STATE.md (if missing)
+### docs/PROJECT_STATE.md (if missing or v1 format)
 - Read: git log, existing CLAUDE.md, README
 - Infer: Current goal (from git log or README), status, next steps
 - Use PROJECT_STATE_TEMPLATE structure
+- ALWAYS set `project_type: individual` in YAML header (explicitly — do not leave blank)
+- ALWAYS fill SESSION block with real values:
+  - `Updated:` → today's date (YYYY-MM-DD HH:MM)
+  - `Done:` → last 3 git log entries (or "Initial setup" if no commits)
+  - `Next:` → inferred from README/git (mark as [inferred])
+  - `Status: ACTIVE`
+  - `Branch:` → `git branch --show-current`
 - Mark inferred vs confirmed
 
 ### docs/PROBLEMS.md (if missing)

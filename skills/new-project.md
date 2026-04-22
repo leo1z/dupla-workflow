@@ -235,6 +235,18 @@ git checkout -b work/phase1-[role-a]
 git checkout main
 git checkout -b work/phase1-[role-b]
 git checkout main
+# Push all branches + invite collaborators
+git push origin --all
+```
+
+**If Team:** after pushing, show collaborator invite instructions:
+```
+Invitar colaboradores a GitHub:
+  1. github.com/[user]/[repo] → Settings → Collaborators
+  2. Add each dev by username
+  3. They accept invite → git clone [repo-url]
+  4. Each dev runs: git checkout work/[su-branch]
+  5. Each dev runs: /new-session
 ```
 
 Execute BEFORE generating docs.

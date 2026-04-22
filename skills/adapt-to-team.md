@@ -94,7 +94,9 @@ Show exactly what will change:
 
 **Step 1: Backup (automatic)**
 ```bash
-git checkout -b backup/before-team-$(date +%Y%m%d)
+# Cross-platform date (bash on Mac/Linux, fallback for Windows)
+BACKUP_DATE=$(date +%Y%m%d 2>/dev/null || powershell -Command "Get-Date -Format yyyyMMdd")
+git checkout -b backup/before-team-${BACKUP_DATE}
 git add docs/PROJECT_STATE.md CLAUDE.md docs/ROADMAP.md
 git commit -m "backup: individual state before team conversion"
 git checkout main

@@ -203,11 +203,22 @@ Usage: `/checkpoint approve-pr work/[branch-name]`
 **Steps:**
 1. Run: `git log main..work/[branch] --oneline` → list commits in branch
 2. Run: `git diff main...work/[branch] --stat` → files changed
-3. Show review summary:
+3. **Identify Dev and Phase:**
+   - Dev: read `## Team` in CLAUDE.md → match branch to member (`work/phase1-backend` → Backend dev)
+   - Phase: read branch prefix (`work/phase1-*` → Phase 1), then read ROADMAP.md Phase 1 expected outcome
+   - If branch doesn't follow `work/phaseN-role` pattern → ask: "¿A qué fase y dev pertenece este branch?"
+4. **Auto-detect GO/NO-GO trigger:**
+   - Read CLAUDE.md `## Team → Members` → list all branches for this phase
+   - Run `git branch -r --merged main` → check which work/phaseN-* branches are already merged
+   - If THIS merge = last unmerged branch of phase → auto-flag: "⚠️ Todos los branches de Phase [N] mergeados — GO/NO-GO requerido"
+5. **Check who gets unblocked:**
+   - Read PROJECT_STATE.md → find dev sections with `Dependencies: Waiting for [branch/role]`
+   - List them in output
+6. Show review summary:
 ```
 ## PR Review — work/[branch-name]
 
-**Dev:** [Name] ([Role])
+**Dev:** [Name] ([Role]) — inferred from branch name
 **Commits:** [N] commits
   - feat: auth endpoint
   - fix: validate password
@@ -217,31 +228,33 @@ Usage: `/checkpoint approve-pr work/[branch-name]`
   + src/models.ts (+45)
   
 **Matches ROADMAP Phase [N]:** [YES / PARTIAL / NO]
-  → Expected: [outcome from ROADMAP]
-  → Actual: [what was done]
+  → Expected: [outcome from ROADMAP Phase N]
+  → Actual: [what commits say was done]
   
-**Blockers resolved:** [YES / NO — check Dependencies]
+**Blockers resolved:** [YES / NO — check Dependencies in PROJECT_STATE]
 **Tests/checks:** [run if applicable]
+[⚠️ Último branch de Phase [N] — se pedirá GO/NO-GO si apruebas]
 
 Aprobar y mergear a main? [s/n]
 ```
-4. If YES:
+7. If YES:
    - `git checkout main && git merge work/[branch] --no-ff -m "merge: [branch] — [description]"`
    - Update `## Shared Status` in PROJECT_STATE.md:
      - `Last Merge: [dev] — [what] — [date]`
      - `Updated: now`
-   - Check if phase GO/NO-GO conditions are met:
-     - If all branches for phase merged → ask "¿Phase [N] complete? ¿GO/NO-GO? [go/adapt/kill]"
+   - If last branch of phase (from Step 4) → ask: "¿Phase [N] complete? ¿GO/NO-GO? [go/adapt/kill]"
      - Update ROADMAP.md phase status accordingly
    - `git push origin main`
-5. If NO → add comment: "¿Qué falta? (Para que el dev corrija)"
-6. Output (8 lines):
+8. If NO → add comment: "¿Qué falta? (Para que el dev corrija)"
+9. Output (10 lines max):
 ```
 ✅ Merged — work/[branch] → main
 
 Dev [Name]: [what was merged]
 ROADMAP Phase [N]: [In Progress / Complete]
-Next: [Dev B] can now start (was waiting for this)
+
+Desbloqueados: [Dev B] puede continuar (esperaba este merge) ✅
+[o: Nadie bloqueado por este merge]
 
 [If phase complete:]
 Phase [N] GO/NO-GO: [GO → proceed to Phase N+1 / ADAPT / KILL]

@@ -18,6 +18,8 @@ Read YAML header of docs/PROJECT_STATE.md:
 ### Step 2A — Individual Flow
 
 1. **Read <session> block** from docs/PROJECT_STATE.md
+   - If SESSION contains placeholder values (e.g., `Updated: YYYY-MM-DD`, `Done: -`, `Next: [...]`) → treat as first session, skip staleness check, go to output
+   - Check for `<handoff>` block in PROJECT_STATE.md → if found, read it (Date, From, Done, Next) and use as context BEFORE reading SESSION
    - Extract: Updated, Done, Next, Blockers, Branch, Model
    - If Updated > 24h OR git log is newer → auto-reconstruct from git log (silent)
 
@@ -38,12 +40,25 @@ Save points:
 
 ### Step 2B — Team Flow
 
+**If first time (no section found for dev AND git log shows <2 commits on branch):**
+```
+Bienvenido al equipo. Día 1:
+  1. git clone [repo-url] (si aún no lo tienes)
+  2. git checkout work/[tu-branch]  ← Lead ya lo creó
+  3. Verifica que tu sección exista en docs/PROJECT_STATE.md
+     → Si no existe: avisa al Lead → /add-team-member
+  4. Lee docs/PROJECT_STATE.md → tu sección + ## Shared Status
+  5. Lee CLAUDE.md → ## Team + ## Git Strategy
+  6. Continúa con /new-session para tu primera sesión
+```
+
 1. **Identify who you are:**
-   - Read `~/.claude/CLAUDE.md` → extract `Name:` field
+   - Read `~/.claude/CLAUDE.md` → extract `Name:` field (use FIRST name only for matching — e.g., "Leo Borjas" → search for "Leo")
    - If not found → ask: "¿Tu nombre? (para saber tu sección en el proyecto)"
+   - Check for `<handoff>` block in PROJECT_STATE.md → if found and `To:` matches your name/role, read it before Dev section
 
 2. **Read ONLY your Dev section** in docs/PROJECT_STATE.md:
-   - Search for `### [Your Name]` section
+   - Search for `### [Your First Name]` section (partial match — "Leo" matches "### Leo (Backend)")
    - Extract: Updated, Done, Next, Blockers, Dependencies
    - If Updated > 24h OR git log of your branch is newer → auto-reconstruct from git log
 
@@ -54,6 +69,7 @@ Save points:
 
 4. **Suggest branch:**
    - Read CLAUDE.md → ## Team → Members section → find your branch
+   - If branch not in CLAUDE.md → read ROADMAP.md current phase → infer `work/phase[N]-[your-role]`
    - If on wrong branch: "⚠️ Tu branch es work/[phase]-[role]. Cambia con: git checkout work/[phase]-[role]"
    - If branch doesn't exist: "git checkout -b work/[phase]-[role]"
 
@@ -111,6 +127,8 @@ Save points:
 | Condition | Action |
 |-----------|--------|
 | project_type missing | Assume Individual (fallback) |
+| SESSION has placeholder values | First session — show output, skip staleness |
+| handoff block found | Read it first, use as additional context |
 | No goal provided (individual) | Ask: "¿Cuál es el objetivo?" |
 | Next field is clear | Don't ask goal — use Next |
 | SESSION > 24h OR git log newer | Auto-reconstruct (no prompt) |
