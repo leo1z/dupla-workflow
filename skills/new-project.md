@@ -274,6 +274,22 @@ Execute BEFORE generating docs.
    - Fill Team section (leader, members, branches)
    - Fill Git Strategy (branch names, merge order)
 
+### Generate docs/code-review-graph.json (project audit map):
+
+After all docs are created, generate the initial project map:
+- Run: `ls -la` on project folders to identify actual source structure
+- Read: ROADMAP.md Phase 1 Outcomes (to set initial scope)
+- Write `docs/code-review-graph.json`:
+  - `"project"`: project name (from folder)
+  - `"generated"`: current timestamp
+  - `"lastCommit"`: current git HEAD (or "initial" if no commits yet)
+  - `"phase"`: `"Phase 1"` (current phase from ROADMAP)
+  - `"structure"`: actual project folders with file counts and purposes
+  - `"riskZones"`: critical files inferred from project type (auth/, db/, config, main entry points)
+  - `"dependencies"`: doc-to-doc connections (PROJECT_STATE → ROADMAP, CLAUDE.md → PROJECT_STATE, etc.)
+  - `"metadata.regenerate"`: `"after phase advance or architectural changes"`
+- This file is the project's structural fingerprint at Phase 1 start
+
 ---
 
 ## Output (max 15 lines)

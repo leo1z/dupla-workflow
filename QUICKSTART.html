@@ -145,7 +145,7 @@ $ cd dupla-workflow
 $ bash bin/install.sh</div>
     <div class="callout blue">
       <div class="callout-title">¿Qué hace bin/install.sh?</div>
-      <div class="callout-text"><strong>Detecta:</strong> ¿tienes VS Code? ¿Antigravity? ¿Claude Desktop?<br/><strong>Instala:</strong> 9 comandos (skills) en tu IDE (~/.claude/skills/ o ~/.agent/skills/).<br/><strong>Configura:</strong> automaciones (hooks) y versión del sistema.<br/><strong>Resultado:</strong> El sistema está listo. Después no tocas más la terminal hasta /new-project.</div>
+      <div class="callout-text"><strong>Detecta:</strong> ¿tienes VS Code? ¿Antigravity? ¿Claude Desktop?<br/><strong>Instala:</strong> 13 skills en ~/.claude/skills/ (+ copia a ~/.agent/skills/ si tienes Antigravity).<br/><strong>Despliega:</strong> 3 hooks (automaciones que corren <em>fuera</em> del contexto — sin quemar tokens).<br/><strong>Resultado:</strong> El sistema está listo. Después no tocas más la terminal hasta /new-project.</div>
     </div>
   </section>
 
@@ -217,8 +217,8 @@ $ bash bin/install.sh</div>
   <section>
     <div class="section-label"><span class="pill">Paso 3 de 5</span><span class="line"></span></div>
     <h2>Crear tu primer proyecto</h2>
-    <p class="section-intro">Dos opciones: proyecto nuevo desde cero, o integrar uno existente. Dupla Workflow se adapta a dónde estés.</p>
-    <div class="grid-2" style="margin-bottom:28px;">
+    <p class="section-intro">Tres modos según el tamaño del proyecto. Dupla Workflow se adapta a dónde estés.</p>
+    <div class="grid-3" style="margin-bottom:28px;">
       <div class="card accent-card">
         <div class="card-title">Proyecto nuevo</div>
         <div class="card-desc">Idea fresca. /new-project te pregunta: ¿problema, usuario, MVP, riesgos? Genera docs + carpetas automáticamente. Puedes empezar desde cualquier punto de madurez (idea nueva, ya investigada, MVP definido).</div>
@@ -226,6 +226,10 @@ $ bash bin/install.sh</div>
       <div class="card">
         <div class="card-title">Proyecto existente</div>
         <div class="card-desc">Ya tienes código, docs, historia. /adapt-project lee tu estructura actual, mapea docs viejos, genera lo que falta. Nada se borra, todo se integra.</div>
+      </div>
+      <div class="card blue-card">
+        <div class="card-title">⚡ Sesión rápida (Micro)</div>
+        <div class="card-desc">Script, experimento, tarea no-código. <strong>/quick-start</strong> — 2 preguntas, crea un QUICKSTATE.md (~80 tokens), listo. Sin carpeta docs/, sin git, sin roadmap. Perfecto para sesiones que no necesitan estructura completa.</div>
       </div>
     </div>
     <div class="steps">
@@ -328,12 +332,12 @@ $ bash bin/install.sh</div>
     <div class="grid-2">
       <div class="card">
         <div class="card-title">Cada 2-4 semanas</div>
-        <div class="card-desc">Corre <code style="font-family:monospace;font-size:12px;color:var(--accent)">/health-check</code> para verificar que todos los docs del proyecto estén actualizados y el stack coincida con el código.</div>
+        <div class="card-desc">Corre <code style="font-family:monospace;font-size:12px;color:var(--accent)">/health-check</code> para verificar que todos los docs del proyecto estén actualizados, el stack coincida con el código, y los skills estén bien instalados.</div>
         <div style="margin-top:10px;"><span class="badge badge-rare">Mantenimiento</span></div>
       </div>
       <div class="card">
-        <div class="card-title">Cuando cambia algo importante</div>
-        <div class="card-desc">Si cambias el stack, agregar un nuevo LLM, o tomas una decisión arquitectónica grande: <code style="font-family:monospace;font-size:12px;color:var(--accent)">/update-context</code>. Actualiza CLAUDE.md automáticamente.</div>
+        <div class="card-title">Cuando haya nueva versión</div>
+        <div class="card-desc">Corre <code style="font-family:monospace;font-size:12px;color:var(--accent)">/update-dupla</code> desde tu IDE, o en terminal: <code style="font-family:monospace;font-size:11px">cd ~/dupla-workflow && git pull && bash bin/install.sh</code>. Hace backup automático antes de actualizar.</div>
         <div style="margin-top:10px;"><span class="badge badge-rare">Según necesidad</span></div>
       </div>
     </div>
@@ -402,22 +406,22 @@ $ bash bin/install.sh</div>
       <div class="card">
         <div class="card-icon">🤖</div>
         <div class="card-title">/new-session</div>
-        <div class="card-desc">Lee PROJECT_STATE.md + git log → te dice dónde estás sin preguntar.</div>
+        <div class="card-desc">Lee SESSION block (~60t) + fase actual del ROADMAP (~100t) → detecta si hubo commits sin checkpoint → te dice dónde estás y qué hacer.</div>
       </div>
       <div class="card">
         <div class="card-icon">💾</div>
         <div class="card-title">/checkpoint</div>
-        <div class="card-desc">Pregunta qué hiciste, actualiza PROJECT_STATE automáticamente, propone commit.</div>
+        <div class="card-desc">Actualiza PROJECT_STATE + sincroniza avance del ROADMAP + detecta si completaste una fase (GO/NO-GO). Solo pregunta sobre arquitectura o problemas si hubo cambios relevantes.</div>
       </div>
       <div class="card">
         <div class="card-icon">🔍</div>
         <div class="card-title">/health-check</div>
-        <div class="card-desc">Revisa que PROJECT_STATE no esté desactualizado. Si lo está, avisa.</div>
+        <div class="card-desc">Revisa skills instalados, docs del proyecto, SESSION block actualizado y coherencia del stack. Dice exactamente qué arreglar si algo está mal.</div>
       </div>
       <div class="card">
         <div class="card-icon">🆕</div>
         <div class="card-title">/new-project</div>
-        <div class="card-desc">Lee ROADMAP + ARCHITECTURE y crea PROJECT_STATE basado en eso.</div>
+        <div class="card-desc">Crea ROADMAP con fases + GO/NO-GO criteria, ARCHITECTURE.md, y PROJECT_STATE con la fase activa marcada desde el inicio.</div>
       </div>
     </div>
     <div class="callout">
@@ -549,6 +553,95 @@ $ bash bin/install.sh</div>
     </div>
   </section>
 
+  <!-- TABLA DE COMANDOS -->
+  <section>
+    <div class="section-label"><span class="pill">Referencia</span><span class="line"></span></div>
+    <h2>Todos los comandos</h2>
+    <p class="section-intro">13 skills en total. La mayoría no los necesitas a diario — los dos que usas todo el tiempo son /new-session y /checkpoint.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th style="text-align:left;padding:12px 16px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);width:200px;">Comando</th>
+            <th style="text-align:left;padding:12px 16px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);">Cuándo usarlo</th>
+            <th style="text-align:left;padding:12px 16px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);width:130px;">Frecuencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- DAILY -->
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);font-weight:700;">/new-session</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Al abrir un chat nuevo o empezar a trabajar. Lee el estado del proyecto y genera el plan del día.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--green-muted);color:var(--green);">Cada sesión</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);font-weight:700;">/checkpoint</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Al cerrar la sesión, a mitad del día, o antes de cambiar de modelo (Claude ↔ Gemini). Guarda estado, sincroniza ROADMAP, propone commit.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--green-muted);color:var(--green);">Cada sesión</span></td>
+          </tr>
+          <!-- SETUP -->
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/setup-dupla</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Una sola vez por máquina. Configura tu identidad, stack y proyectos en ~/.claude/CLAUDE.md.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--accent2-muted);color:var(--accent2);">Una vez</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/new-project</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Para inicializar un proyecto nuevo desde cero. Hace el assessment IML, genera ROADMAP con GO/NO-GO, ARCHITECTURE y PROJECT_STATE.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--accent2-muted);color:var(--accent2);">Por proyecto</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/adapt-project</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Para integrar un proyecto existente. Lee tu estructura actual y genera los docs que faltan sin borrar nada.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--accent2-muted);color:var(--accent2);">Por proyecto</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/quick-start</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Para scripts, experimentos o sesiones pequeñas. Crea un QUICKSTATE.md en lugar de toda la carpeta docs/.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--accent2-muted);color:var(--accent2);">Sesiones micro</span></td>
+          </tr>
+          <!-- TEAM -->
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/adapt-to-team</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Convierte un proyecto individual a modo equipo. Agrega secciones por dev, crea ramas de trabajo. Hace backup automático.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--accent2-muted);color:var(--accent2);">Según necesidad</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/add-team-member</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Agrega un nuevo dev a un proyecto equipo ya iniciado. Actualiza PROJECT_STATE, ROADMAP y crea su branch.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--accent2-muted);color:var(--accent2);">Según necesidad</span></td>
+          </tr>
+          <!-- MAINTENANCE -->
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/health-check</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Verifica que el sistema esté bien: skills instalados, docs actualizados, SESSION no stale, stack coherente. Dice exactamente qué corregir.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:rgba(160,160,160,0.12);color:var(--muted);">Cada 2-4 semanas</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/update-dupla</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Actualiza el sistema a la última versión. Muestra changelog, hace backup automático y actualiza los 13 skills.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:rgba(160,160,160,0.12);color:var(--muted);">Por versión</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/restore</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Muestra puntos de guardado anteriores (save points) y permite revertir el estado del proyecto a uno de ellos.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:rgba(160,160,160,0.12);color:var(--muted);">Si algo sale mal</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(42,42,45,0.5);background:rgba(255,255,255,0.01);">
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/project-audit</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Audita el impacto de cambios usando el code-review-graph. Útil antes de refactors grandes o al iniciar una nueva fase.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:rgba(160,160,160,0.12);color:var(--muted);">Por fase</span></td>
+          </tr>
+          <tr>
+            <td style="padding:12px 16px;"><code style="font-family:monospace;font-size:12px;color:var(--accent);">/token-budget</code></td>
+            <td style="padding:12px 16px;color:var(--muted);">Avisa cuando el contexto del chat está cerca del límite y propone alternativas más livianas para la siguiente acción.</td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;background:rgba(160,160,160,0.12);color:var(--muted);">Automático</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- PREGUNTAS COMUNES -->
   <section>
     <div class="section-label"><span class="pill">FAQ</span><span class="line"></span></div>
@@ -559,16 +652,20 @@ $ bash bin/install.sh</div>
         <div class="card-desc">Corre <code style="font-family:monospace;font-size:12px;color:var(--accent)">/adapt-project</code> en lugar de /new-project. El sistema detecta qué docs faltan y genera solo lo necesario — sin pisar lo que ya existe.</div>
       </div>
       <div class="card">
+        <div class="card-title">¿Para qué sirve /quick-start?</div>
+        <div class="card-desc">Para scripts, experimentos, research o tareas pequeñas donde no necesitas un proyecto completo. Solo crea un archivo <code style="font-family:monospace;font-size:11px">QUICKSTATE.md</code> con qué es, qué hiciste y qué sigue — 80 tokens totales. Si el proyecto crece, puedes migrarlo con /adapt-project.</div>
+      </div>
+      <div class="card">
         <div class="card-title">¿Cuánto se tarda en /new-project?</div>
         <div class="card-desc">2-3 minutos máximo. El sistema genera 4 archivos. Luego puedes editarlos si quieres ser más específico.</div>
       </div>
       <div class="card">
         <div class="card-title">¿Puedo usar Gemini en lugar de Claude?</div>
-        <div class="card-desc">Sí. El sistema tiene modelo-routing: defines quién hace qué. MODEL_ROUTING.md te dice cuándo usar Gemini (investigación, code review) y cuándo usar Claude (código, arquitectura).</div>
+        <div class="card-desc">Sí. Claude se usa para implementar, debug y decisiones de arquitectura. Gemini para research, análisis y code review de features aisladas. <strong>/checkpoint te recomienda cuál modelo usar</strong> al cerrar cada sesión — no tienes que decidirlo tú.</div>
       </div>
       <div class="card">
         <div class="card-title">¿Qué pasa si no corro /checkpoint?</div>
-        <div class="card-desc">La próxima sesión no sabrá qué pasó. Dupla Workflow puede reconstruir desde git log, pero es más lento. /checkpoint toma 30 segundos — úsalo.</div>
+        <div class="card-desc">Si hay commits nuevos, <strong>/new-session detecta automáticamente</strong> que hubo cambios y reconstruye el estado del SESSION block desde git. Sin embargo, pierde la sincronización del ROADMAP: si completaste una fase sin hacer checkpoint, no se marca como hecha. /checkpoint toma 30 segundos y evita ese drift.</div>
       </div>
       <div class="card">
         <div class="card-title">¿Los archivos se pushen a Git?</div>
@@ -604,7 +701,7 @@ $ bash bin/install.sh</div>
       </div>
       <div class="card">
         <div class="card-title">¿Cómo actualizo Dupla-Workflow?</div>
-        <div class="card-desc">Opción A (recomendada): <code style="font-family:monospace;font-size:11px">cd ~/dupla-workflow && git pull && bash bin/install.sh</code>. Opción B (desde IDE): <code style="font-family:monospace;font-size:11px">/update-dupla</code> — detecta tu versión, muestra cambios, hace backup automático, actualiza. Si venías de v1: el mismo comando detecta v1 y guía la migración paso a paso.</div>
+        <div class="card-desc"><strong>Desde IDE:</strong> <code style="font-family:monospace;font-size:11px">/update-dupla</code> — detecta tu versión, muestra changelog, hace backup automático, actualiza. <strong>Desde terminal:</strong> <code style="font-family:monospace;font-size:11px">cd ~/dupla-workflow && git pull && bash bin/install.sh</code>. Si venías de v1: el mismo comando detecta v1 y guía la migración.</div>
       </div>
       <div class="card">
         <div class="card-title">¿El sistema verifica si mis docs están actualizados?</div>
@@ -615,7 +712,7 @@ $ bash bin/install.sh</div>
 
   <!-- SIGUIENTE PASO -->
   <section>
-    <div class="section-label"><span class="pill">Sigueinte</span><span class="line"></span></div>
+    <div class="section-label"><span class="pill">Siguiente</span><span class="line"></span></div>
     <h2>Listo para empezar</h2>
     <div class="card success-card">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
@@ -630,7 +727,7 @@ $ bash bin/install.sh</div>
   </section>
 
   <div class="footer">
-    Dupla Workflow · Guía para nuevos usuarios · v2.0.0
+    Dupla Workflow · Guía para nuevos usuarios · v2.3.0
   </div>
 
 </div>

@@ -103,14 +103,23 @@ Complete session closure with state update + next-session prep + new chat guidan
    - If no fix signals in commits → skip entirely, no prompt
    - Cross-project issue? → only offer PROBLEMS_GLOBAL if PROBLEMS.md was updated
 
-2.8. **Code-review graph** (signal-based — silent otherwise):
-   - Run: `git diff HEAD~1 --name-only 2>/dev/null`
-   - If changed files include `skills/` or `templates/` → show once:
-     ```
-     📊 Cambios en skills/ o templates/ detectados.
-        Considera regenerar el grafo: bash bin/generate-code-review-graph.sh
-     ```
-   - If no changes in those paths → skip entirely
+2.8. **Code-review graph update** (signal-based — silent otherwise):
+   - **Trigger A — Phase advance** (from step 2.5): if any ROADMAP Outcome was marked `[x]` this session:
+     - Update `docs/code-review-graph.json`:
+       - Set `"phase"` to current phase
+       - Update `"lastCommit"` to current git HEAD
+       - Update `"generated"` to now
+       - Re-scan project folders and update `"structure"` file counts
+       - Update `"riskZones"` if architecture-relevant files changed this phase
+     - Show: `📊 Graph actualizado → Phase [N] (docs/code-review-graph.json)`
+   - **Trigger B — Structural changes** (dupla-workflow repo only):
+     - Run: `git diff HEAD~1 --name-only 2>/dev/null`
+     - If changed files include `skills/` or `templates/` → show once:
+       ```
+       📊 Cambios en skills/ o templates/ detectados.
+          Considera regenerar el grafo: bash bin/generate-code-review-graph.sh
+       ```
+   - If neither trigger fires → skip entirely
 
 3. Recommend next model:
    - Next contains "plan", "research", "review", "decidir" → suggest Gemini

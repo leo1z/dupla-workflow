@@ -1,6 +1,6 @@
 ---
 doc: SYSTEM_MAP
-version: v2.2.0
+version: v2.3.0
 updated: 2026-04-22
 ---
 
@@ -74,7 +74,7 @@ graph TB
 | `ARCHITECTURE.md` | Only if building / designing | ~400-1000 | Yes |
 | `PROBLEMS.md` | Only if debugging | ~200-500 | Yes |
 | Skills (`*.md`) | Only when `/skill-name` is invoked | 0 baseline | Yes — on-demand |
-| `code-review-graph.json` | Only via `/project-audit` | 0 baseline | Yes |
+| `code-review-graph.json` | Generated at init; updated on phase advance | 0 baseline | Yes — reference for audits |
 | `QUICKSTATE.md` | Micro sessions only (full read) | ~80 | Yes — replaces all docs |
 
 **Without this system:** An LLM typically reads 3-5 docs per session = 2000-5000 tokens just to understand context.
@@ -137,3 +137,27 @@ For small projects or casual sessions — no `docs/` folder needed.
 ```
 
 Replaces `docs/PROJECT_STATE.md + ROADMAP.md + ARCHITECTURE.md` with one ~80-token file. Suitable for: scripts, experiments, research, non-code tasks, learning sessions.
+
+---
+
+## Code-Review Graph Lifecycle (docs/code-review-graph.json)
+
+Structural fingerprint of the project. Zero token cost at session start — only loaded on demand.
+
+```
+/new-project or /adapt-project          /checkpoint (phase advance)
+           │                                       │
+           ▼                                       ▼
+Generate code-review-graph.json       Update code-review-graph.json
+ - project folders + file counts       - Set "phase" to current phase
+ - risk zones (auth, DB, config)       - Update "lastCommit"
+ - doc dependencies                    - Re-scan structure
+ - "phase": "Phase 1"                  - Update risk zones if needed
+           │                                       │
+           ▼                                       ▼
+  docs/code-review-graph.json      docs/code-review-graph.json (updated)
+```
+
+**When it's generated:** At project initialization (`/new-project`, `/adapt-project`).
+**When it's updated:** When `/checkpoint` marks a ROADMAP Outcome as `[x]` (phase advances).
+**When it's read:** On demand — for impact analysis, audits, or refactoring planning. Not loaded in normal sessions.

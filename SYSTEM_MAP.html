@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dupla Workflow — Cómo funciona el sistema</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f10;
+      --surface: #1a1a1d;
+      --surface2: #222226;
+      --border: #2a2a2d;
+      --text: #ffffff;
+      --muted: #a0a0a0;
+      --accent: #D97757;
+      --accent-muted: rgba(217,119,87,0.13);
+      --accent2: #5b8cf5;
+      --accent2-muted: rgba(91,140,245,0.12);
+      --green: #4ade80;
+      --green-muted: rgba(74,222,128,0.12);
+      --yellow: #facc15;
+      --yellow-muted: rgba(250,204,21,0.10);
+      --radius: 12px;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; font-size: 15px; }
+    .page { max-width: 1000px; margin: 0 auto; padding: 0 24px 100px; }
+
+    /* HERO */
+    .hero { padding: 72px 0 56px; text-align: center; }
+    .hero-tag { display: inline-block; background: var(--accent2-muted); color: var(--accent2); border: 1px solid rgba(91,140,245,0.3); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 17px; color: var(--muted); max-width: 600px; margin: 0 auto 32px; }
+
+    /* SECTION */
+    section { margin-bottom: 72px; }
+    .section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+    .section-label .pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+    .section-label .line { flex: 1; height: 1px; background: var(--border); }
+    h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .section-intro { color: var(--muted); margin-bottom: 28px; max-width: 680px; }
+
+    /* CARDS */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .card-icon { font-size: 28px; margin-bottom: 12px; }
+    .card-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .card.accent-card { border-color: rgba(217,119,87,0.3); background: var(--accent-muted); }
+    .card.blue-card { border-color: rgba(91,140,245,0.3); background: var(--accent2-muted); }
+    .card.success-card { border-color: rgba(74,222,128,0.3); background: var(--green-muted); }
+    .card.yellow-card { border-color: rgba(250,204,21,0.3); background: var(--yellow-muted); }
+
+    /* CALLOUT */
+    .callout { border-left: 3px solid var(--accent); background: var(--accent-muted); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 20px; margin: 20px 0; }
+    .callout.blue { border-left-color: var(--accent2); background: var(--accent2-muted); }
+    .callout.success { border-left-color: var(--green); background: var(--green-muted); }
+    .callout.yellow { border-left-color: var(--yellow); background: var(--yellow-muted); }
+    .callout-title { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+    .callout-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* CODE */
+    .code-block { background: #13131a; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; font-family: monospace; font-size: 12px; line-height: 1.7; color: #cdd6f4; overflow-x: auto; }
+    .code-comment { color: #6c7086; }
+    .code-key { color: #89b4fa; }
+    .code-val { color: #a6e3a1; }
+
+    /* SYSTEM MAP DIAGRAM */
+    .system-diagram { background: #13131a; border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; overflow-x: auto; }
+    .layer { margin-bottom: 24px; }
+    .layer-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .layer-nodes { display: flex; gap: 12px; flex-wrap: wrap; }
+    .node { border-radius: 8px; padding: 10px 14px; font-size: 12px; font-weight: 600; display: flex; flex-direction: column; gap: 3px; min-width: 140px; }
+    .node-title { font-size: 12px; font-weight: 700; }
+    .node-detail { font-size: 10px; font-weight: 400; opacity: 0.75; }
+    .node-cost { font-size: 10px; font-weight: 600; margin-top: 4px; }
+    .node.always { background: rgba(217,119,87,0.15); border: 1px solid rgba(217,119,87,0.4); color: var(--accent); }
+    .node.ondemand { background: rgba(91,140,245,0.12); border: 1px solid rgba(91,140,245,0.3); color: var(--accent2); }
+    .node.zero { background: rgba(74,222,128,0.10); border: 1px solid rgba(74,222,128,0.25); color: var(--green); }
+    .node.outside { background: rgba(250,204,21,0.10); border: 1px solid rgba(250,204,21,0.25); color: var(--yellow); }
+    .node.micro { background: rgba(91,140,245,0.08); border: 1px solid rgba(91,140,245,0.2); color: #a0c4ff; }
+    .arrow-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 11px; color: var(--muted); }
+    .arrow { color: var(--border); font-size: 14px; }
+
+    /* TOKEN TABLE */
+    .token-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .token-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .token-table td { padding: 10px 14px; border-bottom: 1px solid rgba(42,42,45,0.5); vertical-align: top; }
+    .token-table tr:last-child td { border-bottom: none; }
+    .token-table .always-row td:first-child { color: var(--accent); font-weight: 600; }
+    .token-table .ondemand-row td:first-child { color: var(--accent2); }
+    .token-table .zero-row td:first-child { color: var(--green); }
+    .cost-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
+    .cost-always { background: rgba(217,119,87,0.2); color: var(--accent); }
+    .cost-cond { background: rgba(91,140,245,0.15); color: var(--accent2); }
+    .cost-zero { background: rgba(74,222,128,0.12); color: var(--green); }
+
+    /* BEFORE/AFTER */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .compare-box { border-radius: var(--radius); padding: 20px; }
+    .compare-box.before { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); }
+    .compare-box.after { background: var(--green-muted); border: 1px solid rgba(74,222,128,0.3); }
+    .compare-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+    .compare-box.before .compare-label { color: #f87171; }
+    .compare-box.after .compare-label { color: var(--green); }
+    .compare-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
+    .compare-item:last-child { border-bottom: none; }
+    .compare-tokens { font-weight: 700; font-size: 13px; }
+    .compare-box.before .compare-tokens { color: #f87171; }
+    .compare-box.after .compare-tokens { color: var(--green); }
+    .total-row { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; }
+
+    /* SESSION LOOP */
+    .loop-diagram { background: #13131a; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; }
+    .loop-row { display: flex; align-items: flex-start; gap: 0; }
+    .loop-node { text-align: center; min-width: 160px; }
+    .loop-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 8px; }
+    .loop-circle.start { background: rgba(217,119,87,0.2); border: 2px solid var(--accent); }
+    .loop-circle.work { background: rgba(91,140,245,0.15); border: 2px solid var(--accent2); }
+    .loop-circle.save { background: rgba(74,222,128,0.15); border: 2px solid var(--green); }
+    .loop-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+    .loop-detail { font-size: 10px; color: var(--muted); line-height: 1.4; }
+    .loop-arrow { flex: 1; display: flex; align-items: center; justify-content: center; padding-top: 20px; }
+    .loop-arrow-line { height: 2px; flex: 1; background: var(--border); position: relative; }
+    .loop-arrow-line::after { content: '▶'; position: absolute; right: -8px; top: -8px; color: var(--border); font-size: 14px; }
+
+    /* CONDITIONAL TABLE */
+    .cond-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cond-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .cond-table td { padding: 10px 14px; border-bottom: 1px solid rgba(42,42,45,0.5); font-size: 13px; vertical-align: top; }
+    .cond-table tr:last-child td { border-bottom: none; }
+    .signal { font-family: monospace; font-size: 11px; color: var(--accent); background: var(--accent-muted); padding: 2px 7px; border-radius: 4px; }
+
+    /* FOOTER */
+    .footer { text-align: center; padding-top: 48px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+
+    @media (max-width: 680px) {
+      .grid-3, .grid-2, .compare { grid-template-columns: 1fr; }
+      .loop-row { flex-direction: column; align-items: center; }
+      .loop-arrow { padding-top: 0; padding-bottom: 8px; transform: rotate(90deg); width: 40px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Arquitectura del sistema</div>
+    <h1>Cómo funciona <span>Dupla Workflow</span></h1>
+    <p>Cómo se conectan los documentos entre sí, dónde van los tokens, y por qué el sistema funciona sin que tengas que repetir el contexto cada sesión.</p>
+  </div>
+
+  <!-- MAPA DEL SISTEMA -->
+  <section>
+    <div class="section-label"><span class="pill">Estructura</span><span class="line"></span></div>
+    <h2>Los tres niveles del sistema</h2>
+    <p class="section-intro">Dupla Workflow usa tres capas de documentos. Cada capa tiene un costo diferente. El sistema decide qué leer según lo que necesitas hacer.</p>
+
+    <div class="system-diagram">
+      <!-- GLOBAL LAYER -->
+      <div class="layer">
+        <div class="layer-label">🌐 Global — ~/.claude/ — cargado en todos los proyectos</div>
+        <div class="layer-nodes">
+          <div class="node always">
+            <div class="node-title">CLAUDE.md</div>
+            <div class="node-detail">Identidad · Reglas · Routing de modelos</div>
+            <div class="node-cost">⚡ Siempre · ~1000 tokens/turno</div>
+          </div>
+          <div class="node ondemand">
+            <div class="node-title">SYSTEM.md</div>
+            <div class="node-detail">Registro de proyectos · Stack</div>
+            <div class="node-cost">🔘 Solo si pides contexto global</div>
+          </div>
+          <div class="node ondemand">
+            <div class="node-title">PROBLEMS_GLOBAL.md</div>
+            <div class="node-detail">Issues que cruzan proyectos</div>
+            <div class="node-cost">🔘 Solo si debug cross-proyecto</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT LAYER -->
+      <div class="layer">
+        <div class="layer-label">📁 Proyecto — ./docs/ — por proyecto</div>
+        <div class="layer-nodes">
+          <div class="node always">
+            <div class="node-title">CLAUDE.md</div>
+            <div class="node-detail">Reglas del proyecto · Stack local</div>
+            <div class="node-cost">⚡ Siempre · ~200 tokens/turno</div>
+          </div>
+          <div class="node always" style="background:rgba(217,119,87,0.22);border-color:rgba(217,119,87,0.6);">
+            <div class="node-title">PROJECT_STATE.md ⭐</div>
+            <div class="node-detail">Bloque &lt;session&gt; = dónde estás ahora</div>
+            <div class="node-cost">📍 Inicio sesión · ~60 tokens</div>
+          </div>
+          <div class="node ondemand">
+            <div class="node-title">ROADMAP.md</div>
+            <div class="node-detail">Fases · GO/NO-GO criteria · Outcomes</div>
+            <div class="node-cost">🔘 Solo si planificando · +100t (fase activa)</div>
+          </div>
+          <div class="node ondemand">
+            <div class="node-title">ARCHITECTURE.md</div>
+            <div class="node-detail">Stack · decisiones · diagramas</div>
+            <div class="node-cost">🔘 Solo si construyendo</div>
+          </div>
+          <div class="node ondemand">
+            <div class="node-title">PROBLEMS.md</div>
+            <div class="node-detail">Issues conocidos · workarounds</div>
+            <div class="node-cost">🔘 Solo si debugueando</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MICRO LAYER -->
+      <div class="layer">
+        <div class="layer-label">⚡ Micro — cualquier carpeta — modo ligero</div>
+        <div class="layer-nodes">
+          <div class="node micro">
+            <div class="node-title">QUICKSTATE.md</div>
+            <div class="node-detail">Qué · Done · Next · Notes</div>
+            <div class="node-cost">📍 Lectura completa · ~80 tokens · reemplaza docs/</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="layer">
+        <div class="layer-label">🎯 Skills — zero baseline — solo cuando los invocas</div>
+        <div class="layer-nodes">
+          <div class="node zero">
+            <div class="node-title">/new-session</div>
+            <div class="node-detail">Lee estado → plan del día</div>
+          </div>
+          <div class="node zero">
+            <div class="node-title">/checkpoint</div>
+            <div class="node-detail">Guarda estado → handoff</div>
+          </div>
+          <div class="node zero">
+            <div class="node-title">/quick-start</div>
+            <div class="node-detail">Sesión micro sin docs/</div>
+          </div>
+          <div class="node zero">
+            <div class="node-title">+ 10 más</div>
+            <div class="node-detail">new-project, adapt-project, health-check, restore…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOOKS -->
+      <div class="layer" style="margin-bottom:0;">
+        <div class="layer-label">🔔 Hooks — shell scripts — corren FUERA del contexto, sin quemar tokens</div>
+        <div class="layer-nodes">
+          <div class="node outside">
+            <div class="node-title">session-reminder.sh</div>
+            <div class="node-detail">UserPromptSubmit · Una vez/sesión si state es viejo</div>
+          </div>
+          <div class="node outside">
+            <div class="node-title">suggest-checkpoint.sh</div>
+            <div class="node-detail">Stop event · Cada 3 respuestas si hay cambios sin guardar</div>
+          </div>
+          <div class="node outside">
+            <div class="node-title">guard-project-state.sh</div>
+            <div class="node-detail">PreToolUse Write · Silencioso salvo que bloquee</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;font-size:12px;">
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(217,119,87,0.5);display:inline-block;"></span> Siempre cargado</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(91,140,245,0.4);display:inline-block;"></span> Solo si es relevante</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(74,222,128,0.3);display:inline-block;"></span> Zero costo base</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(250,204,21,0.3);display:inline-block;"></span> Fuera del contexto</span>
+    </div>
+  </section>
+
+  <!-- COSTO DE TOKENS -->
+  <section>
+    <div class="section-label"><span class="pill">Tokens</span><span class="line"></span></div>
+    <h2>Dónde van los tokens — antes y después</h2>
+    <p class="section-intro">La diferencia entre explicar el contexto manualmente y usar el SESSION block.</p>
+
+    <div class="compare" style="margin-bottom:28px;">
+      <div class="compare-box before">
+        <div class="compare-label">❌ Sin sistema — contexto manual</div>
+        <div class="compare-item">
+          <span style="color:#ccc;">Explicar el proyecto</span>
+          <span class="compare-tokens">~800</span>
+        </div>
+        <div class="compare-item">
+          <span style="color:#ccc;">Pegar docs relevantes</span>
+          <span class="compare-tokens">~1500</span>
+        </div>
+        <div class="compare-item">
+          <span style="color:#ccc;">Repetir estado actual</span>
+          <span class="compare-tokens">~300</span>
+        </div>
+        <div class="compare-item">
+          <span style="color:#ccc;">CLAUDE.md global</span>
+          <span class="compare-tokens">~1000</span>
+        </div>
+        <div class="total-row">
+          <span>Total inicio de sesión</span>
+          <span style="color:#f87171;">~3600 tokens</span>
+        </div>
+      </div>
+      <div class="compare-box after">
+        <div class="compare-label">✅ Con Dupla Workflow</div>
+        <div class="compare-item">
+          <span style="color:#ccc;">CLAUDE.md global</span>
+          <span class="compare-tokens">~1000</span>
+        </div>
+        <div class="compare-item">
+          <span style="color:#ccc;">CLAUDE.md proyecto</span>
+          <span class="compare-tokens">~200</span>
+        </div>
+        <div class="compare-item">
+          <span style="color:#ccc;">SESSION block (/new-session)</span>
+          <span class="compare-tokens">~60</span>
+        </div>
+        <div class="compare-item">
+          <span style="color:#ccc;">Fase activa ROADMAP (si aplica)</span>
+          <span class="compare-tokens">~100</span>
+        </div>
+        <div class="total-row">
+          <span>Total inicio de sesión</span>
+          <span style="color:var(--green);">~1360 tokens</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-title">60% menos tokens para empezar a trabajar</div>
+      <div class="callout-text">El sistema carga solo el SESSION block (~60 tokens) para conocer el estado. El resto (ROADMAP, ARCHITECTURE, PROBLEMS) se carga condicionalmente — solo cuando la tarea lo requiere. Los skills no consumen tokens hasta que los invocas.</div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:24px;">
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>Documento</th>
+            <th>Cuándo se carga</th>
+            <th>Tokens/turno</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="always-row">
+            <td>~/.claude/CLAUDE.md</td>
+            <td>Siempre — cada sesión, cada proyecto</td>
+            <td><span class="cost-badge cost-always">~1000</span></td>
+          </tr>
+          <tr class="always-row">
+            <td>./CLAUDE.md (proyecto)</td>
+            <td>Siempre — si existe en el proyecto</td>
+            <td><span class="cost-badge cost-always">~200</span></td>
+          </tr>
+          <tr class="ondemand-row">
+            <td>PROJECT_STATE.md &lt;session&gt;</td>
+            <td>Inicio de sesión via /new-session</td>
+            <td><span class="cost-badge cost-cond">~60</span></td>
+          </tr>
+          <tr class="ondemand-row">
+            <td>ROADMAP.md (fase activa)</td>
+            <td>Si planificando (keywords: plan, fase, decidir)</td>
+            <td><span class="cost-badge cost-cond">~100–800</span></td>
+          </tr>
+          <tr class="ondemand-row">
+            <td>ARCHITECTURE.md</td>
+            <td>Si construyendo (keywords: implement, build, conectar)</td>
+            <td><span class="cost-badge cost-cond">~400–1000</span></td>
+          </tr>
+          <tr class="ondemand-row">
+            <td>PROBLEMS.md</td>
+            <td>Si debugueando (keywords: fix, error, bug)</td>
+            <td><span class="cost-badge cost-cond">~200–500</span></td>
+          </tr>
+          <tr class="zero-row">
+            <td>Skills (*.md)</td>
+            <td>Solo cuando invocas /skill-name</td>
+            <td><span class="cost-badge cost-zero">0 base</span></td>
+          </tr>
+          <tr class="zero-row">
+            <td>QUICKSTATE.md (micro)</td>
+            <td>Solo en modo /quick-start — reemplaza toda la capa docs/</td>
+            <td><span class="cost-badge cost-zero">~80</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- THE SESSION LOOP -->
+  <section>
+    <div class="section-label"><span class="pill">Flujo</span><span class="line"></span></div>
+    <h2>El loop de sesión</h2>
+    <p class="section-intro">Cada día de trabajo sigue el mismo ciclo de tres pasos. El sistema gestiona el estado — tú solo trabajas.</p>
+
+    <div class="loop-diagram">
+      <div class="loop-row">
+        <div class="loop-node">
+          <div class="loop-circle start">🚀</div>
+          <div class="loop-title">/new-session</div>
+          <div class="loop-detail">Lee SESSION block<br/>(~60 tokens)<br/>+ fase ROADMAP activa<br/>Detects missed checkpoints<br/>→ Plan del día</div>
+        </div>
+        <div class="loop-arrow">
+          <div class="loop-arrow-line"></div>
+        </div>
+        <div class="loop-node">
+          <div class="loop-circle work">⚡</div>
+          <div class="loop-title">Trabajo</div>
+          <div class="loop-detail">Skills se cargan<br/>solo cuando los usas<br/>Hooks corren fuera<br/>del contexto<br/>Git commits</div>
+        </div>
+        <div class="loop-arrow">
+          <div class="loop-arrow-line"></div>
+        </div>
+        <div class="loop-node">
+          <div class="loop-circle save">💾</div>
+          <div class="loop-title">/checkpoint</div>
+          <div class="loop-detail">Actualiza SESSION<br/>Sincroniza ROADMAP<br/>Detecta GO/NO-GO<br/>Signal-based: solo pregunta<br/>si hay cambios relevantes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout blue" style="margin-top:24px;">
+      <div class="callout-title">Qué hace /checkpoint que no hace git</div>
+      <div class="callout-text">Git guarda el código. /checkpoint guarda el <em>estado estratégico</em>: en qué fase estás, qué salió, qué sigue, si alcanzaste un GO/NO-GO. Sin checkpoint, la próxima sesión reconstruye el estado del código — pero pierde la sincronización con el ROADMAP.</div>
+    </div>
+  </section>
+
+  <!-- CARGA CONDICIONAL -->
+  <section>
+    <div class="section-label"><span class="pill">Inteligencia</span><span class="line"></span></div>
+    <h2>Carga condicional — el sistema decide qué leer</h2>
+    <p class="section-intro">/new-session detecta automáticamente qué docs necesitas según lo que vas a hacer. No tienes que pedírselo.</p>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+      <table class="cond-table">
+        <thead>
+          <tr>
+            <th>Si el campo "Next" contiene…</th>
+            <th>El sistema carga…</th>
+            <th>Tokens extra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="signal">plan</span> <span class="signal">decide</span> <span class="signal">fase</span> <span class="signal">roadmap</span> <span class="signal">evaluar</span></td>
+            <td>ROADMAP.md completo (fases adyacentes también)</td>
+            <td style="color:var(--accent);">+300–800</td>
+          </tr>
+          <tr>
+            <td><span class="signal">implement</span> <span class="signal">build</span> <span class="signal">crear</span> <span class="signal">conectar</span></td>
+            <td>ARCHITECTURE.md (sección relevante)</td>
+            <td style="color:var(--accent);">+400–1000</td>
+          </tr>
+          <tr>
+            <td><span class="signal">fix</span> <span class="signal">error</span> <span class="signal">bug</span> <span class="signal">roto</span></td>
+            <td>PROBLEMS.md</td>
+            <td style="color:var(--accent);">+200–500</td>
+          </tr>
+          <tr>
+            <td><em style="color:var(--muted);">Ninguna de las anteriores</em></td>
+            <td>Nada extra — SESSION block es suficiente</td>
+            <td style="color:var(--green);">+0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <div class="callout-title">Lo mismo aplica a /checkpoint</div>
+      <div class="callout-text">/checkpoint usa señales del git diff y mensajes de commit para decidir si preguntar sobre ARCHITECTURE o PROBLEMS. Si los archivos cambiados no incluyen schemas ni configs, no pregunta nada. Si los commits dicen "fix" o "error", ofrece agregar a PROBLEMS.md. Siempre signal-based — nunca pregunta por default.</div>
+    </div>
+  </section>
+
+  <!-- CÓMO SE CONECTAN LOS DOCUMENTOS -->
+  <section>
+    <div class="section-label"><span class="pill">Conexiones</span><span class="line"></span></div>
+    <h2>Cómo se conectan los documentos entre sí</h2>
+    <p class="section-intro">Cada documento tiene un rol único. Ninguno duplica información del otro.</p>
+
+    <div class="grid-1">
+      <div class="card accent-card">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div style="font-size:28px;">📋</div>
+          <div>
+            <div class="card-title">PROJECT_STATE.md ⭐ — fuente de verdad operacional</div>
+            <div class="card-desc" style="margin-top:6px;">
+              El bloque <code style="font-family:monospace;font-size:11px;color:var(--accent);">&lt;session&gt;</code> contiene: qué se hizo, qué sigue, qué bloquea, en qué fase estás. Es lo único que /new-session lee por default. /checkpoint lo actualiza. Los hooks lo vigilan. Todo lo demás apunta a él.<br/><br/>
+              <strong>Conectado con:</strong> ROADMAP (sincroniza fase), git log (reconstruye Done), CLAUDE.md (define cómo actuar).
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card success-card">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div style="font-size:28px;">🗺️</div>
+          <div>
+            <div class="card-title">ROADMAP.md — brújula estratégica</div>
+            <div class="card-desc" style="margin-top:6px;">
+              Define qué significa "terminado" para cada fase. Fases con Outcomes (entregables concretos) y criterios GO/NO-GO (continúa si… / mata si…). /checkpoint lo marca cuando completas outcomes. /new-session lo lee para saber si estás en camino o si hay una decisión pendiente.<br/><br/>
+              <strong>NO es:</strong> lista de tareas diarias — eso va en PROJECT_STATE. El ROADMAP es el plan estratégico; el SESSION block es el estado táctico.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card blue-card">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div style="font-size:28px;">🏗️</div>
+          <div>
+            <div class="card-title">ARCHITECTURE.md — memoria técnica</div>
+            <div class="card-desc" style="margin-top:6px;">
+              Decisiones de stack, diagramas, "¿por qué usamos X en lugar de Y?". Se actualiza solo cuando /checkpoint detecta cambios en archivos de arquitectura (schemas, configs, package.json). No se toca en cada sesión — solo cuando algo arquitectónico cambió.<br/><br/>
+              <strong>Conectado con:</strong> PROJECT_STATE (referenciado desde Next si construyendo), ROADMAP (outputs técnicos por fase).
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div style="font-size:28px;">⚙️</div>
+          <div>
+            <div class="card-title">CLAUDE.md — contexto de comportamiento</div>
+            <div class="card-desc" style="margin-top:6px;">
+              Global (~/.claude/CLAUDE.md): identidad, reglas de trabajo, model routing. Proyecto (./CLAUDE.md): cómo el stack se conecta, reglas específicas del proyecto ("no tocar la DB en esta etapa"), dónde están los archivos críticos. Siempre cargado — no requiere invocación.<br/><br/>
+              <strong>Cargado automáticamente</strong> por Claude Code en cada sesión. Define cómo actuar — los otros documentos definen dónde estás.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOS HOOKS -->
+  <section>
+    <div class="section-label"><span class="pill">Automación</span><span class="line"></span></div>
+    <h2>Hooks — automatizaciones fuera del contexto</h2>
+    <p class="section-intro">Los hooks son shell scripts que Claude Code ejecuta en respuesta a eventos del sistema. Corren fuera de la ventana de contexto — no queman tokens.</p>
+
+    <div class="grid-3">
+      <div class="card yellow-card">
+        <div class="card-icon" style="font-size:22px;">⏰</div>
+        <div class="card-title">session-reminder.sh</div>
+        <div class="card-desc">
+          <strong>Cuándo:</strong> Al primer mensaje de cada sesión (UserPromptSubmit)<br/><br/>
+          <strong>Qué hace:</strong> Lee PROJECT_STATE.md. Si el estado tiene más de 24h, avisa una sola vez: "Estado de hace Xd. Corre /new-session para actualizar."<br/><br/>
+          <strong>Optimización:</strong> Usa un marker <code style="font-family:monospace;font-size:10px">.tmp/session-reminder-fired</code> — solo dispara una vez por sesión.
+        </div>
+      </div>
+      <div class="card yellow-card">
+        <div class="card-icon" style="font-size:22px;">💾</div>
+        <div class="card-title">suggest-checkpoint.sh</div>
+        <div class="card-desc">
+          <strong>Cuándo:</strong> Al finalizar cada respuesta (Stop event)<br/><br/>
+          <strong>Qué hace:</strong> Cuenta commits sin guardar. Si hay más de 5 commits sin checkpoint: avisa. Si hay cambios y han pasado 3 respuestas: sugiere /checkpoint.<br/><br/>
+          <strong>Optimización:</strong> Throttle vía contador — no interrumpe en cada respuesta, solo cuando hay señal real.
+        </div>
+      </div>
+      <div class="card yellow-card">
+        <div class="card-icon" style="font-size:22px;">🛡️</div>
+        <div class="card-title">guard-project-state.sh</div>
+        <div class="card-desc">
+          <strong>Cuándo:</strong> Antes de cualquier escritura (PreToolUse Write)<br/><br/>
+          <strong>Qué hace:</strong> Verifica que PROJECT_STATE.md exista antes de que Claude escriba archivos del proyecto. Silencioso si todo está bien — solo bloquea si el archivo crítico está ausente.<br/><br/>
+          <strong>Optimización:</strong> Completamente silencioso en el 99% de los casos.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout yellow" style="margin-top:20px;">
+      <div class="callout-title">Por qué los hooks no cuestan tokens</div>
+      <div class="callout-text">Claude Code ejecuta los hooks como procesos de sistema separados, antes o después de las operaciones del modelo. El output del hook aparece como contexto del sistema — no como parte del contexto del LLM. Es la razón por la que pueden monitorear sin "hablar" en cada turno.</div>
+    </div>
+  </section>
+
+  <!-- MICRO MODE -->
+  <section>
+    <div class="section-label"><span class="pill">Modo micro</span><span class="line"></span></div>
+    <h2>Modo micro — /quick-start</h2>
+    <p class="section-intro">Para scripts, experimentos o sesiones pequeñas. Un solo archivo reemplaza toda la estructura docs/.</p>
+
+    <div class="compare">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;">Proyecto completo</div>
+        <div class="code-block" style="font-size:11px;line-height:1.6;">
+docs/<br/>
+├── PROJECT_STATE.md  <span class="code-comment">~500 tokens</span><br/>
+├── ROADMAP.md        <span class="code-comment">~800 tokens</span><br/>
+├── ARCHITECTURE.md   <span class="code-comment">~600 tokens</span><br/>
+└── PROBLEMS.md       <span class="code-comment">~200 tokens</span><br/>
+CLAUDE.md             <span class="code-comment">~300 tokens</span>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--muted);">Ideal para: proyectos reales con roadmap, equipo, o arquitectura que evoluciona.</div>
+      </div>
+      <div class="card blue-card">
+        <div class="card-title" style="margin-bottom:12px;">⚡ Micro (quick-start)</div>
+        <div class="code-block" style="font-size:11px;line-height:1.6;">
+QUICKSTATE.md         <span style="color:#a6e3a1;">~80 tokens total</span><br/>
+<br/>
+<span class="code-comment">---</span><br/>
+<span class="code-key">type:</span> <span class="code-val">micro</span><br/>
+<span class="code-key">updated:</span> <span class="code-val">2026-04-22</span><br/>
+<span class="code-comment">---</span><br/>
+<span class="code-comment">## What</span><br/>
+Script de migración CSV<br/>
+<span class="code-comment">## Done</span><br/>
+- Parse inicial funcionando<br/>
+<span class="code-comment">## Next</span><br/>
+- Validar campos requeridos
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--muted);">Ideal para: scripts, experimentos, research, tareas no-código, sesiones casuales.</div>
+      </div>
+    </div>
+
+    <div class="callout blue" style="margin-top:20px;">
+      <div class="callout-title">Cómo escalar de micro a completo</div>
+      <div class="callout-text">Si el proyecto micro crece y necesita más estructura, corre <code style="font-family:monospace;font-size:11px">/adapt-project</code> en la misma carpeta. El sistema detecta el QUICKSTATE.md, lo usa como contexto inicial, y genera el conjunto completo de docs/ sin perder el historial.</div>
+    </div>
+  </section>
+
+  <!-- HANDOFF -->
+  <section>
+    <div class="section-label"><span class="pill">Handoff</span><span class="line"></span></div>
+    <h2>Cambiar de modelo — Claude ↔ Gemini</h2>
+    <p class="section-intro">El estado persiste entre modelos. Un LLM puede continuar exactamente donde el otro dejó.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;">1. Generar handoff</div>
+        <div class="card-desc">Corre <code style="font-family:monospace;font-size:11px;color:var(--accent)">/checkpoint</code> → elige opción 3 (Handoff). El sistema genera un bloque XML con: fecha, origen, destino, goal, branch, lo que se hizo, y qué sigue.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;">2. Persistir en PROJECT_STATE</div>
+        <div class="card-desc">El bloque <code style="font-family:monospace;font-size:11px;color:var(--accent)">&lt;handoff&gt;</code> se escribe automáticamente en PROJECT_STATE.md justo después del bloque &lt;session&gt;. Si ya existía uno, lo reemplaza.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;">3. El siguiente modelo lo lee</div>
+        <div class="card-desc">El nuevo LLM corre <code style="font-family:monospace;font-size:11px;color:var(--accent)">/new-session</code>. Detecta el bloque &lt;handoff&gt; en PROJECT_STATE.md y lo usa como contexto antes del SESSION block. Puede continuar sin que el usuario re-explique nada.</div>
+      </div>
+      <div class="card success-card">
+        <div class="card-title" style="margin-bottom:12px;">¿Por qué escribirlo al archivo?</div>
+        <div class="card-desc">Si el chat actual se cierra antes de que el handoff se complete, la información se pierde. Escribiendo al archivo, el estado sobrevive aunque el chat muera. El próximo LLM lee PROJECT_STATE.md — siempre disponible.</div>
+      </div>
+    </div>
+
+    <div class="code-block" style="margin-top:20px;">
+<span class="code-comment">&lt;!-- PROJECT_STATE.md — lo que ve el siguiente LLM --&gt;</span>
+<br/>
+<span class="code-key">&lt;session&gt;</span>
+<span class="code-val">Updated: 2026-04-22 15:30</span>
+<span class="code-val">Phase: Phase 2 — Backend API · In Progress</span>
+<span class="code-val">Done: auth endpoint · DB schema · tests passing</span>
+<span class="code-val">Next: Implementar endpoint de pagos</span>
+<span class="code-val">Handoff: Gemini</span>
+<span class="code-key">&lt;/session&gt;</span>
+<br/><br/>
+<span class="code-key">&lt;handoff&gt;</span>
+<span class="code-val">Date: 2026-04-22 15:30</span>
+<span class="code-val">From: claude-sonnet → To: gemini</span>
+<span class="code-val">Goal: API REST para e-commerce</span>
+<span class="code-val">Branch: work/phase2-backend</span>
+<span class="code-val">Done: auth + DB — ver commits de hoy</span>
+<span class="code-val">Next: implementar /api/payments con Stripe</span>
+<span class="code-val">Context: Read docs/PROJECT_STATE.md + ARCHITECTURE.md</span>
+<span class="code-key">&lt;/handoff&gt;</span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Dupla Workflow · Arquitectura del sistema · v2.3.0
+  </div>
+
+</div>
+</body>
+</html>

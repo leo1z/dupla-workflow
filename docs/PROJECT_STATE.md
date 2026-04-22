@@ -8,11 +8,11 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-04-22
+Updated: 2026-04-22 (sesión 2)
 Status: ACTIVE
 Phase: N/A
 Phase_Status: N/A
-Done: team mode completo · 18 gaps corregidos · install.sh despliega hooks · v2.2.0 en master · micro mode + quick-start · system map · hooks optimizados · repo limpio
+Done: QUICKSTART.html v2.3.0 (tabla de 13 comandos, quick-start, FAQ corregido) · SYSTEM_MAP.html creado (arquitectura + ahorro tokens) · code-review-graph lifecycle integrado en new-project + adapt-project + checkpoint
 Next: Compartir con colaboradores y usar el sistema en proyectos activos
 Blockers: none
 Branch: master
@@ -44,10 +44,10 @@ Framework listo para distribución y uso diario en todos los proyectos.
 
 ## Recent Changes
 
+- 2026-04-22 — v2.3.0 sesión 2: QUICKSTART.html + SYSTEM_MAP.html + graph lifecycle en skills
+- 2026-04-22 — v2.3.0: micro mode, roadmap phase awareness, handoff persistence, hooks throttle
 - 2026-04-22 — v2.2.0: team mode, 18 gaps, hooks deployment, slash commands
-- 2026-04-22 — Proyectos existentes adaptados (YAML headers, project_type)
 - 2026-04-21 — v2.1.0: health-check, MCP, update migration, handoff guide
-- 2026-04-20 — v2.0.0: rediseño completo (SESSION block, multi-IDE, GO/NO-GO)
 
 ---
 

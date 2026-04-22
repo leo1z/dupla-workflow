@@ -109,6 +109,24 @@ Add to ~/.claude/SYSTEM.md:
 
 ---
 
+## Phase 6 — Generate docs/code-review-graph.json (project audit map)
+
+After registering the project, generate the initial structural map:
+- Run: `git log --oneline -10`, `ls -la` on project root and src/ (or equivalent)
+- Read: docs/ROADMAP.md current phase section (or Phase: N/A if no ROADMAP)
+- Write `docs/code-review-graph.json`:
+  - `"project"`: project name
+  - `"generated"`: current timestamp
+  - `"lastCommit"`: `git rev-parse --short HEAD`
+  - `"phase"`: current phase from PROJECT_STATE (or "initial" if N/A)
+  - `"structure"`: actual project folders with file counts, purposes inferred from code
+  - `"riskZones"`: critical files inferred from git log + project structure (auth, DB, config, entry points)
+  - `"dependencies"`: doc connections inferred from adapt analysis
+  - `"metadata.regenerate"`: `"after phase advance or architectural changes"`
+- Add `docs/code-review-graph.json` to output "Created" section
+
+---
+
 ## Output (max 15 lines)
 
 ```
