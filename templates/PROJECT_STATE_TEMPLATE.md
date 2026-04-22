@@ -25,6 +25,15 @@ Handoff: no | [destination model if switching]
 
 ---
 
+## Team (optional)
+
+- Owner: [name or model]
+- Current handler: [who's working on it]
+- Last handoff: [date + direction]
+- Shared branch: [work/feature-name]
+
+---
+
 ## In Progress
 
 - Task

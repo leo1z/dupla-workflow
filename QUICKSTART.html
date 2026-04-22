@@ -426,6 +426,33 @@ $ bash bin/install.sh</div>
     </div>
   </section>
 
+  <!-- INDIVIDUAL VS EQUIPO -->
+  <section>
+    <div class="section-label"><span class="pill">Workflow</span><span class="line"></span></div>
+    <h2>Individual vs Equipo</h2>
+    <p class="section-intro">Mismo sistema, flujo ligeramente diferente.</p>
+    <div class="grid-2">
+      <div class="card accent-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="font-size:28px;">👤</div>
+          <div class="card-title" style="margin-bottom:0;">Individual</div>
+        </div>
+        <div class="card-desc" style="font-size:13px;line-height:1.6;"><strong>Flujo típico:</strong><br/>1. /new-session → Leo dónde quedé<br/>2. Trabajo<br/>3. /checkpoint → guardo estado<br/>4. git push<br/><br/><strong>Quién es el "dueño"?</strong> Tú. /checkpoint actualiza PROJECT_STATE.md y propone commit.<br/><br/><strong>Cambiar de LLM:</strong> /checkpoint handoff → abre en Gemini → /new-session. El sistema sincroniza automáticamente.</div>
+      </div>
+      <div class="card success-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="font-size:28px;">👥</div>
+          <div class="card-title" style="margin-bottom:0;">Equipo (2-4 personas)</div>
+        </div>
+        <div class="card-desc" style="font-size:13px;line-height:1.6;"><strong>Flujo típico:</strong><br/>1. /new-session (tu turno)<br/>2. Trabajo en tu rama<br/>3. /checkpoint close (final del día)<br/>4. git push → merge a main<br/>5. Siguiente dev: git pull → /new-session<br/><br/><strong>Quién es el "dueño"?</strong> El equipo. PROJECT_STATE.md es compartido en main.<br/><br/><strong>TEAM section:</strong> PROJECT_STATE.md tiene campo "Owner" + "Last handoff". Cada dev ve quién está de turno.</div>
+      </div>
+    </div>
+    <div class="callout blue">
+      <div class="callout-title">💡 Clave diferencia</div>
+      <div class="callout-text"><strong>Individual:</strong> guardas en tu rama local. <strong>Equipo:</strong> mergeas a main, así el siguiente dev ve el estado actualizado. El sistema no necesita comandos nuevos — solo /checkpoint close hace que el estado sea compartido.</div>
+    </div>
+  </section>
+
   <!-- PROYECTOS EXISTENTES -->
   <section>
     <div class="section-label"><span class="pill">Referencia</span><span class="line"></span></div>

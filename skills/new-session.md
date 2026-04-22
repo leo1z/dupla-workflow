@@ -14,7 +14,7 @@ Usage: /new-session [optional goal]
 2. **Read <session> block** (first content after header):
    - Extract: Updated, Done, Next, Blockers, Branch, Model
    - Compute staleness: "Updated" vs now
-   - If Updated > 48h → ⚠️ "Última actualización hace X. Estado puede estar desactualizado."
+   - If Updated > 24h OR git log is newer → auto-reconstruct from git log (silent, then show updated SESSION)
 
 3. **If planning** → read docs/ROADMAP.md (5 min)
 
@@ -61,7 +61,7 @@ Save points recientes:
 |-----------|--------|
 | No goal provided | Ask in 1 line: "¿Cuál es el objetivo de esta sesión?" |
 | Next field is clear | Don't ask goal — use Next as direction |
-| SESSION > 48h | Offer to reconstruct from git log |
+| SESSION > 24h OR git log newer | Auto-reconstruct from git log (no prompt) |
 | status: STALE | Warn before continuing |
 | Blockers field ≠ "none" | Highlight in Alert |
 | On main branch | ⚠️ Strong warning |
