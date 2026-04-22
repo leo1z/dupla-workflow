@@ -12,8 +12,8 @@ Updated: 2026-04-22 (sesión 3)
 Status: ACTIVE
 Phase: N/A
 Phase_Status: N/A
-Done: Gap analysis (16 gaps) · Sprint inmediato (GAP-04,05,13,10,16) · Sprint corto (GAP-01,02,08,06) · Sprint medio+backlog (GAP-07,09,11,12,15,03,14)
-Next: Publicar v2.3.1 — git commit + push con CHANGELOG
+Done: v2.3.1 publicado · CLAUDE.md proyecto creado · quick-start skill instalado · flujo new-session verificado
+Next: Usar el sistema en proyectos activos — abrir dupla-conecta u otro proyecto y correr /adapt-project o /new-session
 Blockers: none
 Branch: master
 Model: claude
