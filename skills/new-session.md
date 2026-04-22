@@ -34,6 +34,14 @@ If no `QUICKSTATE.md`, check if `docs/PROJECT_STATE.md` exists:
    - Check for `<handoff>` block in PROJECT_STATE.md → if found, read it (Date, From, Done, Next) and use as context BEFORE reading SESSION
    - Extract: Updated, Done, Next, Blockers, Branch, Model, **Phase, Phase_Status**
    - If Updated > 24h OR git log is newer → auto-reconstruct from git log (silent)
+   - **Phase: N/A check:** if `Phase: N/A` AND `docs/ROADMAP.md` exists → show once:
+     ```
+     ℹ️ Tienes docs/ROADMAP.md pero Phase está en N/A.
+        ¿Quieres activar el tracking de fase? [s/n]
+        (Si sí → leo el ROADMAP y te sugiero en qué fase estás)
+     ```
+     - If yes → read ROADMAP.md, infer current phase from git log + outcomes, update SESSION Phase field
+     - If no → continue with Phase: N/A (won't ask again this session)
    - **Check for missed checkpoint:** compare `SESSION.Updated` vs date of latest commit
      - If git has commits newer than SESSION.Updated AND Phase ≠ "N/A" → missed checkpoint detected
      - Run ROADMAP phase sync inline (same as checkpoint step 2.5):
@@ -72,6 +80,24 @@ Save points:
 ---
 
 ### Step 2B — Team Flow
+
+**Special mode: `/new-session standup`** (Lead only — consolidated team view)
+- Read ALL `### [Dev Name]` sections in PROJECT_STATE.md + `## Shared Status`
+- Show:
+  ```
+  ## Standup — [date] · [Project] Phase [N]
+
+  | Dev       | Branch         | Hizo          | Siguiente        | Bloqueado |
+  |-----------|----------------|---------------|------------------|-----------|
+  | Dev A     | work/ph1-back  | auth endpoint | tests + PR       | No        |
+  | Dev B     | work/ph1-front | login UI      | Waiting Dev A PR | Sí ⏳     |
+  | Dev C     | work/ph1-db    | schema        | migración        | No        |
+
+  PRs pendientes de merge: [list branches not yet merged to main]
+  GO/NO-GO status: [Phase_Status from Shared Status]
+  ```
+- Max 15 lines. No planning, no branch suggestions — solo el estado del equipo.
+- Return after showing standup (don't continue with individual dev flow)
 
 **If first time (no section found for dev AND git log shows <2 commits on branch):**
 ```

@@ -1,15 +1,20 @@
 #!/bin/bash
 # Hook: Stop — fires when Claude finishes a response
 # Suggests /checkpoint only when meaningful — avoids spamming context every turn
+# GAP-02 fix: state files stored in system temp dir (outside repo, survives git clean)
 
 # Skip if no uncommitted changes
 if [ -z "$(git status --short 2>/dev/null)" ]; then
   exit 0
 fi
 
+# System temp dir keyed by project path — survives git clean
+PROJECT_HASH=$(echo "$PWD" | cksum | cut -d' ' -f1 2>/dev/null || echo "default")
+TMPDIR_DUPLA="${TMPDIR:-/tmp}/dupla-hooks-$PROJECT_HASH"
+mkdir -p "$TMPDIR_DUPLA"
+
 # Throttle: only fire once per 3 stops using a counter file
-COUNTER_FILE=".tmp/checkpoint-counter"
-mkdir -p .tmp
+COUNTER_FILE="$TMPDIR_DUPLA/checkpoint-counter"
 COUNT=$(cat "$COUNTER_FILE" 2>/dev/null || echo 0)
 COUNT=$((COUNT + 1))
 echo "$COUNT" > "$COUNTER_FILE"
@@ -37,7 +42,7 @@ elif [ "$COUNT" -ge 3 ] && [ "$commits_since_state" -gt 0 ]; then
 fi
 
 # Long session warning — only once per session
-LONG_SESSION_MARKER=".tmp/long-session-warned"
+LONG_SESSION_MARKER="$TMPDIR_DUPLA/long-session-warned"
 commits_since_main=$(git log main..HEAD --oneline 2>/dev/null | wc -l | tr -d ' ')
 if [ "${commits_since_main:-0}" -gt 10 ] && [ ! -f "$LONG_SESSION_MARKER" ]; then
   echo "💡 Sesión larga ($commits_since_main commits). /checkpoint close → nuevo chat → /new-session"

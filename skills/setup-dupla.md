@@ -15,8 +15,12 @@ Also check ~/Projects/ or ~/projects/ for existing projects with docs/:
 - If found: "Detected X projects. Include in SYSTEM.md registry? [y/n]"
 
 Detect IDEs:
-- ~/.claude/ exists? → Claude Code
-- ~/.agent/ exists? → Antigravity detected (will sync CLAUDE.md later)
+- ~/.claude/ exists? → Claude Code detected
+- ~/.agent/ exists? → Antigravity detected (Unix/macOS/WSL)
+- On Windows (Git Bash): check if `$USERPROFILE/.agent/` exists as fallback
+  - If detected: will sync CLAUDE.md to that path
+  - If NOT detected but user says they have Antigravity: ask for path manually
+    `"¿Dónde está instalado Antigravity? (ej: C:\Users\[name]\.agent\)"`
 
 ---
 
@@ -154,9 +158,12 @@ If YES → generate based on IDE detected:
 - ~/.claude/PROBLEMS_GLOBAL.md (empty, ready)
 
 **Infrastructure installed:**
-- ✓ Skills deployed (14 v2 commands)
+- ✓ Skills deployed (13 v2 commands)
 - ✓ Hooks configured (guard-project-state, suggest-checkpoint, session-reminder)
 - ✓ DUPLA_VERSION [from VERSION file]
+
+ℹ️ Para credenciales seguras: crea ~/.claude/CREDENTIALS.md
+   (plantilla en templates/CREDENTIALS_TEMPLATE.md)
 
 **Next:** /health-check to verify
 ```

@@ -6,16 +6,18 @@ Usage: /restore
 
 ## Execution
 
-1. Run: `git log --oneline -20`
-2. Extract commits with "checkpoint:" or "handoff:" or commit messages from /checkpoint
-3. Number them (5, 4, 3, 2, 1) with most recent = 5
-4. For each commit, extract:
+1. Run: `git branch --show-current` → store as CURRENT_BRANCH
+2. Run: `git log --oneline -20 --first-parent HEAD` → commits on current branch only
+   - This prevents mixing in checkpoints from other team members' branches
+3. Extract commits with "checkpoint:" or "handoff:" or commit messages from /checkpoint
+4. Number them (5, 4, 3, 2, 1) with most recent = 5
+5. For each commit, extract:
    - Time (from commit date)
    - Message summary (e.g., "Agrega validación de email")
-5. Display menu:
+6. Display menu:
 
 ```
-Tus puntos de guardado (más recientes primero):
+Tus puntos de guardado — branch: [CURRENT_BRANCH] (más recientes primero):
 
   5 · hace 2h      → "Agrega validación de email"
   4 · hace 4h      → "Conecta Supabase auth"
@@ -23,6 +25,7 @@ Tus puntos de guardado (más recientes primero):
   2 · ayer 10am    → "Configura ambiente"
   1 · hace 2 días  → "Proyecto creado"
 
+⚠️ Solo muestra commits de este branch. Para ver otros branches usa: git log --all --oneline
 ¿A cuál quieres volver? (número) o Enter para cancelar:
 ```
 

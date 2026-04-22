@@ -1,6 +1,10 @@
 Lightweight session for small projects or casual work. No docs/ folder needed — just a QUICKSTATE.md in any folder.
 
-Usage: /quick-start [optional goal]
+Usage:
+  /quick-start              → start or resume a micro session
+  /quick-start [goal]       → resume with a specific goal override
+  /quick-start save         → save/update QUICKSTATE.md and close
+  /quick-start close        → alias for save
 
 ---
 
@@ -17,6 +21,9 @@ A single file (`QUICKSTATE.md`) replaces the full `docs/` structure. Use it for:
 ## Execution
 
 ### Step 1 — Detect context
+
+Check args first:
+- Arg is `save` or `close` → skip to Step 5 directly (save/update QUICKSTATE.md)
 
 Check current directory for `QUICKSTATE.md`:
 - **Found** → read it → go to Step 3 (returning session)
@@ -128,6 +135,7 @@ No git commit required. No checkpoint needed. The file IS the state.
 
 | Condition | Action |
 |---|---|
+| arg = `save` or `close` | Skip to Step 5 — save QUICKSTATE.md immediately |
 | QUICKSTATE.md exists | Returning session — read + show state |
 | QUICKSTATE.md missing | New — ask 2 questions → create file |
 | User passes arg (goal) | Override Next with that goal |

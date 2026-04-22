@@ -160,7 +160,7 @@ Use this to fill "prompts que funcionan bien" and "evitar" in warnings.
 - Preguntas de 1 línea con respuesta de 1 línea
 - "¿Qué quedó pendiente para la próxima sesión?"
 
-**Evitar todo lo demás.** Correr `/progress` y cerrar.
+**Evitar todo lo demás.** Correr `/checkpoint close` y cerrar.
 
 **Diferir a próxima sesión:** todo lo que no sea guardar estado.
 

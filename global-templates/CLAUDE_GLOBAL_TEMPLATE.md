@@ -52,9 +52,8 @@ System is command-driven:
 
 - /new-session → read state → decide next
 - /checkpoint → save session + update truth
-- /update-context → align docs
+- /adapt-project → onboard or update existing project
 - /restore → revert to save point
-- /adapt-project → onboard existing project
 
 ---
 

@@ -1,5 +1,27 @@
 # Changelog — Dupla-Workflow
 
+## [2.3.1] — 2026-04-22
+
+### Fixed (16 gaps from audit)
+- **GAP-01** `session-reminder.sh` — cross-platform date parsing: Linux → macOS → Python3 fallback (Windows Git Bash now works)
+- **GAP-02** `session-reminder.sh` + `suggest-checkpoint.sh` — session markers/counters moved from `.tmp/` (cleared by `git clean`) to system temp dir keyed by project path
+- **GAP-03** `README.md` — documents slash command registration in Claude Code, adds troubleshooting note + workaround
+- **GAP-04** `CLAUDE_GLOBAL_TEMPLATE.md` — `/update-context` (non-existent) replaced with `/adapt-project`
+- **GAP-05** `token-budget.md` — `/progress` (renamed in v2.0) replaced with `/checkpoint close`
+- **GAP-06** `new-session.md` — when `Phase: N/A` but `docs/ROADMAP.md` exists, offers to activate phase tracking instead of ignoring it
+- **GAP-07** `restore.md` — save points now filtered by current branch (`--first-parent HEAD`); shows branch name in menu header
+- **GAP-08** `quick-start.md` — adds `/quick-start save` and `/quick-start close` as explicit aliases that trigger Step 5 immediately
+- **GAP-09** `checkpoint.md` Mode 4 — `approve-pr` now verifies dev SESSION was updated before merge; warns Lead if dev skipped `/checkpoint`
+- **GAP-10** `health-check.md` — skills count updated from hardcoded `12/12` to `13/13`; core skills list made explicit
+- **GAP-11** `adapt-project.md` — when `docs/ROADMAP.md` exists, shows preview and asks what to do instead of overwriting with placeholder
+- **GAP-12** `new-session.md` — adds `/new-session standup` mode for Lead: consolidated table of all devs (Done/Next/Blocked) in ≤15 lines
+- **GAP-13** `README.md` — version header updated from v2.2.0 to v2.3.0
+- **GAP-14** `setup-dupla.md` — Antigravity detection now includes Windows path (`$USERPROFILE/.agent/`) with manual path fallback
+- **GAP-15** `new-project.md` — Phase 4 research adds sequential fallback for IDEs without subagent support
+- **GAP-16** `setup-dupla.md` — setup output now mentions `CREDENTIALS_TEMPLATE.md`; skills count corrected (14→13)
+
+---
+
 ## [2.3.0] — 2026-04-22
 
 ### New Features

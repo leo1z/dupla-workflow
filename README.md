@@ -121,7 +121,11 @@ Kill criteria defined upfront. No sunk cost fallacy.
 ### Claude Code (VS Code)
 1. Install VS Code + Claude Code extension
 2. `bash bin/install.sh`
-3. Skills in `~/.claude/skills/`
+3. Skills in `~/.claude/skills/` (for Antigravity) and `~/.claude/commands/` (for slash commands)
+
+> **Slash commands not showing?** In Claude Code, type `/` and check if `/new-session`, `/checkpoint` appear.
+> If not, verify `~/.claude/commands/` has the `.md` files. You may need to restart VS Code.
+> Workaround: type the skill name manually (e.g., `run /new-session`) — works even without slash registration.
 
 ### Antigravity
 1. Install Antigravity (Google's Agent IDE)
@@ -247,7 +251,7 @@ Migration: backs up all v1 files → installs v2 → suggests `/setup-dupla` for
 
 ## Version
 
-**v2.2.0** — 2026-04-21
+**v2.3.0** — 2026-04-22
 - Team mode: individual vs team detection, team templates, git strategy
 - /adapt-to-team: convert individual projects to team
 - /add-team-member: add devs + edit roles mid-project

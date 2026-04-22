@@ -8,12 +8,12 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-04-22 (sesión 2)
+Updated: 2026-04-22 (sesión 3)
 Status: ACTIVE
 Phase: N/A
 Phase_Status: N/A
-Done: QUICKSTART.html v2.3.0 (tabla de 13 comandos, quick-start, FAQ corregido) · SYSTEM_MAP.html creado (arquitectura + ahorro tokens) · code-review-graph lifecycle integrado en new-project + adapt-project + checkpoint
-Next: Compartir con colaboradores y usar el sistema en proyectos activos
+Done: Gap analysis (16 gaps) · Sprint inmediato (GAP-04,05,13,10,16) · Sprint corto (GAP-01,02,08,06) · Sprint medio+backlog (GAP-07,09,11,12,15,03,14)
+Next: Publicar v2.3.1 — git commit + push con CHANGELOG
 Blockers: none
 Branch: master
 Model: claude

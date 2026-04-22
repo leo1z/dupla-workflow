@@ -27,6 +27,11 @@ Run ALL checks silently. Output only warnings and errors, plus a summary.
   → ✅ core skills present / ⚠️ missing: [list only missing core ones]
   → Extra .md files not in core list → ℹ️ Custom skills found: [list] (not an error)
 
+# Core skills count (dynamic)
+CORE_SKILLS=(new-project new-session checkpoint restore setup-dupla update-dupla adapt-project adapt-to-team add-team-member health-check token-budget project-audit quick-start)
+FOUND=$(ls ~/.claude/skills/*.md 2>/dev/null | wc -l)
+# Compare found vs 13 expected — flag missing by name only
+
 # CLAUDE.md has required fields?
 grep "Name:" ~/.claude/CLAUDE.md    → ✅ / ⚠️ empty
 grep "Stack" ~/.claude/SYSTEM.md    → ✅ / ⚠️ empty
@@ -128,7 +133,7 @@ Latest on GitHub → v[latest]
 ```
 ✅ Health Check — All systems OK
 
-Global: ✅ Skills (12/12) · CLAUDE.md · SYSTEM.md · v2.1.0
+Global: ✅ Skills (13/13) · CLAUDE.md · SYSTEM.md · v[version]
 Project: ✅ PROJECT_STATE (CURRENT) · ROADMAP · CLAUDE.md
 [Team: ✅ 3 devs · 3 sections · 3 branches]
 Stack: ✅ Coherent

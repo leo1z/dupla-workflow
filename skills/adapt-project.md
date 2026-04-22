@@ -79,9 +79,19 @@ Preserve: don't delete, archive instead.
 - Create empty from template
 - Add note: "Start documenting issues as they arise"
 
-### docs/ROADMAP.md (if missing)
-- Create placeholder
-- Add note: "PENDING — use /new-project IML assessment or fill manually"
+### docs/ROADMAP.md
+- **If missing:** Create placeholder with note "PENDING — use /new-project IML assessment or fill manually"
+- **If exists:** Show first 20 lines and ask:
+  ```
+  Encontré docs/ROADMAP.md existente.
+  ¿Qué hago?
+    1 — Mantenerlo (solo agrego YAML header + GO/NO-GO blocks si faltan)
+    2 — Reemplazarlo con plantilla nueva (el actual se guarda en docs/ARCHIVE.md)
+    3 — Déjarlo como está (no tocar)
+  ```
+  - Option 1: add `---\ndoc: ROADMAP\n---` header if missing + append GO/NO-GO block to any phase without it
+  - Option 2: move to docs/ARCHIVE.md → create fresh from ROADMAP_TEMPLATE.md
+  - Option 3: skip entirely
 
 ### docs/ARCHITECTURE.md (if missing)
 - Read: folder structure, package.json, git log, CLAUDE.md

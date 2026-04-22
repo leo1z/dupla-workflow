@@ -260,11 +260,22 @@ Usage: `/checkpoint approve-pr work/[branch-name]`
    - Dev: read `## Team` in CLAUDE.md → match branch to member (`work/phase1-backend` → Backend dev)
    - Phase: read branch prefix (`work/phase1-*` → Phase 1), then read ROADMAP.md Phase 1 expected outcome
    - If branch doesn't follow `work/phaseN-role` pattern → ask: "¿A qué fase y dev pertenece este branch?"
-4. **Auto-detect GO/NO-GO trigger:**
+4. **Verify dev's SESSION is up to date:**
+   - Read PROJECT_STATE.md → find `### [Dev Name]` section → check `Updated:` field
+   - Compare `Updated:` vs date of latest commit on the branch (`git log work/[branch] -1 --format=%ci`)
+   - If SESSION.Updated is OLDER than last commit → warn before continuing:
+     ```
+     ⚠️ La sección de [Dev Name] en PROJECT_STATE no fue actualizada.
+        Último commit: [date] · Último checkpoint: [Updated date]
+        Recomienda al dev: /checkpoint close antes del PR
+        ¿Continuar de todas formas? [s/n]
+     ```
+   - If SESSION.Updated matches or is newer → ✅ proceed silently
+5. **Auto-detect GO/NO-GO trigger:**
    - Read CLAUDE.md `## Team → Members` → list all branches for this phase
    - Run `git branch -r --merged main` → check which work/phaseN-* branches are already merged
    - If THIS merge = last unmerged branch of phase → auto-flag: "⚠️ Todos los branches de Phase [N] mergeados — GO/NO-GO requerido"
-5. **Check who gets unblocked:**
+6. **Check who gets unblocked:**
    - Read PROJECT_STATE.md → find dev sections with `Dependencies: Waiting for [branch/role]`
    - List them in output
 6. Show review summary:

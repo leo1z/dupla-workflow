@@ -121,10 +121,16 @@ Only if Clarity Check passed:
 
 "¿Investigación rápida del mercado? [s/n]"
 
-If yes → spawn 3 parallel subagents:
-- Agent 1: Competitive analysis (direct competitors, alternatives)
-- Agent 2: Market size (TAM/SAM/SOM, demand signals)
-- Agent 3: Similar solutions (what exists, how they work)
+If yes:
+- **If subagents available** (Claude Code, Antigravity with multi-agent) → spawn 3 parallel subagents:
+  - Agent 1: Competitive analysis (direct competitors, alternatives)
+  - Agent 2: Market size (TAM/SAM/SOM, demand signals)
+  - Agent 3: Similar solutions (what exists, how they work)
+- **If subagents NOT available** (Claude Desktop, single-agent IDEs) → execute sequentially:
+  1. Competitive analysis: "¿Quiénes son los competidores directos y alternativas actuales?"
+  2. Market size: "¿Cuál es el tamaño estimado del mercado y señales de demanda?"
+  3. Similar solutions: "¿Qué soluciones similares existen y cómo funcionan?"
+  - Wait for each answer before next — same 3 topics, sequential instead of parallel
 
 Combine results into brief summary (max 200 words).
 
