@@ -167,6 +167,36 @@ Key: SESSION block + selective doc loading (never load all docs upfront).
 
 ---
 
+## Updating
+
+### Already have Dupla-Workflow v2?
+
+```bash
+cd ~/dupla-workflow   # wherever you cloned it
+git pull
+bash bin/install.sh
+```
+
+Then in your IDE:
+```
+/health-check   → verify everything is correct
+```
+
+### Have v2 installed but want in-IDE update?
+
+```
+/update-dupla   → checks version, shows changelog, updates with backup
+```
+
+### Coming from v1 (commands/ folder, CREDENCIALES.md)?
+
+```
+/update-dupla   → detects v1, guides migration step by step
+```
+Migration: backs up all v1 files → installs v2 → suggests `/setup-dupla` for global docs → `/adapt-project` per project for doc format.
+
+---
+
 ## Troubleshooting
 
 **"docs/PROJECT_STATE.md not found"**

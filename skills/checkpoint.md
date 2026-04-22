@@ -6,25 +6,29 @@ Usage: /checkpoint
 
 ## Mode Selection
 
-Detect project_type from docs/PROJECT_STATE.md YAML:
-- `project_type: individual` → show modes 1–3
-- `project_type: team` → show modes 1–4 (mode 4 only for Leader)
+**Auto-detect context first, then show relevant options:**
+
+Detect signals:
+- Uncommitted changes? → suggest Quick Save
+- User mentioned "gemini", "cambiar modelo", "handoff", "otro modelo" → suggest Handoff
+- project_type: team AND user is Lead → add Approve PR option
+- Many commits since last close (>10) → suggest Full Close + new chat
 
 **Individual menu:**
 ```
 ¿Qué quieres hacer?
-  1 — Quick save (mid-session)
-  2 — Full close (end of session)
-  3 — Handoff (switch to another model)
+  1 — Quick save (mid-session, 30 seg)
+  2 — Full close (end of session + abre nuevo chat)
+  3 — Handoff (cambiar a otro modelo o dev)
 ```
 
 **Team menu:**
 ```
 ¿Qué quieres hacer?
-  1 — Quick save (mid-session)
-  2 — Full close (end of session)
-  3 — Handoff (switch to another model)
-  4 — Approve PR (Lead only — review + merge branch)
+  1 — Quick save (mid-session, 30 seg)
+  2 — Full close (end of session + abre nuevo chat)
+  3 — Handoff (cambiar a otro modelo)
+  4 — Approve PR (Lead: revisar + mergear rama)
 ```
 
 ---
@@ -56,7 +60,7 @@ Next: [continues...]
 
 ## Mode 2 — Full Close (end of session)
 
-Complete session closure with state update + next-session prep.
+Complete session closure with state update + next-session prep + new chat guidance.
 
 **Steps:**
 1. Run quick save (Mode 1, all steps)
@@ -71,55 +75,121 @@ Complete session closure with state update + next-session prep.
 3. Ask: "¿Hay algo para PROBLEMS.md? (Enter para omitir)"
 4. Check: cross-project issue? → offer "Agregar a ~/.claude/PROBLEMS_GLOBAL.md? [s/n]"
 5. Recommend next model:
-   - "plan", "research", "review" → suggest Gemini
-   - "implement", "debug", "code" → suggest Claude
+   - Next contains "plan", "research", "review", "decidir" → suggest Gemini
+   - Next contains "implement", "debug", "code", "build" → suggest Claude
+   - No clear signal → "Claude o Gemini según qué hagas primero"
 6. **Team:** show dependency status for next dev:
    ```
-   Tu trabajo actualizado. Estado de dependencias:
-   → Dev B puede continuar (esperaba tu API) ✅
-   → Dev C ya terminó DB ✅
+   Dev B puede continuar (esperaba tu API) ✅
+   Dev C ya terminó DB ✅
    ```
-7. Output (10 lines max):
+7. **Always end with new chat guidance:**
 ```
 ✅ Sesión cerrada — [fecha]
 
 Completado: [from git log]
 Próxima sesión: [Next sentence]
-Recomendado: [model]
+Modelo recomendado: [Claude / Gemini]
 
-[Team only:]
-Dev B puede continuar → /new-session en su chat
+→ Cierra este chat
+→ Abre uno nuevo
+→ Escribe /new-session para continuar
+   (Chats frescos = contexto limpio = menos tokens)
+
+[Team only: Dev B puede continuar → /new-session en su chat]
 ```
 
 ---
 
-## Mode 3 — Handoff (to another model)
+## Mode 3 — Handoff (to another model or dev)
 
-Complete save + generate handoff block.
+Complete save + generate handoff block + step-by-step instructions.
 
 **Steps:**
-1. Run full close (Mode 2, skip model recommendation)
-2. Generate `<handoff>` block:
+
+1. Ask destination:
+```
+¿A dónde vas?
+  1 — Gemini (Antigravity — planificación / investigación)
+  2 — Claude Opus (mismo IDE — tarea compleja)
+  3 — Otro dev del equipo
+  4 — Otro (especifica)
+```
+
+2. Run full close (Mode 2, skip new-chat guidance — handled below)
+
+3. Generate `<handoff>` block:
 ```xml
 <handoff>
 Date: YYYY-MM-DD HH:MM
-From: claude → To: [gemini/claude-opus/other]
+From: [current model] → To: [destination]
 Project: [name] at [path]
-Goal: [current goal]
+Goal: [current goal from PROJECT_STATE]
 Branch: [current branch]
-Done: [completed this session]
-Next: [next action]
-Context: Read docs/PROJECT_STATE.md first
-[Team: your Dev section is ### [Name]]
+Done: [completed this session — from git log]
+Next: [next action — be specific]
+Context: Read docs/PROJECT_STATE.md first, then <session> block
+[Team only: Your Dev section is ### [Dev Name]]
 </handoff>
 ```
-3. Ask: "¿Push antes de handoff? [s/n]"
-4. Output (8 lines):
-```
-✅ Listo para handoff
 
-Copia este bloque al próximo chat:
+4. Push if uncommitted:
+```
+¿Push antes del handoff? [s/n]
+→ If yes: git add . && git commit -m "handoff: [brief desc]" && git push
+```
+
+5. Show step-by-step instructions for destination:
+
+**If Gemini (Antigravity):**
+```
+✅ Handoff listo → Gemini
+
+Pasos:
+  1. Abre Antigravity
+  2. Selecciona Gemini como modelo
+  3. Nuevo chat (ícono +)
+  4. Pega este bloque AL INICIO del chat:
+
 [handoff block]
+
+  5. Escribe: /new-session
+  6. Gemini leerá tu estado y continuará
+
+Cuándo volver a Claude:
+  → Cuando empieces a implementar código
+  → /checkpoint handoff → selecciona Claude → repite el proceso
+```
+
+**If Claude Opus (same IDE):**
+```
+✅ Handoff listo → Claude Opus
+
+Pasos:
+  1. Cierra este chat
+  2. Abre nuevo chat en VS Code / Antigravity
+  3. Selecciona Claude Opus como modelo
+  4. Pega este bloque AL INICIO:
+
+[handoff block]
+
+  5. Escribe: /new-session
+```
+
+**If another dev (Team):**
+```
+✅ Handoff listo → [Dev Name]
+
+Comparte esto con [Dev Name]:
+  1. git pull origin main
+  2. git checkout work/[branch]
+  3. Abre nuevo chat en su IDE
+  4. Pega este bloque:
+
+[handoff block]
+
+  5. Escribe: /new-session
+  Su sección en PROJECT_STATE.md ya está actualizada.
 ```
 
 ---

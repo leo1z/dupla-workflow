@@ -100,8 +100,40 @@ If YES → proceed to generation
 
 ### Optional: ~/.claude/.mcp.json
 - If user selected "technical stack": ask "Enable MCP filesystem access? [s/n]"
-- Generate .mcp.json for project-level MCP server setup
 - Requires Node.js installed
+- **Does NOT work in Antigravity** (uses its own context system)
+- Works in: Claude Desktop + VS Code + Claude Code
+
+If YES → generate based on IDE detected:
+
+**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json` on Mac,
+`%APPDATA%\Claude\claude_desktop_config.json` on Windows):
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/[name]/Projects"]
+    }
+  }
+}
+```
+
+**VS Code + Claude Code** (`.mcp.json` in project root):
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
+    }
+  }
+}
+```
+
+**What MCP enables:** Claude reads project files automatically at session start — no need to use Read tool manually. SESSION block still used for efficiency (MCP doesn't replace it).
+
+**Without MCP:** System works fine — Claude uses Read tool on demand. MCP is a convenience improvement, not required.
 
 ### 4. Install Dupla Infrastructure
 - Execute: `bash ~/Projects/dupla-workflow/bin/install.sh` (or detect dupla-workflow location)
