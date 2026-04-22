@@ -1,5 +1,35 @@
 # Changelog — Dupla-Workflow
 
+## [2.2.0] — 2026-04-21
+
+### New Features
+- **Team mode** — Individual vs Team detection, per-dev sections, concurrent work without conflicts
+- **approve-pr** — Lead reviews + merges branch vs ROADMAP, auto-detects GO/NO-GO per phase
+- **adapt-to-team** — Convert individual project → team without redoing setup
+- **add-team-member** — Add devs or change roles mid-project
+- **health-check** — Full system verification (skills, hooks, project docs, team, stack coherence)
+- **project-audit** — Pre-compiled dependency graph for low-token impact analysis
+- **token-budget** — Session cost monitor
+
+### Fixed
+- **install.sh** — Now deploys hooks to `~/.claude/hooks/` and registers in `settings.json`
+- **session-reminder.sh** — Cross-platform date parsing (macOS + Linux)
+- **adapt-to-team.sh** — Cross-platform date for branch naming (Windows compatible)
+- **new-session** — Detects first session (placeholder SESSION), reads `<handoff>` block, partial name matching for team
+- **adapt-project** — Always sets `project_type: individual` + fills SESSION with real values
+- **new-project** — `git push --all` + GitHub collaborator invite instructions for team setup
+- **checkpoint approve-pr** — Infers dev/phase from branch name, auto-detects last branch of phase (GO/NO-GO), shows which devs get unblocked
+- **health-check** — Verifies hooks in settings.json, custom skills flagged as INFO not WARNING
+- **update-dupla** — User-run bash instructions (Claude can't execute), custom hooks warning in v1 migration
+- **suggest-checkpoint** — Detects many modified files without commits (long sessions without git activity)
+
+### Added
+- Team day-1 onboarding guide in `/new-session`
+- Branch fallback from ROADMAP phase when not defined in CLAUDE.md
+- Windows install note in README (Git Bash / WSL required)
+
+---
+
 ## [2.0.0] — 2026-04-20
 
 ### Major Changes

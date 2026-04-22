@@ -234,7 +234,7 @@ Migration: backs up all v1 files → installs v2 → suggests `/setup-dupla` for
 
 ## Version
 
-**v2.1.0** — 2026-04-21
+**v2.2.0** — 2026-04-21
 - Team mode: individual vs team detection, team templates, git strategy
 - /adapt-to-team: convert individual projects to team
 - /add-team-member: add devs + edit roles mid-project
