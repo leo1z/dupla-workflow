@@ -69,6 +69,46 @@ if [ "$HAS_ANTIGRAVITY" = true ]; then
   fi
 fi
 
+# Deploy hooks
+echo "🔧 Deploying hooks..."
+mkdir -p "$CLAUDE_DIR/hooks"
+cp "$SCRIPT_DIR/hooks"/*.sh "$CLAUDE_DIR/hooks/" 2>/dev/null || true
+chmod +x "$CLAUDE_DIR/hooks"/*.sh 2>/dev/null || true
+echo "   ✓ Hooks deployed to ~/.claude/hooks/"
+
+# Register hooks in settings.json
+SETTINGS="$CLAUDE_DIR/settings.json"
+HOOKS_JSON='{
+  "hooks": {
+    "PreToolUse": [{"matcher": "Write", "hooks": [{"type": "command", "command": "bash ~/.claude/hooks/guard-project-state.sh"}]}],
+    "Stop": [{"type": "command", "command": "bash ~/.claude/hooks/suggest-checkpoint.sh"}],
+    "UserPromptSubmit": [{"type": "command", "command": "bash ~/.claude/hooks/session-reminder.sh"}]
+  }
+}'
+
+if [ ! -f "$SETTINGS" ]; then
+  echo "$HOOKS_JSON" > "$SETTINGS"
+  echo "   ✓ Hooks registered in ~/.claude/settings.json"
+elif grep -q '"PreToolUse"' "$SETTINGS" 2>/dev/null; then
+  echo "   ⚠️  Hooks already in settings.json — skipped (verify manually if needed)"
+elif command -v python3 >/dev/null 2>&1; then
+  python3 - "$SETTINGS" "$HOOKS_JSON" <<'PYEOF'
+import sys, json
+settings_path = sys.argv[1]
+new_hooks = json.loads(sys.argv[2])
+with open(settings_path) as f:
+  settings = json.load(f)
+settings.setdefault("hooks", {}).update(new_hooks["hooks"])
+with open(settings_path, "w") as f:
+  json.dump(settings, f, indent=2)
+PYEOF
+  echo "   ✓ Hooks merged into ~/.claude/settings.json"
+else
+  echo "   ⚠️  Could not auto-merge settings.json (python3 not found)"
+  echo "      Add manually to ~/.claude/settings.json:"
+  echo "$HOOKS_JSON"
+fi
+
 # Create dupla version marker
 echo "$(cat "$SCRIPT_DIR/VERSION")" > "$CLAUDE_DIR/DUPLA_VERSION"
 [ "$HAS_ANTIGRAVITY" = true ] && cp "$CLAUDE_DIR/DUPLA_VERSION" "$AGENT_DIR/DUPLA_VERSION"
@@ -83,4 +123,5 @@ echo ""
 echo "IDEs configured:"
 [ "$HAS_CLAUDE" = true ] && echo "  ✓ Claude Code (~/.claude/skills/)"
 [ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Antigravity (~/.agent/skills/)"
+echo "  ✓ Hooks: guard, suggest-checkpoint, session-reminder"
 echo ""

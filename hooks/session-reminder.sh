@@ -13,8 +13,12 @@ if [ -z "$UPDATED" ]; then
   exit 0
 fi
 
-# Parse YYYY-MM-DD format
-UPDATED_EPOCH=$(date -d "$UPDATED" +%s 2>/dev/null)
+# Parse YYYY-MM-DD format (cross-platform: GNU date on Linux, BSD date on macOS)
+if date -d "$UPDATED" +%s >/dev/null 2>&1; then
+  UPDATED_EPOCH=$(date -d "$UPDATED" +%s)
+else
+  UPDATED_EPOCH=$(date -j -f "%Y-%m-%d" "$UPDATED" +%s 2>/dev/null)
+fi
 NOW_EPOCH=$(date +%s)
 DIFF_SECONDS=$((NOW_EPOCH - UPDATED_EPOCH))
 DIFF_HOURS=$((DIFF_SECONDS / 3600))
