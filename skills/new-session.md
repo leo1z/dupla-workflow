@@ -11,10 +11,19 @@ Usage: /new-session [optional goal]
 First, check for `QUICKSTATE.md` in the current directory:
 - **Found** → Micro flow: delegate entirely to `/quick-start` skill and stop here
 
-If no `QUICKSTATE.md`, read YAML header of docs/PROJECT_STATE.md:
-- `project_type: individual` → Individual flow (below)
-- `project_type: team` → Team flow (below)
-- No YAML / missing field → assume Individual (fallback)
+If no `QUICKSTATE.md`, check if `docs/PROJECT_STATE.md` exists:
+- **Not found** → stop and show:
+  ```
+  ❌ Este proyecto no está inicializado en Dupla-Workflow.
+
+  ¿Proyecto existente?  → /adapt-project
+  ¿Proyecto nuevo?      → /new-project
+  ¿Sesión pequeña?      → /quick-start
+  ```
+- **Found** → read YAML header:
+  - `project_type: individual` → Individual flow (below)
+  - `project_type: team` → Team flow (below)
+  - No YAML / missing field → assume Individual (fallback)
 
 ---
 
@@ -154,6 +163,7 @@ Bienvenido al equipo. Día 1:
 | Condition | Action |
 |-----------|--------|
 | QUICKSTATE.md found | Micro flow — delegate to /quick-start |
+| docs/PROJECT_STATE.md not found | Stop — show /adapt-project / /new-project / /quick-start options |
 | project_type missing | Assume Individual (fallback) |
 | SESSION has placeholder values | First session — show output, skip staleness |
 | handoff block found | Read it first, use as additional context |
