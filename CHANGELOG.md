@@ -1,5 +1,12 @@
 # Changelog — Dupla-Workflow
 
+## [2.4.1] — 2026-04-22
+
+### New Skill
+- **`/check-project`** — Validates that project docs reflect current reality. Reads PROJECT_STATE, CLAUDE.md, ROADMAP, ARCHITECTURE, PROBLEMS → asks targeted questionnaire in one block → shows drift table → offers to update docs.
+
+---
+
 ## [2.4.0] — 2026-04-22
 
 ### New Features — Antigravity (Gemini) Full Support
