@@ -27,7 +27,7 @@ bash bin/install.sh
 
 > **Windows:** use Git Bash or WSL to run `bash bin/install.sh`. In VS Code, open the integrated terminal and set it to Git Bash first.
 
-Deploys skills to `~/.claude/skills/` (Claude Code) and `~/.agent/skills/` (Antigravity, if detected).
+Deploys skills to `~/.claude/skills/` (Claude Code) and `~/.gemini/antigravity/global_workflows/` (Antigravity, if detected).
 
 ### 2. Configure (IDE — once per machine)
 
@@ -129,10 +129,11 @@ Kill criteria defined upfront. No sunk cost fallacy.
 
 ### Antigravity
 1. Install Antigravity (Google's Agent IDE)
-2. `bash bin/install.sh` (auto-detects `~/.agent/` on macOS/Linux or `%USERPROFILE%\.agent\` on Windows)
-3. Skills in `~/.agent/skills/`
-4. CLAUDE.md synced to `~/.agent/CLAUDE.md`
-5. **Skills activation:** in Antigravity write the skill name as instruction (e.g. "Ejecuta /new-session") — not slash commands
+2. `bash bin/install.sh` (auto-detects `~/.gemini/antigravity/` on Windows · `~/.agent/` on macOS/Linux)
+3. Skills deployed as **Workflows** to `~/.gemini/antigravity/global_workflows/`
+4. Global identity synced to `~/.gemini/GEMINI.md`
+5. **Skills activation:** type `/skill-name` in Antigravity Agent chat (shows in Customizations → Workflows)
+6. **Per-project:** run `/adapt-project` → creates `.agents/rules/claude.md` (Gemini reads it automatically)
 
 ### Claude Desktop
 1. Install Claude Desktop (Anthropic official)

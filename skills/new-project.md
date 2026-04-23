@@ -286,7 +286,7 @@ After all docs are created, generate the initial project map:
 - Run: `ls -la` on project folders to identify actual source structure
 - Read: ROADMAP.md Phase 1 Outcomes (to set initial scope)
 - Write `docs/code-review-graph.json`:
-  - `"project"`: project name (from folder)
+  - `"project"`: actual project name from `basename $(pwd)` (never `"."` or placeholder)
   - `"generated"`: current timestamp
   - `"lastCommit"`: current git HEAD (or "initial" if no commits yet)
   - `"phase"`: `"Phase 1"` (current phase from ROADMAP)

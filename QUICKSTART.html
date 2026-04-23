@@ -153,7 +153,7 @@ $ bash bin/install.sh</div>
     </div>
     <div class="callout blue">
       <div class="callout-title">¿Qué hace bin/install.sh?</div>
-      <div class="callout-text"><strong>Detecta:</strong> ¿tienes VS Code? ¿Antigravity? ¿Claude Desktop?<br/><strong>Instala:</strong> 13 skills en ~/.claude/skills/ (+ copia a ~/.agent/skills/ si tienes Antigravity).<br/><strong>Despliega:</strong> 3 hooks (automaciones que corren <em>fuera</em> del contexto — sin quemar tokens).<br/><strong>Resultado:</strong> El sistema está listo. Después no tocas más la terminal hasta /new-project.</div>
+      <div class="callout-text"><strong>Detecta:</strong> ¿tienes VS Code? ¿Antigravity? ¿Claude Desktop?<br/><strong>Claude Code:</strong> 13 skills en ~/.claude/skills/ + ~/.claude/commands/.<br/><strong>Antigravity:</strong> 13 workflows en ~/.gemini/antigravity/global_workflows/ · identidad en ~/.gemini/GEMINI.md.<br/><strong>Despliega:</strong> 3 hooks (automaciones que corren <em>fuera</em> del contexto — sin quemar tokens).<br/><strong>Resultado:</strong> El sistema está listo. Después no tocas más la terminal hasta /new-project.</div>
     </div>
   </section>
 
@@ -212,7 +212,7 @@ $ bash bin/install.sh</div>
       </div>
       <div class="card blue-card">
         <div class="card-title">Skills en Antigravity</div>
-        <div class="card-desc"><strong>install.sh los instala automáticamente</strong> en <code style="font-size:11px;font-family:monospace">~/.agent/skills/</code>. En Antigravity los skills se activan escribiendo su nombre (ej: "Ejecuta /new-session") — no como slash commands como en Claude Code.</div>
+        <div class="card-desc"><strong>install.sh los instala como Workflows</strong> en <code style="font-size:11px;font-family:monospace">~/.gemini/antigravity/global_workflows/</code>. Actívalos escribiendo <code style="font-size:11px;font-family:monospace">/skill-name</code> en el chat de Agent — igual que en Claude Code. Por proyecto: <code style="font-size:11px;font-family:monospace">/adapt-project</code> crea <code style="font-size:11px;font-family:monospace">.agents/rules/</code> con las reglas del proyecto.</div>
       </div>
     </div>
     <div class="callout blue">

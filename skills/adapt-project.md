@@ -152,7 +152,7 @@ After registering the project, generate the initial structural map:
 - Run: `git log --oneline -10`, `ls -la` on project root and src/ (or equivalent)
 - Read: docs/ROADMAP.md current phase section (or Phase: N/A if no ROADMAP)
 - Write `docs/code-review-graph.json`:
-  - `"project"`: project name
+  - `"project"`: actual project name from `basename $(pwd)` (never `"."` or generic)
   - `"generated"`: current timestamp
   - `"lastCommit"`: `git rev-parse --short HEAD`
   - `"phase"`: current phase from PROJECT_STATE (or "initial" if N/A)
