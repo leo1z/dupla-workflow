@@ -161,3 +161,18 @@ Generate code-review-graph.json       Update code-review-graph.json
 **When it's generated:** At project initialization (`/new-project`, `/adapt-project`).
 **When it's updated:** When `/checkpoint` marks a ROADMAP Outcome as `[x]` (phase advances).
 **When it's read:** On demand — for impact analysis, audits, or refactoring planning. Not loaded in normal sessions.
+
+---
+
+## 2026-04-22 — Antigravity Installation Detection
+
+`bin/install.sh` now detects Antigravity across all known paths in priority order:
+
+1. `~/.agent/` (Unix default) → deploys to `rules/`
+2. `~/.gemini/antigravity/` (Windows confirmed) → deploys to `knowledge/`
+3. `%USERPROFILE%/.agent/` (Windows fallback) → deploys to `rules/`
+4. `%USERPROFILE%/.gemini/antigravity/` (Windows fallback) → deploys to `knowledge/`
+
+Skills are wrapped with `trigger: agent_requested` frontmatter. `CLAUDE.md` is synced as `trigger: always_on`.
+
+If binary exists but directory not found → user sees `find` command + `ANTIGRAVITY_DIR=<path>` override.
