@@ -9,6 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 AGENT_DIR="$HOME/.agent"
 AGENT_RULES_DIR=""
+AGENT_WORKFLOWS_DIR="$HOME/.agents/workflows"
 SKILLS_SOURCE="$SCRIPT_DIR/skills"
 TEMPLATES_SOURCE="$SCRIPT_DIR/templates"
 GLOBAL_TEMPLATES_SOURCE="$SCRIPT_DIR/global-templates"
@@ -103,6 +104,18 @@ if [ "$HAS_ANTIGRAVITY" = true ]; then
   echo "   ✓ Skills deployed to $AGENT_RULES_DIR (Antigravity)"
 fi
 
+# Deploy skills — Antigravity Workflows (type "/" to trigger in Agent)
+mkdir -p "$AGENT_WORKFLOWS_DIR"
+for skill_file in "$SKILLS_SOURCE"/*.md; do
+  fname=$(basename "$skill_file")
+  name="${fname%.md}"
+  dest="$AGENT_WORKFLOWS_DIR/$fname"
+  desc=$(grep -m1 "^[^#]" "$skill_file" 2>/dev/null | sed 's/^[[:space:]]*//' | cut -c1-200)
+  printf -- "---\ndescription: %s\n---\n\n" "$desc" > "$dest"
+  cat "$skill_file" >> "$dest"
+done
+echo "   ✓ Workflows deployed to ~/.agents/workflows/ (type /skill-name in Antigravity)"
+
 # Deploy templates reference (for projects)
 echo "📋 Setting up templates directory structure..."
 mkdir -p "$CLAUDE_DIR/templates"
@@ -192,6 +205,7 @@ echo "  2. Or if migrating: /adapt-project"
 echo ""
 echo "IDEs configured:"
 [ "$HAS_CLAUDE" = true ] && echo "  ✓ Claude Code (~/.claude/skills/)"
-[ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Antigravity ($AGENT_RULES_DIR)"
+[ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Antigravity rules ($AGENT_RULES_DIR)"
+echo "  ✓ Antigravity workflows (~/.agents/workflows/) — type /skill-name in Agent"
 echo "  ✓ Hooks: guard, suggest-checkpoint, session-reminder"
 echo ""
