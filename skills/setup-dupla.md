@@ -16,11 +16,11 @@ Also check ~/Projects/ or ~/projects/ for existing projects with docs/:
 
 Detect IDEs:
 - ~/.claude/ exists? → Claude Code detected
-- ~/.agent/ exists? → Antigravity detected (Unix/macOS/WSL)
-- On Windows (Git Bash): check if `$USERPROFILE/.agent/` exists as fallback
-  - If detected: will sync CLAUDE.md to that path
-  - If NOT detected but user says they have Antigravity: ask for path manually
-    `"¿Dónde está instalado Antigravity? (ej: C:\Users\[name]\.agent\)"`
+- ~/.gemini/antigravity/ exists? → Antigravity detected (confirmed Windows path)
+- ~/.agent/ exists? → Antigravity detected (Unix/macOS fallback)
+- If NOT detected but user says they have Antigravity: ask for path manually
+  `"¿Dónde está instalado Antigravity? (ej: ~/.gemini/antigravity/)"`
+  Then set: ANTIGRAVITY_DIR=<path> bash bin/install.sh
 
 ---
 
@@ -98,9 +98,10 @@ If YES → proceed to generation
 ### 3. ~/.claude/PROBLEMS_GLOBAL.md
 - Create empty template (user populates as issues arise)
 
-### Optional: ~/.agent/CLAUDE.md
-- If Antigravity detected: copy ~/.claude/CLAUDE.md to ~/.agent/CLAUDE.md
-- Same copy to ~/.agent/skills/ if they exist
+### Antigravity setup (if detected)
+- `~/.gemini/GEMINI.md` ← copy of ~/.claude/CLAUDE.md (global Gemini identity)
+- `~/.gemini/antigravity/global_workflows/` ← skills deployed as workflows (type /skill-name in Agent)
+- Per-project: `/adapt-project` creates `.agents/rules/claude.md` automatically
 
 ### Optional: ~/.claude/.mcp.json
 - If user selected "technical stack": ask "Enable MCP filesystem access? [s/n]"
@@ -158,7 +159,9 @@ If YES → generate based on IDE detected:
 - ~/.claude/PROBLEMS_GLOBAL.md (empty, ready)
 
 **Infrastructure installed:**
-- ✓ Skills deployed (13 v2 commands)
+- ✓ Claude Code skills (13 commands in ~/.claude/skills/)
+- ✓ Antigravity workflows (13 in ~/.gemini/antigravity/global_workflows/) [if detected]
+- ✓ ~/.gemini/GEMINI.md synced [if detected]
 - ✓ Hooks configured (guard-project-state, suggest-checkpoint, session-reminder)
 - ✓ DUPLA_VERSION [from VERSION file]
 

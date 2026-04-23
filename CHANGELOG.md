@@ -1,5 +1,24 @@
 # Changelog — Dupla-Workflow
 
+## [2.4.0] — 2026-04-22
+
+### New Features — Antigravity (Gemini) Full Support
+- **Global workflows** — Skills deployed to `~/.gemini/antigravity/global_workflows/` as Antigravity Workflows. Type `/skill-name` in Agent to trigger.
+- **GEMINI.md** — `install.sh` now syncs `~/.claude/CLAUDE.md` → `~/.gemini/GEMINI.md` (global Gemini identity, equivalent to CLAUDE.md for Claude Code)
+- **Project rules** — `/adapt-project` now creates `.agents/rules/claude.md` per project (`trigger: always_on`). Gemini reads project context automatically at session start.
+- **Shared state** — `docs/PROJECT_STATE.md` is the same file for both Claude and Gemini. No duplication — both models read from the same source of truth.
+- **Per-project update** — `/update-dupla` now asks which projects to update `.agents/rules/` for Gemini.
+
+### Fixed
+- **`install.sh`** — Antigravity detection now finds `~/.gemini/antigravity/` (confirmed Windows path). Previous path `~/.agent/` was incorrect.
+- **`install.sh`** — If Antigravity binary exists but config dir not found: shows `find` command + `ANTIGRAVITY_DIR=<path>` override.
+- **`health-check.md`** — Checks updated to use `~/.gemini/antigravity/global_workflows/` and `~/.gemini/GEMINI.md` instead of old `~/.agent/` paths.
+- **`setup-dupla.md`** — Detection and sync updated to correct Antigravity paths.
+- **`update-dupla.md`** — Update commands corrected to deploy to `~/.gemini/antigravity/global_workflows/`.
+- **`SYSTEM_MAP.md`** — Added Antigravity document layer diagram and token cost table alongside Claude Code.
+
+---
+
 ## [2.3.1] — 2026-04-22
 
 ### Fixed (16 gaps from audit)

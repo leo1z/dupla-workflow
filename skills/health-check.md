@@ -36,9 +36,10 @@ FOUND=$(ls ~/.claude/skills/*.md 2>/dev/null | wc -l)
 grep "Name:" ~/.claude/CLAUDE.md    → ✅ / ⚠️ empty
 grep "Stack" ~/.claude/SYSTEM.md    → ✅ / ⚠️ empty
 
-# Antigravity: if ~/.agent/ exists
-~/.agent/skills/ → same skills present? → ✅ / ⚠️ out of sync
-~/.agent/CLAUDE.md matches ~/.claude/CLAUDE.md? → ✅ / ⚠️ different
+# Antigravity: if ~/.gemini/antigravity/ exists
+~/.gemini/GEMINI.md → ✅ exists / ⚠️ MISSING (run install.sh)
+~/.gemini/antigravity/global_workflows/ → workflows present? → ✅ / ⚠️ out of sync (run install.sh)
+.agents/rules/claude.md (project) → ✅ exists / ⚠️ MISSING (run /adapt-project)
 
 # Hooks installed?
 ~/.claude/hooks/guard-project-state.sh   → ✅ / ⚠️ MISSING
@@ -153,7 +154,7 @@ WARNINGS (fix soon):
   ⚠️ work/phase1-frontend branch missing → git checkout -b work/phase1-frontend
 
 INFO:
-  ℹ️ Antigravity not detected (normal if not using it)
+  ℹ️ Antigravity not detected — if installed, check ~/.gemini/antigravity/ exists
   ℹ️ MCP not configured (optional — run /setup-dupla to enable)
 
 Run /health-check again after fixes to verify.
