@@ -12,9 +12,9 @@ Updated: 2026-04-22 (sesión 6)
 Status: ACTIVE
 Phase: N/A
 Phase_Status: N/A
-Done: v2.4.0 completo — Antigravity global_workflows/ + GEMINI.md + .agents/rules/ por proyecto · health-check + setup-dupla + update-dupla + README + QUICKSTART + SYSTEM_MAP + code-review-graph alineados · .agents/rules creados para dupla-conecta, maraton, microdetective
+Done: v2.4.0 completo — Antigravity global_workflows/ + GEMINI.md + .agents/rules/ por proyecto · health-check + setup-dupla + update-dupla + README + QUICKSTART + SYSTEM_MAP + code-review-graph alineados · .agents/rules creados para dupla-conecta, maraton, microdetective · /check-project skill creado e instalado
 Next: Validar flujo en proyecto real — abrir Antigravity, verificar que /new-session aparece en Workflows tab, correr /adapt-project en dupla-conecta
-Blockers: Confirmar path Antigravity en macOS (desconocido — ningún Mac disponible aún)
+Blockers: none
 Branch: master
 Model: claude
 Handoff: no
@@ -39,6 +39,7 @@ Framework listo para distribución y uso diario en todos los proyectos.
 ## Blockers
 
 - none
+- *(pendiente menor: confirmar path Antigravity en macOS — no bloquea trabajo)*
 
 ---
 

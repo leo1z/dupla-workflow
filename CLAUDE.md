@@ -6,10 +6,13 @@ AI workflow framework for Claude Code + Antigravity (Gemini). Provides slash com
 
 ## Stack
 
-- **Skills:** `.md` files in `skills/` — slash commands executed by Claude Code
+- **Skills:** `.md` files in `skills/` — slash commands in Claude Code · Workflows in Antigravity (type `/skill-name` in Agent)
 - **Hooks:** shell scripts in `hooks/` — automations running outside context window
 - **Templates:** `.md` files in `templates/` — used by skills to generate project docs
-- **Install:** `bin/install.sh` — deploys skills + hooks to `~/.claude/` (and `~/.agent/` if Antigravity)
+- **Install:** `bin/install.sh` — deploys to:
+  - Claude Code: `~/.claude/skills/` + `~/.claude/commands/`
+  - Antigravity: `~/.gemini/antigravity/global_workflows/` (Workflows) + `~/.gemini/GEMINI.md` (identity)
+  - Per-project: `.agents/rules/claude.md` via `/adapt-project`
 - **Version:** read from `VERSION` file
 
 ## Key Files
