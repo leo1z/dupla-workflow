@@ -23,6 +23,13 @@ HAS_ANTIGRAVITY=false
 [ -d "$CLAUDE_DIR" ] && HAS_CLAUDE=true
 
 # Antigravity detection — check all known paths (Unix + Windows)
+# Override: ANTIGRAVITY_DIR=/path bash bin/install.sh
+if [ -n "$ANTIGRAVITY_DIR" ] && [ -d "$ANTIGRAVITY_DIR" ]; then
+  AGENT_DIR="$ANTIGRAVITY_DIR"
+  AGENT_RULES_DIR="$ANTIGRAVITY_DIR/knowledge"
+  HAS_ANTIGRAVITY=true
+fi
+
 [ -d "$AGENT_DIR" ] && HAS_ANTIGRAVITY=true && AGENT_RULES_DIR="$AGENT_DIR/rules"
 
 # Windows: ~/.gemini/antigravity/ (confirmed path on Windows)
@@ -53,6 +60,13 @@ if [ "$HAS_ANTIGRAVITY" = false ] && [ -n "$USERPROFILE" ]; then
     AGENT_RULES_DIR="$WIN_GEMINI_DIR/knowledge"
     HAS_ANTIGRAVITY=true
   fi
+fi
+
+if [ "$HAS_ANTIGRAVITY" = false ] && command -v antigravity >/dev/null 2>&1; then
+  echo "⚠️  Antigravity binary found but config directory not detected."
+  echo "   Run this to find it:"
+  echo "     find ~ -maxdepth 4 -name 'antigravity' -type d 2>/dev/null"
+  echo "   Then re-run: ANTIGRAVITY_DIR=<path> bash bin/install.sh"
 fi
 
 if [ "$HAS_CLAUDE" = false ] && [ "$HAS_ANTIGRAVITY" = false ]; then
