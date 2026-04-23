@@ -53,25 +53,57 @@ cp ~/.claude/skills/*.md ~/.claude/skills-backup/v[old-version]/
 # Download new version
 git clone --depth 1 https://github.com/leo1z/dupla-workflow.git /tmp/dupla-new
 
-# Update skills
+# Update Claude Code skills + hooks
 cp /tmp/dupla-new/skills/*.md ~/.claude/skills/
-
-# Update hooks
+cp /tmp/dupla-new/skills/*.md ~/.claude/commands/
 cp /tmp/dupla-new/hooks/*.sh ~/.claude/hooks/
-
-# Update version marker
 cp /tmp/dupla-new/VERSION ~/.claude/DUPLA_VERSION
 
-# Sync Antigravity if exists
-if [ -d ~/.agent/ ]; then
-  cp ~/.claude/skills/*.md ~/.agent/skills/
-fi
+# Update Antigravity global workflows (type "/" in Agent to use)
+mkdir -p ~/.gemini/antigravity/global_workflows
+for f in /tmp/dupla-new/skills/*.md; do
+  fname=$(basename "$f")
+  desc=$(grep -m1 "^[^#]" "$f" | cut -c1-200)
+  printf -- "---\ndescription: %s\n---\n\n" "$desc" > ~/.gemini/antigravity/global_workflows/"$fname"
+  cat "$f" >> ~/.gemini/antigravity/global_workflows/"$fname"
+done
+
+# Sync GEMINI.md from CLAUDE.md (only if GEMINI.md doesn't exist yet)
+[ ! -s ~/.gemini/GEMINI.md ] && cp ~/.claude/CLAUDE.md ~/.gemini/GEMINI.md
 
 # Cleanup
 rm -rf /tmp/dupla-new
 ```
 
 Tell user: "Copia y pega estos comandos en tu terminal. Cuando terminen, vuelve aquí y escribe /health-check"
+
+### Step 4.5 — Per-Project Update (optional)
+
+Ask:
+```
+¿Actualizar .agents/rules/ en algún proyecto? (para que Gemini lea las reglas del proyecto)
+
+Proyectos registrados en ~/.claude/SYSTEM.md:
+  1. [proyecto A] — [path]
+  2. [proyecto B] — [path]
+  0. Saltar
+
+¿Cuál(es)? (número, varios con coma, o 0 para saltar)
+```
+
+For each selected project — show command:
+```bash
+mkdir -p [project-path]/.agents/rules
+# Si ya existe CLAUDE.md del proyecto:
+cp [project-path]/CLAUDE.md [project-path]/.agents/rules/claude.md
+# Agregar trigger frontmatter al inicio:
+sed -i '1s/^/---\ntrigger: always_on\n---\n\n/' [project-path]/.agents/rules/claude.md
+```
+
+Output per project:
+```
+✓ [proyecto] → .agents/rules/claude.md actualizado
+```
 
 ### Step 5 — Output
 
@@ -81,6 +113,11 @@ Tell user: "Copia y pega estos comandos en tu terminal. Cuando terminen, vuelve 
 Cambios principales:
 - [feature 1]
 - [feature 2]
+
+Claude Code:   ~/.claude/skills/ ✓
+Antigravity:   ~/.gemini/antigravity/global_workflows/ ✓
+               ~/.gemini/GEMINI.md ✓ (si no existía)
+Por proyecto:  [N proyectos actualizados / saltado]
 
 Backup anterior: ~/.claude/skills-backup/v[old-version]/
 Siguiente: /health-check para verificar

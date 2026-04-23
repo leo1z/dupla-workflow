@@ -1,6 +1,6 @@
 ---
 doc: SYSTEM_MAP
-version: v2.3.0
+version: v2.4.0
 updated: 2026-04-22
 ---
 
@@ -12,70 +12,72 @@ How the system works, what each document does, and where tokens go.
 
 ## Document Layers
 
+### Claude Code (IDE / CLI)
+
 ```mermaid
 graph TB
 
-    subgraph GLOBAL["🌐 GLOBAL — ~/.claude/  (loaded in every project)"]
+    subgraph GLOBAL_C["🌐 GLOBAL — ~/.claude/"]
         GC["CLAUDE.md\nIdentity · Rules · Routing\n⚡ Always in context · ~1000 tokens/turn"]
         GS["SYSTEM.md\nProjects registry\n🔘 On demand only"]
-        GP["PROBLEMS_GLOBAL.md\nCross-project issues\n🔘 Only if debugging cross-project"]
+        GP["PROBLEMS_GLOBAL.md\n🔘 Only if debugging cross-project"]
+        SK["skills/*.md\n🎯 Zero cost until invoked\nTrigger: /skill-name"]
     end
 
-    subgraph PROJECT["📁 PROJECT — ./docs/  (per-project)"]
-        PC["CLAUDE.md\nProject-level rules\n⚡ Always in context · ~200 tokens/turn"]
-        PS["PROJECT_STATE.md ⭐\nRead: <session> block only\n📍 Session start · ~60 tokens"]
-        RD["ROADMAP.md\nPhases + features\n🔘 Only if planning"]
-        AR["ARCHITECTURE.md\nStack + decisions\n🔘 Only if building"]
-        PR["PROBLEMS.md\nKnown issues\n🔘 Only if debugging"]
+    subgraph PROJECT_C["📁 PROJECT — ./"]
+        PC["CLAUDE.md\nProject rules\n⚡ Always in context · ~200 tokens/turn"]
+        PS["docs/PROJECT_STATE.md ⭐\n<session> block · ~60 tokens"]
+        RD["docs/ROADMAP.md · docs/ARCHITECTURE.md\ndocs/PROBLEMS.md · 🔘 conditional"]
     end
 
-    subgraph MICRO["🗒️ MICRO — any folder  (lightweight)"]
-        QS["QUICKSTATE.md\nWhat · Done · Next · Notes\n📍 Full read · ~80 tokens\n(replaces entire docs/ structure)"]
-    end
-
-    subgraph SKILLS["🎯 SKILLS — on demand, zero baseline cost"]
-        NS["/new-session\nRead state → plan"]
-        CP["/checkpoint\nSave state → handoff"]
-        NP["/new-project\nInit project structure"]
-        QK["/quick-start\nMicro session init"]
-    end
-
-    subgraph HOOKS["🔔 HOOKS — shell scripts, run OUTSIDE context window"]
-        SR["session-reminder.sh\nUserPromptSubmit\nOnce/session if state stale"]
-        SC["suggest-checkpoint.sh\nStop event\nEvery 3 turns if changes pending"]
-        GG["guard-project-state.sh\nPreToolUse Write\nSilent unless blocking"]
-    end
-
-    GC -->|shapes| PC
-    PS -->|read by| NS
-    NS -->|updates| PS
-    CP -->|updates| PS
-    PS -.->|if planning| RD
-    PS -.->|if building| AR
-    PS -.->|if debugging| PR
-    GP -.->|feeds into| PR
-    SR -->|reads| PS
-    SC -.->|nudges toward| CP
-    GG -->|checks existence of| PS
-    QS -->|read by| QK
-    QK -->|updates| QS
+    GC --> PC
+    PS -->|read by /new-session| PS
 ```
+
+### Antigravity (Gemini)
+
+```mermaid
+graph TB
+
+    subgraph GLOBAL_A["🌐 GLOBAL — ~/.gemini/ + ~/.gemini/antigravity/"]
+        GM["GEMINI.md\nIdentity · Rules · Routing\n⚡ Always in context (same as CLAUDE.md)"]
+        WF["global_workflows/*.md\n🎯 Zero cost until invoked\nTrigger: /skill-name in Agent"]
+    end
+
+    subgraph PROJECT_A["📁 PROJECT — .agents/"]
+        AR["rules/claude.md\nProject rules\n⚡ trigger: always_on"]
+        AW["workflows/*.md\n🎯 Project-specific workflows\ntrigger: agent_requested"]
+        PS2["docs/PROJECT_STATE.md ⭐\nSame file as Claude — shared source of truth"]
+    end
+
+    GM --> AR
+    AR -->|instructs to read| PS2
+```
+
+**Clave:** `docs/PROJECT_STATE.md` es compartido — Claude y Gemini leen el mismo archivo. No se duplica.
 
 ---
 
 ## Token Cost — What Gets Loaded When
 
+### Claude Code
 | Document | When loaded | Tokens/turn | Skippable? |
 |---|---|---|---|
-| `~/.claude/CLAUDE.md` | **Always** — every session, every project | ~1000 | No — loaded by Claude Code |
-| `./CLAUDE.md` | **Always** — if file exists in project | ~200 | No — loaded by Claude Code |
-| `PROJECT_STATE.md` `<session>` | Session start (via `/new-session`) | ~60 | Yes — only the `<session>` block |
-| `ROADMAP.md` | Only if planning next features | ~300-800 | Yes |
-| `ARCHITECTURE.md` | Only if building / designing | ~400-1000 | Yes |
-| `PROBLEMS.md` | Only if debugging | ~200-500 | Yes |
-| Skills (`*.md`) | Only when `/skill-name` is invoked | 0 baseline | Yes — on-demand |
-| `code-review-graph.json` | Generated at init; updated on phase advance | 0 baseline | Yes — reference for audits |
-| `QUICKSTATE.md` | Micro sessions only (full read) | ~80 | Yes — replaces all docs |
+| `~/.claude/CLAUDE.md` | **Always** — every session | ~1000 | No |
+| `./CLAUDE.md` | **Always** — if exists in project | ~200 | No |
+| `docs/PROJECT_STATE.md` `<session>` | Session start via `/new-session` | ~60 | Yes |
+| `docs/ROADMAP.md` / `ARCHITECTURE.md` / `PROBLEMS.md` | Conditional | ~200-1000 | Yes |
+| Skills `~/.claude/skills/*.md` | Only when `/skill-name` invoked | 0 baseline | Yes |
+| `QUICKSTATE.md` | Micro sessions only | ~80 | Yes |
+
+### Antigravity (Gemini)
+| Document | When loaded | Tokens/turn | Skippable? |
+|---|---|---|---|
+| `~/.gemini/GEMINI.md` | **Always** — global identity | ~1000 | No |
+| `.agents/rules/claude.md` | **Always** — `trigger: always_on` | ~200 | No |
+| `docs/PROJECT_STATE.md` `<session>` | Session start — same file as Claude | ~60 | Yes |
+| `docs/ROADMAP.md` / `ARCHITECTURE.md` | Conditional — same files as Claude | ~200-1000 | Yes |
+| `~/.gemini/antigravity/global_workflows/*.md` | Only when `/skill-name` typed in Agent | 0 baseline | Yes |
 
 **Without this system:** An LLM typically reads 3-5 docs per session = 2000-5000 tokens just to understand context.
 **With this system:** Session start costs ~1260 tokens (CLAUDE.md global + project + session block).
