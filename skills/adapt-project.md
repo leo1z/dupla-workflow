@@ -119,6 +119,33 @@ Add to ~/.claude/SYSTEM.md:
 
 ---
 
+## Phase 5.5 — Set Up Antigravity (.agents/) Structure
+
+Create `.agents/` folder in project root for Gemini/Antigravity:
+
+### .agents/rules/claude.md
+- Content: copy of project CLAUDE.md (if exists) OR short rule block:
+  ```
+  ---
+  trigger: always_on
+  ---
+
+  # [Project Name] — Project Rules
+
+  Read docs/PROJECT_STATE.md <session> block at session start.
+  Read docs/ARCHITECTURE.md only if building.
+  Read docs/PROBLEMS.md only if debugging.
+  Commit prefix: feat/fix/chore/docs. Never commit to main directly.
+  ```
+
+### .agents/workflows/ (optional, for project-specific workflows)
+- Only create if project has custom prompts/workflows
+- Skip if none needed — global workflows in ~/.gemini/antigravity/global_workflows/ cover standard skills
+
+Show in output: "✓ .agents/rules/ created — Gemini reads project rules automatically"
+
+---
+
 ## Phase 6 — Generate docs/code-review-graph.json (project audit map)
 
 After registering the project, generate the initial structural map:

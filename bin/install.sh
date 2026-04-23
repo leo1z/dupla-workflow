@@ -141,14 +141,25 @@ else
   echo "   ✓ .claudeignore already exists — skipped"
 fi
 
-# Check if Antigravity needs CLAUDE.md (sync to knowledge/ as always_on rule)
+# Sync ~/.claude/CLAUDE.md → ~/.gemini/GEMINI.md (global Gemini identity)
+GEMINI_DIR="$HOME/.gemini"
+mkdir -p "$GEMINI_DIR"
+if [ -f "$CLAUDE_DIR/CLAUDE.md" ]; then
+  if [ ! -s "$GEMINI_DIR/GEMINI.md" ]; then
+    echo "📌 Creating ~/.gemini/GEMINI.md from CLAUDE.md..."
+    cp "$CLAUDE_DIR/CLAUDE.md" "$GEMINI_DIR/GEMINI.md"
+    echo "   ✓ ~/.gemini/GEMINI.md created"
+  else
+    echo "   ✓ ~/.gemini/GEMINI.md already exists — skipped"
+  fi
+fi
+
+# Sync CLAUDE.md to Antigravity knowledge/ as always_on rule (fallback for older Antigravity)
 if [ "$HAS_ANTIGRAVITY" = true ] && [ -f "$CLAUDE_DIR/CLAUDE.md" ]; then
   AGENT_CLAUDE="$AGENT_RULES_DIR/CLAUDE.md"
   if [ ! -f "$AGENT_CLAUDE" ]; then
-    echo "📌 Syncing CLAUDE.md to Antigravity..."
     printf -- "---\ntrigger: always_on\n---\n\n" > "$AGENT_CLAUDE"
     cat "$CLAUDE_DIR/CLAUDE.md" >> "$AGENT_CLAUDE"
-    echo "   ✓ CLAUDE.md synced to $AGENT_RULES_DIR/"
   fi
 fi
 
@@ -204,8 +215,13 @@ echo "  1. Run: /setup-dupla"
 echo "  2. Or if migrating: /adapt-project"
 echo ""
 echo "IDEs configured:"
-[ "$HAS_CLAUDE" = true ] && echo "  ✓ Claude Code (~/.claude/skills/)"
-[ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Antigravity rules ($AGENT_RULES_DIR)"
-echo "  ✓ Antigravity workflows (~/.gemini/antigravity/global_workflows/) — type /skill-name in Agent"
+[ "$HAS_CLAUDE" = true ] && echo "  ✓ Claude Code — skills (~/.claude/skills/)"
+[ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Antigravity — global rules ($AGENT_RULES_DIR)"
+echo "  ✓ Antigravity — global workflows (~/.gemini/antigravity/global_workflows/)"
+echo "  ✓ Gemini identity (~/.gemini/GEMINI.md)"
 echo "  ✓ Hooks: guard, suggest-checkpoint, session-reminder"
+echo ""
+echo "Per-project setup: run /adapt-project in any project"
+echo "  → Creates .agents/rules/ (project rules for Gemini)"
+echo "  → Creates .agents/workflows/ (project workflows)"
 echo ""
