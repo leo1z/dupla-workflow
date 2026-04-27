@@ -6,11 +6,13 @@ Usage: /new-project
 
 ## Phase 0 — Project Setup
 
+> 💡 **Activa Plan Mode** antes de continuar (Shift+Tab en Claude Code). Este skill genera el plan — afínalo antes de ejecutar.
+
 Ask TWO questions upfront (in same message):
 
 **Maturity:**
 "¿Dónde está tu idea?
-  1 — Idea nueva (nunca investigada)
+  1 — Idea nueva (nunca investigada ni validada con personas reales)
   2 — Ya investigada (tengo research, sin MVP definido)
   3 — MVP ya definido (sé exactamente qué construir)
   4 — En construcción (ya existe, quiero integrar al workflow)"
@@ -21,7 +23,7 @@ Ask TWO questions upfront (in same message):
   2 — Equipo (2+ personas, con un lead que aprueba cambios)"
 
 Based on Maturity:
-- **1** → continue with Phase 1, include research
+- **1** → run **Phase 0.5 (Validation Gate)** before continuing
 - **2** → skip Phase 4 research, ask "¿Dónde está el research?"
 - **3** → skip Phase 2 + 4, ask "¿Dónde están ROADMAP + ARCHITECTURE?"
 - **4** → redirect to `/adapt-project`
@@ -30,6 +32,52 @@ Based on Team:
 - **Individual** → use CLAUDE_TEMPLATE.md + PROJECT_STATE_TEMPLATE.md
 - **Equipo** → after Phase 6 (Clarity Check), ask team questions (Phase 6B)
   then use CLAUDE_TEAM_TEMPLATE.md + PROJECT_STATE_TEAM_TEMPLATE.md
+
+---
+
+## Phase 0.5 — Validation Gate (only if Maturity = 1)
+
+Before investing time in the full flow, check if the idea is worth building.
+
+Ask in ONE message:
+
+```
+Antes de definir el proyecto, hagamos un chequeo rápido:
+
+1. ¿Cuál es el problema real que quieres resolver? (una oración, específica)
+2. ¿Hablaste con al menos 2-3 personas reales que tienen este problema? [s/n]
+   → Si sí: ¿qué dijeron?
+   → Si no: ¿tienes alguna señal de que existe? (queja, post, experiencia propia)
+3. ¿Alguien pagaría por resolverlo, aunque sea poco? [s/n] ¿Por qué?
+```
+
+**Evaluate responses:**
+
+- **Problema claro + confirmación real + señal de pago** → ✅ continúa a Phase 1
+- **Problema vago O sin validación O sin señal de pago** → mostrar:
+
+```
+⚠️ La idea aún no está lista para construir.
+
+Antes de continuar, valida con este prompt en Claude:
+
+---
+Tengo esta idea: [idea]
+
+Ayúdame a:
+1. Identificar el problema real
+2. Decir si es un problema fuerte o débil
+3. Quién lo tiene (personas específicas)
+4. Si alguien pagaría — por qué sí o no
+5. Cómo validarlo sin construir nada
+
+---
+
+Regla: Si nadie reacciona al problema → no construyas.
+Vuelve cuando tengas al menos 2-3 personas que confirmen el problema.
+```
+
+→ Stop. No continuar hasta que el usuario regrese con validación.
 
 ---
 
@@ -46,7 +94,7 @@ Select one → determine question language + docs generated.
 
 ---
 
-## Phase 2 — IML Assessment (Patrón Estándar)
+## Phase 2 — Entendamos tu idea
 
 Ask ALL 7 questions in ONE message (language adapted to project type):
 
@@ -90,21 +138,21 @@ Ask ALL 7 questions in ONE message (language adapted to project type):
 
 ---
 
-## Phase 3 — Clarity Check (binary validation)
+## Phase 3 — ¿Está clara la idea?
 
 Show summary with binary YES/NO for each:
 
 ```
-## Clarity Check
+## ¿Está clara la idea?
 
-- [ ] Problem is SPECIFIC (not vague)
-- [ ] 3 real people/customers identified
-- [ ] Core action/flow defined (3 steps)
-- [ ] Main risk/assumption named
-- [ ] Constraints clear (time/budget/deadline)
+- [ ] El problema es ESPECÍFICO (no vago)
+- [ ] Hay 3 personas reales identificadas
+- [ ] El flujo principal está definido (3 pasos)
+- [ ] El riesgo principal está nombrado
+- [ ] Los límites están claros (tiempo/presupuesto/deadline)
 
-✅ All YES to proceed
-❌ Any NO → which needs work?
+✅ Todo YES → seguimos
+❌ Algún NO → ¿cuál necesita más claridad?
 ```
 
 If any NO → offer to refine that section:
@@ -180,7 +228,7 @@ Show before generating:
 **Stack:** [recommendation]
 **Market:** [brief research result]
 
-IML Score: [1-5] (5 = ready to build)
+Listo para construir: [1-5] (5 = listo)
 Proceed to docs? [s/n]
 ```
 
@@ -305,7 +353,7 @@ After all docs are created, generate the initial project map:
 ✅ Project Initialized — [name]
 
 **Type:** Individual · [Software/Negocio/Contenido/Investigación]
-**IML Score:** [1-5]
+**Listo para construir:** [1-5]
 
 Created:
 - docs/PROJECT_STATE.md
@@ -323,7 +371,7 @@ Next: /new-session to start Phase 1
 
 **Type:** Team · [Software/Negocio/Contenido/Investigación]
 **Lead:** [name] · **Members:** [Dev A (Role)], [Dev B (Role)]
-**IML Score:** [1-5]
+**Listo para construir:** [1-5]
 
 Created:
 - docs/PROJECT_STATE.md (## Team Status with Dev sections)
@@ -342,10 +390,11 @@ Lead: /checkpoint approve-pr [branch] to review and merge
 ## Rules
 
 - **Phase 0:** Always ask maturity + individual/team in same message
-- **If Phase 3 (Clarity Check) failed:** Auto-refine, don't abandon
-- **All 7 questions** must be answered before Clarity Check (unless skipped via Phase 0)
-- **Clarity Check = 5 binary validations** (no maybe)
-- **IML Score = subjective:** 1 (idea only), 5 (ready to build)
+- **If Phase 3 (¿Está clara la idea?) failed:** Auto-refine, don't abandon
+- **All 7 questions** must be answered before Phase 3 (unless skipped via Phase 0)
+- **Phase 3 = 5 binary validations** (no maybe)
+- **Listo para construir = subjective:** 1 (solo idea), 5 (listo para ejecutar)
+- **Phase 0.5:** if maturity = 1 and idea not validated → stop and show validation prompt, don't continue
 - **Research runs in parallel** (don't block on speed)
 - **Roadmap must have GO/NO-GO** at each phase
 - **NEVER create docs with empty placeholders** — infer from answers

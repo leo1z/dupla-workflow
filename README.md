@@ -19,13 +19,19 @@ AI-assisted project workflow system. Portable, multi-IDE, works for individuals 
 
 ### 1. Install (terminal — once per machine)
 
+**Option A — one-liner (no git clone needed):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/leo1z/dupla-workflow/master/bin/install.sh | bash
+```
+
+**Option B — clone first:**
 ```bash
 git clone https://github.com/leo1z/dupla-workflow.git
 cd dupla-workflow
 bash bin/install.sh
 ```
 
-> **Windows:** use Git Bash or WSL to run `bash bin/install.sh`. In VS Code, open the integrated terminal and set it to Git Bash first.
+> **Windows:** use Git Bash or WSL. In VS Code, open the integrated terminal and set it to Git Bash first.
 
 Deploys skills to `~/.claude/skills/` (Claude Code) and `~/.gemini/antigravity/global_workflows/` (Antigravity, if detected).
 

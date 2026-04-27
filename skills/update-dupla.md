@@ -1,10 +1,38 @@
 Update Dupla-Workflow system to latest version. Downloads from GitHub with auto-backup.
 
-Usage: /update-dupla
+Usage:
+  /update-dupla        → full update flow (backup + download + install)
+  /update-dupla check  → solo verificar versión (sin actualizar)
 
 ---
 
 ## Execution
+
+### Step 0 — Detect Mode
+
+If invoked as `/update-dupla check`:
+- Execute **only Steps 1 + 2** (version comparison)
+- Show result and **STOP** — do not show CHANGELOG or ask to update
+- Output:
+  ```
+  Dupla-Workflow
+    Local:  v[X.Y.Z]
+    Remoto: v[X.Y.Z]
+
+  ✅ Ya estás en la última versión.
+  ```
+  or:
+  ```
+  Dupla-Workflow
+    Local:  v[X.Y.Z]
+    Remoto: v[X.Y.Z]  ← nueva versión disponible
+
+  → /update-dupla para actualizar
+  ```
+
+If invoked as `/update-dupla` (no args) → full flow below.
+
+---
 
 ### Step 1 — Check Current Version
 

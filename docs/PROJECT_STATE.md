@@ -8,12 +8,12 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-04-22 (sesión 6)
+Updated: 2026-04-27 (sesión 7)
 Status: ACTIVE
 Phase: N/A
 Phase_Status: N/A
-Done: v2.4.0 completo — Antigravity global_workflows/ + GEMINI.md + .agents/rules/ por proyecto · health-check + setup-dupla + update-dupla + README + QUICKSTART + SYSTEM_MAP + code-review-graph alineados · .agents/rules creados para dupla-conecta, maraton, microdetective · /check-project skill creado e instalado
-Next: Validar flujo en proyecto real — abrir Antigravity, verificar que /new-session aparece en Workflows tab, correr /adapt-project en dupla-conecta
+Done: /new-project mejorado — Phase 0.5 validation gate + Plan Mode + lenguaje accesible · /update-dupla check mode agregado · README con curl one-liner installer
+Next: Instalar skills actualizados con /update-dupla, luego validar flujo en proyecto real (Antigravity Workflows tab + /adapt-project en dupla-conecta)
 Blockers: none
 Branch: master
 Model: claude
@@ -45,6 +45,7 @@ Framework listo para distribución y uso diario en todos los proyectos.
 
 ## Recent Changes
 
+- 2026-04-27 — sesión 7: /new-project validation gate + Plan Mode + lenguaje accesible · /update-dupla check mode · README one-liner installer
 - 2026-04-22 — sesión 6: v2.4.0 Antigravity completo — global_workflows + GEMINI.md + .agents/rules/ + todos los docs alineados
 - 2026-04-22 — sesión 5: Antigravity detection fix (Windows ~/.gemini/antigravity/) + skills a knowledge/ + ANTIGRAVITY_DIR override
 - 2026-04-22 — sesión 4: CLAUDE.md repo + quick-start fix + adapt-project clarificado en guías
