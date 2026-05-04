@@ -1,8 +1,11 @@
-Update Dupla-Workflow system to latest version. Downloads from GitHub with auto-backup.
+Update Dupla-Workflow system to latest version. Fully automatic — Claude runs all commands.
+
+**When to use:** when `/health-check` reports a version mismatch, or when you want to get the latest skills and hooks.
+**See also:** `/health-check` (verify after update) · `/setup-dupla` (first-time setup)
 
 Usage:
-  /update-dupla        → full update flow (backup + download + install)
-  /update-dupla check  → solo verificar versión (sin actualizar)
+  /update-dupla        → full automatic update (backup + download + install)
+  /update-dupla check  → check version only (no changes)
 
 ---
 
@@ -10,312 +13,269 @@ Usage:
 
 ### Step 0 — Detect Mode
 
-If invoked as `/update-dupla check`:
-- Execute **only Steps 1 + 2** (version comparison)
-- Show result and **STOP** — do not show CHANGELOG or ask to update
-- Output:
-  ```
-  Dupla-Workflow
-    Local:  v[X.Y.Z]
-    Remoto: v[X.Y.Z]
+If `/update-dupla check`:
+- Run Steps 1 + 2 only → show version comparison → STOP
 
-  ✅ Ya estás en la última versión.
-  ```
-  or:
-  ```
-  Dupla-Workflow
-    Local:  v[X.Y.Z]
-    Remoto: v[X.Y.Z]  ← nueva versión disponible
-
-  → /update-dupla para actualizar
-  ```
-
-If invoked as `/update-dupla` (no args) → full flow below.
+If `/update-dupla` (no args) → full automatic flow below.
 
 ---
 
 ### Step 1 — Check Current Version
 
+Run via Bash:
 ```bash
 cat ~/.claude/DUPLA_VERSION
-# → v2.0.0 (or missing → v1 detected)
 ```
 
-- If DUPLA_VERSION missing → v1 detected → go to **V1 Migration** section
-- If DUPLA_VERSION present → compare with latest
+- Missing → v1 detected → go to **V1 Migration**
+- Present → continue
 
 ### Step 2 — Check Latest Version
 
+Run via Bash:
 ```bash
 curl -s https://raw.githubusercontent.com/leo1z/dupla-workflow/master/VERSION
-# → v2.1.0
 ```
 
-Compare:
-- Equal → "✅ Ya estás en la última versión (v[X.Y.Z]). Ejecuta /health-check para verificar estado."
-- Local newer → "⚠️ Tu versión es más reciente. ¿Tienes cambios locales no publicados?"
-- Behind → show CHANGELOG + ask to update
+- Equal → "✅ Ya estás en la última versión (vX.Y.Z). Ejecuta /health-check para verificar."  → STOP
+- Local newer → "⚠️ Tu versión local es más reciente que master. ¿Tienes cambios no publicados?" → STOP
+- Behind → show CHANGELOG + ask `¿Actualizar? [s/n]`
 
 ### Step 3 — Show CHANGELOG + Confirm
 
-```
-Nueva versión disponible: v[X.Y.Z]
-
-Cambios:
-- [feature 1]
-- [feature 2]
-- [bug fix]
-
-¿Actualizar? [s/n]
+Fetch and show relevant section:
+```bash
+curl -s https://raw.githubusercontent.com/leo1z/dupla-workflow/master/CHANGELOG.md | head -60
 ```
 
-### Step 4 — Re-detect Tools + Backup + Update
+Show new version + key changes. Ask: `¿Actualizar? [s/n]`
 
-**Before showing update commands, silently re-detect available tools and IDEs:**
-- `git --version` → available? (required)
-- `python3 --version` → available? (hooks need it on Windows)
-- `node --version` → available? (MCP filesystem)
-- `~/.cursor/` exists? → Cursor present → include Cursor commands in update
-- `~/.gemini/antigravity/` or `~/.agent/` exists? → Antigravity present → update workflows
+If NO → stop.
 
-Only show commands for detected tools — skip sections for undetected IDEs without noise.
+---
 
-Show commands to user — they must run these in terminal (Claude cannot execute bash directly):
+### Step 4 — Auto-detect Environment (silent)
+
+Run via Bash:
+```bash
+git --version
+python3 --version 2>/dev/null || echo "python3: missing"
+ls ~/.cursor/ 2>/dev/null && echo "cursor: yes" || echo "cursor: no"
+ls ~/.gemini/antigravity/ 2>/dev/null && echo "antigravity: yes" || echo "antigravity: no"
+ls ~/.agent/ 2>/dev/null && echo "agent-legacy: yes" || echo "agent-legacy: no"
+```
+
+Detect:
+- `HAS_CURSOR` — `~/.cursor/` exists
+- `HAS_ANTIGRAVITY` — `~/.gemini/antigravity/` exists
+- `HAS_AGENT_LEGACY` — `~/.agent/` exists (old Antigravity path)
+- `OLD_VERSION` — from DUPLA_VERSION
+- `ANTIGRAVITY_KNOWLEDGE` — `~/.gemini/antigravity/knowledge/` if exists, else `~/.gemini/antigravity/global_workflows/`
+
+---
+
+### Step 5 — Backup + Download
+
+Run via Bash (Claude executes these directly):
 
 ```bash
-# Backup current skills
-mkdir -p ~/.claude/skills-backup/v[old-version]
-cp ~/.claude/skills/*.md ~/.claude/skills-backup/v[old-version]/
+# Backup
+mkdir -p ~/.claude/skills-backup/v${OLD_VERSION}
+cp ~/.claude/skills/*.md ~/.claude/skills-backup/v${OLD_VERSION}/ 2>/dev/null || true
 
-# Download new version
+# Download
+rm -rf /tmp/dupla-new
 git clone --depth 1 https://github.com/leo1z/dupla-workflow.git /tmp/dupla-new
+```
 
-# Update Claude Code skills + hooks
+Verify clone: `ls /tmp/dupla-new/skills/*.md | wc -l` — must be > 0, else abort with error.
+
+---
+
+### Step 6 — Deploy Claude Code
+
+```bash
 cp /tmp/dupla-new/skills/*.md ~/.claude/skills/
 cp /tmp/dupla-new/skills/*.md ~/.claude/commands/
 cp /tmp/dupla-new/hooks/*.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/*.sh
 cp /tmp/dupla-new/VERSION ~/.claude/DUPLA_VERSION
+```
 
-# [Only if Antigravity detected] Update Antigravity global workflows
-mkdir -p ~/.gemini/antigravity/global_workflows
+---
+
+### Step 7 — Deploy Antigravity (if detected)
+
+**knowledge/ directory** (trigger: agent_requested):
+```bash
+KNOWLEDGE_DIR=~/.gemini/antigravity/knowledge
+mkdir -p "$KNOWLEDGE_DIR"
+
+# Build current skill filenames
+CURRENT_SKILLS=$(ls /tmp/dupla-new/skills/*.md | xargs -I{} basename {})
+
+# Orphan cleanup — only remove files that were deployed by dupla
+# (have trigger: frontmatter AND are no longer in source)
+for existing in "$KNOWLEDGE_DIR"/*.md; do
+  [ -f "$existing" ] || continue
+  fname=$(basename "$existing")
+  [ "$fname" = "CLAUDE.md" ] && continue
+  [ "$fname" = "DUPLA_VERSION" ] && continue
+  if ! echo "$CURRENT_SKILLS" | grep -qw "$fname"; then
+    # Only delete if this file was previously deployed by dupla (has trigger: header)
+    if grep -q "^trigger:" "$existing" 2>/dev/null; then
+      rm -f "$existing"
+    fi
+  fi
+done
+
+# Deploy with trigger: agent_requested
 for f in /tmp/dupla-new/skills/*.md; do
   fname=$(basename "$f")
-  desc=$(grep -m1 "^[^#]" "$f" | cut -c1-200)
-  printf -- "---\ndescription: %s\n---\n\n" "$desc" > ~/.gemini/antigravity/global_workflows/"$fname"
-  cat "$f" >> ~/.gemini/antigravity/global_workflows/"$fname"
+  dest="$KNOWLEDGE_DIR/$fname"
+  if ! grep -q "^trigger:" "$f" 2>/dev/null; then
+    printf -- "---\ntrigger: agent_requested\n---\n\n" > "$dest"
+    cat "$f" >> "$dest"
+  else
+    cp "$f" "$dest"
+  fi
 done
-[ ! -s ~/.gemini/GEMINI.md ] && cp ~/.claude/CLAUDE.md ~/.gemini/GEMINI.md
+```
 
-# [Only if Cursor detected] Update Cursor slash commands
+**global_workflows/ directory** (description: frontmatter):
+```bash
+WORKFLOWS_DIR=~/.gemini/antigravity/global_workflows
+mkdir -p "$WORKFLOWS_DIR"
+
+# Orphan cleanup — only remove files deployed by dupla (have description: frontmatter)
+for existing in "$WORKFLOWS_DIR"/*.md; do
+  [ -f "$existing" ] || continue
+  fname=$(basename "$existing")
+  if ! echo "$CURRENT_SKILLS" | grep -qw "$fname"; then
+    if grep -q "^description:" "$existing" 2>/dev/null; then
+      rm -f "$existing"
+    fi
+  fi
+done
+
+# Deploy with description: frontmatter
+for f in /tmp/dupla-new/skills/*.md; do
+  fname=$(basename "$f")
+  desc=$(grep -m1 "^[^#]" "$f" 2>/dev/null | sed 's/^[[:space:]]*//' | cut -c1-200)
+  printf -- "---\ndescription: %s\n---\n\n" "$desc" > "$WORKFLOWS_DIR/$fname"
+  cat "$f" >> "$WORKFLOWS_DIR/$fname"
+done
+
+# Sync CLAUDE.md as always_on rule
+if [ -f ~/.claude/CLAUDE.md ] && [ -s ~/.claude/CLAUDE.md ]; then
+  printf -- "---\ntrigger: always_on\n---\n\n" > "$KNOWLEDGE_DIR/CLAUDE.md"
+  cat ~/.claude/CLAUDE.md >> "$KNOWLEDGE_DIR/CLAUDE.md"
+fi
+```
+
+**Legacy ~/.agent/ path (if detected):**
+```bash
+# Same deploy to ~/.agent/rules/ if exists
+```
+
+---
+
+### Step 8 — Deploy Cursor (if detected)
+
+```bash
 mkdir -p ~/.cursor/commands
 cp /tmp/dupla-new/skills/*.md ~/.cursor/commands/
+```
 
-# Cleanup
+---
+
+### Step 9 — Cleanup
+
+```bash
 rm -rf /tmp/dupla-new
 ```
 
-Tell user: "Copia y pega los bloques relevantes a tu setup en terminal. Cuando terminen, escribe /health-check"
-
-### Step 4.5 — Per-Project Update (optional)
-
-Ask:
-```
-¿Actualizar skills en proyectos existentes?
-
-Proyectos registrados en ~/.claude/SYSTEM.md:
-  1. [proyecto A] — [path]
-  2. [proyecto B] — [path]
-  0. Saltar
-
-¿Cuál(es)? (número, varios con coma, o 0 para saltar)
-```
-
-For each selected project, detect what's present and show the relevant commands:
-
-**Antigravity (.agents/rules/):**
-```bash
-mkdir -p [project-path]/.agents/rules
-cp [project-path]/CLAUDE.md [project-path]/.agents/rules/claude.md
-sed -i '1s/^/---\ntrigger: always_on\n---\n\n/' [project-path]/.agents/rules/claude.md
-```
-
-**Cursor (local .cursor/commands/ — only if directory exists in project):**
-```bash
-# [Solo si existe [project-path]/.cursor/commands/]
-cp /tmp/dupla-new/skills/*.md [project-path]/.cursor/commands/
-```
-
-**Claude Code (local .claude/skills/ — only if directory exists in project):**
-```bash
-# [Solo si existe [project-path]/.claude/skills/]
-cp /tmp/dupla-new/skills/*.md [project-path]/.claude/skills/
-```
-
-Only show the block(s) that apply to each project — skip sections for paths that don't exist.
-
-Output per project:
-```
-✓ [proyecto]
-  → .agents/rules/claude.md [si Antigravity]
-  → .cursor/commands/ [si Cursor local]
-  → .claude/skills/ [si Claude local]
-```
-
-### Step 4.6 — Auto-propagate global docs to projects (silent, automatic)
-
-**After skills update, check if global templates changed in the new version:**
-
-Read the git diff between old version and new: `git -C /tmp/dupla-new log v[old]..v[new] --name-only -- templates/ global-templates/`
-
-If any template file changed → for each project registered in `~/.claude/SYSTEM.md`:
-
-1. Check which docs in the project are **template-derived** (have `doc:` YAML header matching a template):
-   - `docs/PROJECT_STATE.md` → from PROJECT_STATE_TEMPLATE.md
-   - `docs/ROADMAP.md` → from ROADMAP_TEMPLATE.md
-   - `CLAUDE.md` (project) → from CLAUDE_TEMPLATE.md
-
-2. For each changed template → show diff of what would change in the project doc:
-   ```
-   📄 Template actualizado: ROADMAP_TEMPLATE.md
-      Afecta: [proyecto A]/docs/ROADMAP.md, [proyecto B]/docs/ROADMAP.md
-
-   Cambio: se añade campo "Adapt if:" al bloque GO/NO-GO de cada fase
-   ¿Aplicar a todos los proyectos? [s/n/ver uno por uno]
-   ```
-
-3. If YES (all):
-   - For each project: merge the new template fields INTO the existing doc
-   - **Never overwrite custom content** — only add missing fields
-   - Mark added fields with `# (auto-updated from template vX.Y.Z)`
-
-4. If NO: skip silently — user's docs stay as-is
-
-**If no templates changed:** skip this step entirely — no prompt, no noise.
-
-**Key rule:** this is additive only. Never remove user content. If a conflict is found (user customized a field that the template now changes), show the conflict and ask.
-
 ---
 
-### Step 5 — Output
+### Step 10 — Output
 
 ```
-✅ Actualizado a v[X.Y.Z]
+✅ Actualizado a v[NEW] (desde v[OLD])
 
-Cambios principales:
-- [feature 1]
-- [feature 2]
+Claude Code:   ~/.claude/skills/ ✓ [N skills] + hooks ✓ [N hooks]
+Antigravity:   knowledge/ ✓ [N skills] · global_workflows/ ✓ [N skills]   [si detectado]
+Cursor:        ~/.cursor/commands/ ✓ [N skills]                            [si detectado]
 
-Claude Code:   ~/.claude/skills/ ✓ + hooks ✓
-Antigravity:   ~/.gemini/antigravity/global_workflows/ ✓ [si detectado]
-               ~/.gemini/GEMINI.md ✓ [si no existía]
-Cursor:        ~/.cursor/commands/ ✓ [si detectado]
-Por proyecto:  [N proyectos actualizados / saltado]
+Backup anterior: ~/.claude/skills-backup/v[OLD]/
 
-Backup anterior: ~/.claude/skills-backup/v[old-version]/
-Siguiente: /health-check para verificar
+→ /health-check para verificar que todo está OK
 ```
 
 ---
 
-## V1 Migration (when DUPLA_VERSION is missing)
+## V1 Migration (DUPLA_VERSION missing)
 
-Detected if:
-- `~/.claude/DUPLA_VERSION` does not exist
-- OR `~/.claude/skills/` doesn't exist but `~/.claude/commands/` does
+Detected if `~/.claude/DUPLA_VERSION` does not exist.
 
 Show:
 ```
-⚠️ Detecté Dupla-Workflow v1 (versión anterior).
+⚠️ Dupla-Workflow v1 detectado.
 
 Cambios en v2:
-- commands/ → skills/ (renombrado)
+- commands/ → skills/
 - CREDENCIALES.md → CREDENTIALS.md
-- CONTEXTO_*.md + STACK_GLOBAL.md → CLAUDE.md + SYSTEM.md (fusionados)
+- CONTEXTO_*.md + STACK_GLOBAL.md → CLAUDE.md + SYSTEM.md
 - Nuevos skills: checkpoint, restore, adapt-to-team, add-team-member
-- SESSION block en PROJECT_STATE (ahorro de tokens)
+- SESSION block en PROJECT_STATE
 
 ¿Migrar a v2? [s/n]
-(Backup automático antes de cualquier cambio)
 ```
 
-**If YES — Migration Steps:**
-
+If YES → Claude runs:
 ```bash
-# 1. Backup everything
 mkdir -p ~/.claude/v1-backup
 cp -r ~/.claude/commands ~/.claude/v1-backup/ 2>/dev/null || true
 cp ~/.claude/CREDENCIALES.md ~/.claude/v1-backup/ 2>/dev/null || true
 cp ~/.claude/CONTEXTO_*.md ~/.claude/v1-backup/ 2>/dev/null || true
 cp ~/.claude/STACK_GLOBAL.md ~/.claude/v1-backup/ 2>/dev/null || true
-
-# 2. Install v2
+rm -rf /tmp/dupla-new
 git clone --depth 1 https://github.com/leo1z/dupla-workflow.git /tmp/dupla-new
 bash /tmp/dupla-new/bin/install.sh
-
-# 3. Rename credentials if needed
 if [ -f ~/.claude/CREDENCIALES.md ] && [ ! -f ~/.claude/CREDENTIALS.md ]; then
   cp ~/.claude/CREDENCIALES.md ~/.claude/CREDENTIALS.md
-  echo "ℹ️ CREDENCIALES.md → CREDENTIALS.md (v1 backup conservado)"
 fi
+rm -rf /tmp/dupla-new
 ```
 
-Then ask:
-```
-Tus archivos globales v1 (CONTEXTO, STACK_GLOBAL) siguen en el backup.
-¿Quieres migrar su contenido a CLAUDE.md + SYSTEM.md (v2)? [s/n]
-
-Si sí → corre /setup-dupla para regenerar con tu información actual
-Si no → puedes hacerlo después con /setup-dupla
-```
-
-For project docs (v1 format):
-```
-¿Tienes proyectos con docs en formato v1 (sin SESSION block, sin YAML header)?
-
-Para migrar cada proyecto: ve a la carpeta del proyecto y corre /adapt-project
-El sistema detectará el formato v1 y actualizará los docs.
-```
-
-**If user had custom hooks in v1:**
-```
-⚠️ Si tenías hooks personalizados en ~/.claude/hooks/ (no los de dupla-workflow):
-  - Fueron copiados al backup en ~/.claude/v1-backup/
-  - Los nuevos hooks de v2 fueron instalados encima
-  - Revisa el backup si necesitas recuperar lógica personalizada
-  - Los hooks v2 son: guard-project-state.sh, suggest-checkpoint.sh, session-reminder.sh
-```
-
-**Migration output:**
+Then show:
 ```
 ✅ Migración v1 → v2 completada
-
 Backup en: ~/.claude/v1-backup/
-Skills v2 instalados: 13 commands
-Hooks configurados: guard, suggest-checkpoint, session-reminder
 
 Siguiente:
-1. /setup-dupla → regenera CLAUDE.md + SYSTEM.md con tu info
-2. Para cada proyecto: /adapt-project → migra docs a formato v2
-3. /health-check → verifica que todo esté correcto
+1. /setup-dupla → regenera CLAUDE.md + SYSTEM.md con tu info actual
+2. Por proyecto: /adapt-project → migra docs a formato v2
+3. /health-check → verifica todo
 ```
 
 ---
 
 ## Rollback
 
+If something breaks after update, Claude runs:
 ```bash
-cp ~/.claude/skills-backup/v[old-version]/*.md ~/.claude/skills/
-echo "v[old-version]" > ~/.claude/DUPLA_VERSION
-echo "✅ Revertido a v[old-version]"
+cp ~/.claude/skills-backup/v[OLD]/*.md ~/.claude/skills/
+echo "v[OLD]" > ~/.claude/DUPLA_VERSION
 ```
 
 ---
 
 ## Rules
 
+- **Claude executes all Bash commands directly** — never show copy-paste blocks to the user
 - Always backup before any change
-- Never delete v1 files — copy only
-- Show CHANGELOG before asking approval
-- V1 migration: suggest /setup-dupla instead of auto-converting global docs
-- Project doc migration is per-project (/adapt-project), not global
-- After update: always suggest /health-check
+- Orphan cleanup: only delete files that have dupla frontmatter (`trigger:` or `description:`) AND are no longer in source — never delete user-created files
+- Never delete v1 backup files
+- After update: always run `/health-check` automatically or suggest it
+- If git clone fails → abort with error, do not proceed
+- If skill count after deploy is 0 → abort with error, restore from backup

@@ -151,12 +151,15 @@ fi
 if [ "$HAS_ANTIGRAVITY" = true ] && [ -n "$AGENT_WORKFLOWS_DIR" ]; then
   mkdir -p "$AGENT_WORKFLOWS_DIR"
 
-  # Orphan cleanup in global_workflows too
+  # Orphan cleanup in global_workflows — only remove files deployed by dupla (have description: frontmatter)
   for existing in "$AGENT_WORKFLOWS_DIR"/*.md; do
     [ -f "$existing" ] || continue
     fname=$(basename "$existing")
     if ! echo "$CURRENT_SKILLS" | grep -qw "$fname"; then
-      rm -f "$existing"
+      # Only delete if this file was previously deployed by dupla (has description: header)
+      if grep -q "^description:" "$existing" 2>/dev/null; then
+        rm -f "$existing"
+      fi
     fi
   done
 
