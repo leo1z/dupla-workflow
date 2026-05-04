@@ -2,4 +2,6 @@
 [x] Creado comando /research
 [x] Limpiado HOW_IT_WORKS.md (HITL, borrado /zohar)
 [x] Archivados PDFs/HTMLs y Wishlist
-[>] Publicar versión v2.5.0 con las mejoras de seguridad, research y fast-track.
+[x] Audit del sistema: eliminados docs muertos, HOW_IT_WORKS reescrito como guía maestra, SYSTEM_MAP → redirect
+[x] v2.5.0: skills redundantes borrados, hooks fijados, install.sh validado, HOW_IT_WORKS user journey, CHANGELOG + VERSION bump
+[ ] Merge work → master y publicar v2.5.0

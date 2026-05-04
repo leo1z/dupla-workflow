@@ -1,5 +1,8 @@
 Summarize project state to reduce context bloat. Run when sessions feel heavy or after 10+ sessions.
 
+**When to use:** When responses feel generic, after 10+ sessions, or before handing off to a new LLM. Not a replacement for `/checkpoint`.
+**See also:** `/checkpoint` (save state first) · `/restore` (undo if compact went wrong)
+
 Usage:
   /compact          → summarize current project
   /compact global   → summarize cross-project memory (MEMORY_GLOBAL.md)

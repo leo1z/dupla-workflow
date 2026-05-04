@@ -1,5 +1,8 @@
 Revert to a previous save point. Replaces /versions with human-readable checkpoints.
 
+**When to use:** When a session made things worse and you want to go back. Works from `_versions/` snapshots created by auto-snapshot hook.
+**See also:** `/checkpoint` (creates save points) · `/health-check` (verify state after restore)
+
 Usage: /restore
 
 ---

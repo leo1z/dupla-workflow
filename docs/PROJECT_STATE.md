@@ -8,16 +8,16 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-05-04 (sesión 11)
+Updated: 2026-05-04 (sesión 12)
 Status: ACTIVE
 Mode: full
 Phase: N/A
 Phase_Status: N/A
-Done: Implementado Fast-Track en AGENTS.md, creado comando /research, limpiado HOW_IT_WORKS.md (HITL, borrado /zohar), archivados PDFs/HTMLs y Wishlist.
-Next: Publicar versión v2.5.0 con las mejoras de seguridad, research y fast-track.
+Done: v2.5.0 completo — audit del sistema, eliminados 2 skills redundantes (token-budget, project-audit), 3 docs muertos, fixes en hooks (suggest-checkpoint branch order, auto-knowledge-graph silence), install.sh reescrito con validación real, setup-dupla python3 block + MEMORY_GLOBAL seed, health-check actualizado, HOW_IT_WORKS como guía maestra con user journey, skills con When-to-use/See-also.
+Next: Merge work → master y publicar v2.5.0.
 Blockers: none
 Branch: work
-Model: gemini
+Model: claude
 Handoff: no
 </session>
 

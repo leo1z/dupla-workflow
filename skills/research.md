@@ -1,5 +1,8 @@
 Inicia una investigación profunda usando sub-agentes exploradores en paralelo. Resume la información localmente sin saturar la memoria del chat.
 
+**When to use:** When you need to explore a topic, compare libraries, or gather evidence before making a decision. Not for building — for knowing.
+**See also:** `/knowledge-graph` (map doc relationships) · `/new-session mode:research` (full research session mode)
+
 Usage:
   /research                → inicia una nueva investigación
   /research [topic]        → inicia investigación sobre un tema específico

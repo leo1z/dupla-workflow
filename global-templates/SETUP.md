@@ -93,4 +93,4 @@ Generates `~/.claude/CLAUDE.md`, `~/.claude/SYSTEM.md`, `~/.claude/PROBLEMS_GLOB
 | `/restore` | Revertir a un save point anterior |
 | `/update-dupla` | Actualizar a la última versión |
 
-→ Full system map: [docs/SYSTEM_MAP.md](../docs/SYSTEM_MAP.md)
+→ [Cómo funciona, instalar y usar](../docs/HOW_IT_WORKS.md)

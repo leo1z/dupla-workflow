@@ -1,5 +1,62 @@
 # Changelog — Dupla-Workflow
 
+## [2.5.0] — 2026-05-04
+
+### System Audit & Coherence Pass
+
+**Removed (redundant/illusion):**
+- `token-budget.md` — advisory only, no real token enforcement. Removed to avoid false confidence.
+- `project-audit.md` — absorbed by `/knowledge-graph`. Use `/knowledge-graph` for doc dependency analysis.
+- `MEMORY.md` (root) — self-referential doc with no function. Claude's memory system is native.
+- `docs/SYSTEM_MAP.md` — content merged into `docs/HOW_IT_WORKS.md`. File kept as redirect.
+- `.agents/rules/CLAUDE.md` — exact duplicate of `claude.md` in same folder.
+- `docs/vision/Guia-validar-ideas.md` — unreferenced archive file.
+
+**Fixed — Hooks:**
+- `suggest-checkpoint.sh` — default branch detection now runs BEFORE commit counting (was using hardcoded `main` before dynamic detection).
+- `auto-knowledge-graph.sh` — now reports failure instead of silently succeeding when graph generation fails. Also skips if no `PROJECT_STATE.md` or `QUICKSTATE.md` found (avoids running on non-Dupla dirs).
+
+**Fixed — install.sh:**
+- IDE detection now runs BEFORE creating `~/.claude/` directories (previously created orphan dirs on failed installs).
+- Validates `CLAUDE.md` has real content (>5 non-empty lines) before syncing to `GEMINI.md`. Previously synced empty/placeholder files.
+- Skill and hook count verified after copy — fails with error if 0 deployed.
+- `hitl-guard.sh` added to hooks registration (was missing from `settings.json` template).
+- Post-install summary shows counts and explicit warning if `/setup-dupla` is still required.
+
+**Fixed — setup-dupla.md:**
+- Python3 missing on Windows now stops setup with install instructions (was a warn-only). Hooks require Python3 on Windows — proceeding without it leaves a broken system.
+- Added Phase 3.5: MEMORY_GLOBAL seed — asks one optional question about recurring problems after interview, pre-populates `MEMORY_GLOBAL.md` instead of leaving it empty.
+
+**Fixed — health-check.md:**
+- Added CLAUDE.md content check (real content vs. placeholder).
+- Added GEMINI.md sync diff check (`diff ~/.claude/CLAUDE.md ~/.gemini/GEMINI.md`).
+- Added MEMORY_GLOBAL.md as required (was optional).
+- Updated skill list to 15 (removed token-budget, project-audit; added knowledge-graph, compact, research).
+- Updated hook counts in OK output template.
+- Added HOW_IT_WORKS.md to allowed docs list (orphan file check).
+
+**Improved — Skills:**
+- Added `**When to use:**` and `**See also:**` to top of: `new-session`, `checkpoint`, `adapt-project`, `research`, `compact`, `restore`, `knowledge-graph`.
+
+**Improved — HOW_IT_WORKS.md:**
+- Full rewrite: now covers install → configure → initialize → daily flow → verify as a linear user journey.
+- Added skill decision table ("when to use what").
+- Added honest limitations section for hooks (what blocks vs. what just prints).
+- Added token cost breakdown per doc.
+- Added §8 Antigravity section with explicit "skills are NOT slash commands" warning and no-hooks manual workflow.
+
+**Fixed — User Journey gaps (4-flow evaluation):**
+- `auto-snapshot.sh` now also snapshots `QUICKSTATE.md` (micro mode) — previously only `docs/` was backed up, leaving quick-start sessions without restore points.
+- `new-project.md` Plan Mode hint scoped to Claude Code IDE only — removed confusion for Terminal/Antigravity/Cursor users.
+- `setup-dupla.md` Phase 0B: Antigravity users now get explicit warning about slash-command behavior and no-hooks manual workflow at setup end.
+- `HOW_IT_WORKS.md` §8: dedicated Antigravity section documenting the 3 key differences from Claude Code (skill invocation, no hooks, manual update flow).
+
+**Documented limitations (not fixed — by design):**
+- Hooks `suggest-checkpoint` and `session-reminder` are advisory only (exit 0) — they print messages but do not block. Users who close the chat abruptly without committing lose uncommitted work; this is a fundamental hook model limitation.
+- `sync-gemini.sh` only fires when Claude uses the Write tool on `CLAUDE.md` — manual edits to that file do not trigger sync. Run `/health-check` to detect drift.
+
+---
+
 ## [2.4.1] — 2026-04-22
 
 ### New Skill

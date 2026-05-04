@@ -11,7 +11,7 @@ AI-assisted project workflow system. Portable, multi-IDE, works for individuals 
 - ✅ Multi-IDE: Claude Code (VS Code) + Antigravity + Claude Desktop
 - ✅ Human-readable save points (/restore)
 
-→ [How the system works — document map + token costs](docs/SYSTEM_MAP.md)
+→ [Cómo funciona, instalar y usar](docs/HOW_IT_WORKS.md)
 
 ---
 
