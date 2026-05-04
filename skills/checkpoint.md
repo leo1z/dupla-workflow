@@ -178,10 +178,12 @@ If unable to detect → ask: "¿Desde dónde estás usando esto? (Claude Code ID
 1. Ask destination:
 ```
 ¿A dónde vas?
-  1 — Gemini (Antigravity — planificación / investigación)
-  2 — Claude Opus (mismo IDE — tarea compleja)
-  3 — Otro dev del equipo
-  4 — Otro (especifica)
+  1 — Gemini (Antigravity / CLI — planificación / investigación)
+  2 — Claude Opus/Sonnet (mismo IDE o diferente — tarea compleja)
+  3 — GPT-4 / OpenAI API
+  4 — Cursor + cualquier modelo
+  5 — Otro dev del equipo
+  6 — Otro (especifica — modelo local, Windsurf, etc.)
 ```
 
 2. Run full close (Mode 2, skip new-chat guidance — handled below)
@@ -267,6 +269,58 @@ Qué hará el modelo al recibir el handoff:
   → Lee el bloque <handoff> → identifica proyecto + branch
   → Lee docs/PROJECT_STATE.md automáticamente
   → Te muestra estado actual + plan para continuar desde donde quedaste
+```
+
+**If GPT-4 / OpenAI API:**
+```
+✅ Handoff listo → GPT-4
+
+GPT no tiene slash commands ni hooks — usa system prompt.
+
+Pasos exactos:
+  1. Abre ChatGPT, API Playground, o tu cliente OpenAI
+  2. Crea un nuevo chat
+  3. Como SYSTEM PROMPT (antes de cualquier mensaje), pega:
+     → El contenido de ~/.claude/CLAUDE.md (o tu GLOBAL_BEHAVIOR file)
+  4. Como primer USER MESSAGE, pega:
+
+[handoff block]
+
+  5. En ese mismo mensaje, añade:
+     "Lee el bloque anterior. Eres mi asistente de desarrollo.
+      Tu primera tarea es: [Next del handoff]"
+
+Lo que NO funcionará en GPT:
+  - /new-session, /checkpoint (no hay slash commands)
+  - Hooks automáticos
+  - Lectura automática de archivos del proyecto
+
+Workaround: adjunta docs/PROJECT_STATE.md como archivo si tu cliente lo permite,
+o copia el bloque <session> y pégalo junto al handoff.
+```
+
+**If Cursor:**
+```
+✅ Handoff listo → Cursor
+
+Pasos exactos:
+  1. Abre Cursor y el proyecto
+  2. Verifica que las rules estén activas: .cursor/rules/global.mdc (Agent Mode)
+  3. Abre nuevo chat en Agent Mode (no Chat/Composer — esos no leen rules)
+  4. Pega este bloque AL INICIO:
+
+[handoff block]
+
+  5. Escribe: /new-session
+     (Skills instalados en .cursor/commands/ via install.sh)
+
+Si no instalaste skills en Cursor: escribe el nombre del skill como texto
+  → "Ejecuta el skill new-session" o copia el contenido del skill
+
+Lo que NO funcionará en Cursor:
+  - Hooks automáticos (guard, snapshot, sync-gemini)
+  - Auto-snapshot de docs/
+  - sync-gemini (copia manual si cambias CLAUDE.md)
 ```
 
 **If another dev (Team):**

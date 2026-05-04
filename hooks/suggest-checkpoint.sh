@@ -43,9 +43,18 @@ elif [ "$COUNT" -ge 3 ] && [ "$commits_since_state" -gt 0 ]; then
   echo "0" > "$COUNTER_FILE"
 fi
 
+# Detect default branch dynamically (main / master / develop / trunk)
+DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')
+if [ -z "$DEFAULT_BRANCH" ]; then
+  DEFAULT_BRANCH=$(git branch --list main master develop trunk 2>/dev/null | head -1 | tr -d ' *' )
+fi
+if [ -z "$DEFAULT_BRANCH" ]; then
+  DEFAULT_BRANCH="main"
+fi
+
 # Long session warning — only once per session
 LONG_SESSION_MARKER="$TMPDIR_DUPLA/long-session-warned"
-commits_since_main=$(git log main..HEAD --oneline 2>/dev/null | wc -l | tr -d ' ')
+commits_since_main=$(git log "${DEFAULT_BRANCH}..HEAD" --oneline 2>/dev/null | wc -l | tr -d ' ')
 if [ "${commits_since_main:-0}" -gt 10 ] && [ ! -f "$LONG_SESSION_MARKER" ]; then
   echo "💡 Sesión larga ($commits_since_main commits). /checkpoint close → nuevo chat → /new-session"
   echo ""

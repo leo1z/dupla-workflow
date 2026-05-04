@@ -1,6 +1,6 @@
 #!/bin/bash
-# Dupla-Workflow v2 Installation Script
-# Deploys to Claude Code (.claude/) and Antigravity (.agent/) IDEs
+# Dupla-Workflow Installation Script
+# Deploys to Claude Code, Antigravity (Gemini), and Cursor
 # Usage: bash bin/install.sh
 
 set -e
@@ -14,14 +14,29 @@ SKILLS_SOURCE="$SCRIPT_DIR/skills"
 TEMPLATES_SOURCE="$SCRIPT_DIR/templates"
 GLOBAL_TEMPLATES_SOURCE="$SCRIPT_DIR/global-templates"
 
-echo "🚀 Dupla-Workflow v2 Installation"
-echo "=================================="
+echo "Dupla-Workflow Installation"
+echo "==========================="
 
 # Detect IDEs
 HAS_CLAUDE=false
 HAS_ANTIGRAVITY=false
+HAS_CURSOR=false
 
 [ -d "$CLAUDE_DIR" ] && HAS_CLAUDE=true
+
+# Cursor detection — check for .cursor/commands/ or cursor CLI
+CURSOR_COMMANDS_DIR=""
+if command -v cursor >/dev/null 2>&1; then
+  HAS_CURSOR=true
+fi
+# Check common Cursor user data paths
+for d in "$HOME/.cursor" "$APPDATA/.cursor" "$(echo "$USERPROFILE" | sed 's|\\|/|g')/.cursor"; do
+  if [ -d "$d" ]; then
+    HAS_CURSOR=true
+    CURSOR_COMMANDS_DIR="$d/commands"
+    break
+  fi
+done
 
 # Antigravity detection — check all known paths (Unix + Windows)
 # Override: ANTIGRAVITY_DIR=/path bash bin/install.sh
@@ -70,9 +85,9 @@ if [ "$HAS_ANTIGRAVITY" = false ] && command -v antigravity >/dev/null 2>&1; the
   echo "   Then re-run: ANTIGRAVITY_DIR=<path> bash bin/install.sh"
 fi
 
-if [ "$HAS_CLAUDE" = false ] && [ "$HAS_ANTIGRAVITY" = false ]; then
-  echo "❌ Neither Claude Code nor Antigravity detected."
-  echo "   Install Claude Code CLI or Antigravity first."
+if [ "$HAS_CLAUDE" = false ] && [ "$HAS_ANTIGRAVITY" = false ] && [ "$HAS_CURSOR" = false ]; then
+  echo "ERROR: No supported IDE detected (Claude Code, Antigravity, or Cursor)."
+  echo "   Install at least one first, then re-run."
   exit 1
 fi
 
@@ -102,6 +117,13 @@ if [ "$HAS_ANTIGRAVITY" = true ]; then
     fi
   done
   echo "   ✓ Skills deployed to $AGENT_RULES_DIR (Antigravity)"
+fi
+
+# Deploy skills — Cursor (slash commands via .cursor/commands/)
+if [ "$HAS_CURSOR" = true ] && [ -n "$CURSOR_COMMANDS_DIR" ]; then
+  mkdir -p "$CURSOR_COMMANDS_DIR"
+  cp "$SKILLS_SOURCE"/*.md "$CURSOR_COMMANDS_DIR/" 2>/dev/null || true
+  echo "   ✓ Skills deployed to $CURSOR_COMMANDS_DIR (Cursor slash commands)"
 fi
 
 # Deploy skills — Antigravity Workflows (type "/" to trigger in Agent)
@@ -192,15 +214,41 @@ elif grep -q '"PreToolUse"' "$SETTINGS" 2>/dev/null; then
 elif command -v python3 >/dev/null 2>&1; then
   python3 - "$SETTINGS" "$HOOKS_JSON" <<'PYEOF'
 import sys, json
+
 settings_path = sys.argv[1]
-new_hooks = json.loads(sys.argv[2])
+new_hooks_raw = json.loads(sys.argv[2])["hooks"]
+
 with open(settings_path) as f:
   settings = json.load(f)
-settings.setdefault("hooks", {}).update(new_hooks["hooks"])
+
+existing = settings.setdefault("hooks", {})
+
+for event, entries in new_hooks_raw.items():
+  if event not in existing:
+    existing[event] = entries
+    continue
+  # Append only entries whose command is not already present
+  existing_cmds = set()
+  for e in existing[event]:
+    # Stop/UserPromptSubmit: entries are {"type","command"}
+    if isinstance(e, dict) and "command" in e:
+      existing_cmds.add(e["command"])
+    # PreToolUse/PostToolUse: entries are {"matcher","hooks":[...]}
+    elif isinstance(e, dict) and "hooks" in e:
+      for h in e.get("hooks", []):
+        existing_cmds.add(h.get("command", ""))
+  for new_entry in entries:
+    new_cmd = new_entry.get("command") or ""
+    if not new_cmd:
+      # structured entry (PreToolUse style) — check inner hooks
+      new_cmd = " ".join(h.get("command","") for h in new_entry.get("hooks",[]))
+    if new_cmd not in existing_cmds:
+      existing[event].append(new_entry)
+
 with open(settings_path, "w") as f:
   json.dump(settings, f, indent=2)
 PYEOF
-  echo "   ✓ Hooks merged into ~/.claude/settings.json"
+  echo "   ✓ Hooks merged into ~/.claude/settings.json (append-only, no overwrites)"
 else
   echo "   ⚠️  Could not auto-merge settings.json (python3 not found)"
   echo "      Add manually to ~/.claude/settings.json:"
@@ -219,11 +267,14 @@ echo "  1. Run: /setup-dupla"
 echo "  2. Or if migrating: /adapt-project"
 echo ""
 echo "IDEs configured:"
-[ "$HAS_CLAUDE" = true ] && echo "  ✓ Claude Code — skills (~/.claude/skills/)"
+[ "$HAS_CLAUDE" = true ] && echo "  ✓ Claude Code — skills (~/.claude/skills/) + hooks"
 [ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Antigravity — global rules ($AGENT_RULES_DIR)"
-echo "  ✓ Antigravity — global workflows (~/.gemini/antigravity/global_workflows/)"
-echo "  ✓ Gemini identity (~/.gemini/GEMINI.md)"
-echo "  ✓ Hooks: guard-project-state, suggest-checkpoint, session-reminder, auto-snapshot, sync-gemini"
+[ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Antigravity — global workflows (~/.gemini/antigravity/global_workflows/)"
+[ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Gemini identity (~/.gemini/GEMINI.md)"
+[ "$HAS_CURSOR" = true ] && echo "  ✓ Cursor — slash commands ($CURSOR_COMMANDS_DIR)"
+echo ""
+echo "Hooks (Claude Code only — no hook support in Cursor/Windsurf/Gemini):"
+echo "  guard-project-state, suggest-checkpoint, session-reminder, auto-snapshot, sync-gemini"
 echo ""
 echo "Per-project setup: run /adapt-project in any project"
 echo "  → Creates .agents/rules/ (project rules for Gemini)"

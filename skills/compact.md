@@ -8,8 +8,11 @@ Usage:
 
 ## When to run
 
-Auto-suggested by suggest-checkpoint.sh when: >10 commits since last checkpoint OR session approaching token limits.
-Manual: any time context feels bloated or LLM starts hallucinating project details.
+Run manually when:
+- Session feels slow or responses are getting generic/hallucinated
+- After 10+ work sessions without compacting
+- Before a handoff to a different LLM (reduce context size)
+- When PROJECT_STATE Done field has 10+ accumulated items
 
 ---
 

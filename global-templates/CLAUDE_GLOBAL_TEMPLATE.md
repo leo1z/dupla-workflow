@@ -1,11 +1,20 @@
 ---
-doc: CLAUDE
+doc: GLOBAL_BEHAVIOR
 type: Static
 updated: YYYY-MM-DD
-purpose: Global behavior, identity, model routing, and execution rules
+purpose: Global behavior, identity, model routing — LLM-agnostic
+llm: [claude | gemini | gpt | cursor | windsurf | other]
 ---
 
-# Claude Global — [Your Name]
+# Global Behavior — [Your Name]
+
+> This file is LLM-agnostic. Rename or copy as needed:
+> - Claude Code → `~/.claude/CLAUDE.md`
+> - Gemini/Antigravity → `~/.gemini/GEMINI.md`
+> - Cursor → `.cursor/rules/global.mdc` or `.cursorrules`
+> - Windsurf → `.windsurfrules`
+> - GPT (API) → paste as system prompt
+> - Any other LLM → paste at conversation start or configure as system rule
 
 ## Identity
 
@@ -84,16 +93,65 @@ Si `Mode` no está en SESSION → asumir `full`.
 
 ---
 
-## Modos de Uso por Superficie
+## Capacidades por Superficie
 
-| Superficie | Skills disponibles | Hooks | Handoff |
-|---|---|---|---|
-| Claude Code IDE/CLI | Todos (14 skills) | Automáticos | /checkpoint handoff |
-| Antigravity/Gemini | new-session, checkpoint, new-project | No (manual) | Pegar `<handoff>` block |
-| Cursor/Windsurf | Leer .md manualmente | No | Pegar `<handoff>` block |
-| Chat (WhatsApp/Slack) | Pegar `<handoff>` + PROJECT_STATE | No | `<handoff>` block |
+Lo que funciona en cada entorno — basado en capacidades técnicas reales:
 
-Para chat sin IDE: pegar `<handoff>` block → el LLM lee PROJECT_STATE.md → retoma desde Next.
+### ✅ Claude Code (IDE extension + CLI) — Capacidad completa
+- Skills: `/new-session`, `/checkpoint`, todos los 14+ skills como slash commands
+- Hooks automáticos: Stop, PreToolUse, PostToolUse, UserPromptSubmit
+- Auto-snapshot de docs/ en cada Stop
+- Sync automático CLAUDE.md → GEMINI.md al escribir
+- MCP: filesystem (requiere Node.js), fetch (requiere pip)
+- Handoff: `/checkpoint handoff` genera el bloque y lo escribe en PROJECT_STATE
+
+### ✅ Gemini CLI / Antigravity — Capacidad alta (sin hooks)
+- Skills: como workflows en `~/.gemini/antigravity/global_workflows/` — escribe el nombre del skill
+- Sin hooks automáticos — el usuario ejecuta skills manualmente
+- GEMINI.md se carga automáticamente (equivalente de CLAUDE.md)
+- `run_command` disponible: Gemini puede ejecutar comandos de shell cuando se lo pides
+- Handoff: pegar `<handoff>` block al iniciar chat → escribir "ejecuta new-session"
+
+### ✅ Cursor (IDE) — Capacidad media
+- Rules: `.cursor/rules/*.mdc` (Agent Mode) o `.cursorrules` (Chat/Composer)
+- Slash commands propios: archivos en `.cursor/commands/` (invocados con `/comando`)
+- Install Dupla para Cursor: copiar skills a `.cursor/commands/` durante `/adapt-project`
+- Sin hooks automáticos — todo es manual o reglas pasivas
+- Handoff: pegar `<handoff>` block + contenido de `claude-progress.txt` al inicio del chat
+
+### ✅ Windsurf (IDE) — Capacidad media
+- Rules: `.windsurfrules` o `.windsurf/rules/*.md` con frontmatter `trigger: always_on`
+- Workflows: multi-step tasks invocados con `@workflow-name` en Cascade
+- Sin hooks automáticos
+- Handoff: pegar `<handoff>` block + `claude-progress.txt` al inicio
+
+### ✅ GPT-4 / OpenAI API — Capacidad base
+- Sin slash commands nativos (ChatGPT Plus tiene Custom Prompts pero no es estándar)
+- Sin hooks
+- System prompt: pegar contenido de este archivo como system prompt de la conversación
+- Handoff: pegar `<handoff>` block + contenido de `claude-progress.txt`
+- MCP: posible vía plugins o function calling, pero no estándar
+
+### ⚡ Claude.ai Web / ChatGPT Web — Capacidad mínima
+- Sin skills, sin hooks, sin filesystem
+- Adjuntar `PROJECT_STATE.md` + `claude-progress.txt` como archivos
+- Pegar `<handoff>` block al inicio del chat
+- Usar solo para consultas rápidas o revisión de documentos
+
+### 📱 Chat (WhatsApp/Slack/Telegram vía OpenClaw) — Capacidad de continuidad
+- Sin filesystem local, sin hooks, sin slash commands
+- Lo que SÍ funciona: pegar `<handoff>` block como texto → el LLM retoma desde Next
+- Lo que SÍ funciona: pegar contenido de `claude-progress.txt` (30 tokens, cabe en un mensaje)
+- Lo que NO funciona: leer archivos del proyecto automáticamente
+- Workaround: exportar `SESSION block` de PROJECT_STATE como texto y pegarlo junto al handoff
+
+**Regla universal de handoff** (funciona en TODOS los entornos):
+```
+1. En el entorno actual: /checkpoint handoff (o manual si no hay skills)
+2. Copiar el bloque <handoff> generado
+3. En el nuevo entorno: pegar el bloque + "continúa desde Next:"
+4. El LLM leerá el bloque y retomará — sin perder contexto
+```
 
 ---
 
