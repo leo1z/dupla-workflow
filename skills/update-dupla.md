@@ -69,7 +69,16 @@ Cambios:
 ¿Actualizar? [s/n]
 ```
 
-### Step 4 — Backup + Update
+### Step 4 — Re-detect Tools + Backup + Update
+
+**Before showing update commands, silently re-detect available tools and IDEs:**
+- `git --version` → available? (required)
+- `python3 --version` → available? (hooks need it on Windows)
+- `node --version` → available? (MCP filesystem)
+- `~/.cursor/` exists? → Cursor present → include Cursor commands in update
+- `~/.gemini/antigravity/` or `~/.agent/` exists? → Antigravity present → update workflows
+
+Only show commands for detected tools — skip sections for undetected IDEs without noise.
 
 Show commands to user — they must run these in terminal (Claude cannot execute bash directly):
 
@@ -87,7 +96,7 @@ cp /tmp/dupla-new/skills/*.md ~/.claude/commands/
 cp /tmp/dupla-new/hooks/*.sh ~/.claude/hooks/
 cp /tmp/dupla-new/VERSION ~/.claude/DUPLA_VERSION
 
-# Update Antigravity global workflows (type "/" in Agent to use)
+# [Only if Antigravity detected] Update Antigravity global workflows
 mkdir -p ~/.gemini/antigravity/global_workflows
 for f in /tmp/dupla-new/skills/*.md; do
   fname=$(basename "$f")
@@ -95,15 +104,17 @@ for f in /tmp/dupla-new/skills/*.md; do
   printf -- "---\ndescription: %s\n---\n\n" "$desc" > ~/.gemini/antigravity/global_workflows/"$fname"
   cat "$f" >> ~/.gemini/antigravity/global_workflows/"$fname"
 done
-
-# Sync GEMINI.md from CLAUDE.md (only if GEMINI.md doesn't exist yet)
 [ ! -s ~/.gemini/GEMINI.md ] && cp ~/.claude/CLAUDE.md ~/.gemini/GEMINI.md
+
+# [Only if Cursor detected] Update Cursor slash commands
+mkdir -p ~/.cursor/commands
+cp /tmp/dupla-new/skills/*.md ~/.cursor/commands/
 
 # Cleanup
 rm -rf /tmp/dupla-new
 ```
 
-Tell user: "Copia y pega estos comandos en tu terminal. Cuando terminen, vuelve aquí y escribe /health-check"
+Tell user: "Copia y pega los bloques relevantes a tu setup en terminal. Cuando terminen, escribe /health-check"
 
 ### Step 4.5 — Per-Project Update (optional)
 
@@ -142,9 +153,10 @@ Cambios principales:
 - [feature 1]
 - [feature 2]
 
-Claude Code:   ~/.claude/skills/ ✓
-Antigravity:   ~/.gemini/antigravity/global_workflows/ ✓
-               ~/.gemini/GEMINI.md ✓ (si no existía)
+Claude Code:   ~/.claude/skills/ ✓ + hooks ✓
+Antigravity:   ~/.gemini/antigravity/global_workflows/ ✓ [si detectado]
+               ~/.gemini/GEMINI.md ✓ [si no existía]
+Cursor:        ~/.cursor/commands/ ✓ [si detectado]
 Por proyecto:  [N proyectos actualizados / saltado]
 
 Backup anterior: ~/.claude/skills-backup/v[old-version]/

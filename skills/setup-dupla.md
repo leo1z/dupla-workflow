@@ -18,15 +18,18 @@ If python3 missing → warn (don't stop): "⚠️ python3 no encontrado — los 
 
 ### 0B — Detect IDEs and surface
 - `~/.claude/` exists? → Claude Code detected → **full hooks + skills available**
-- `~/.gemini/antigravity/` exists? → Antigravity detected → **skills as workflows, no hooks**
-- `~/.agent/` exists? → Antigravity (Unix/macOS fallback)
-- Neither found → ask: "¿Desde qué IDE o terminal usas esto?"
+- `~/.gemini/antigravity/` or `~/.agent/` exists? → Antigravity detected → **skills as workflows, no hooks**
+- `~/.cursor/` exists? → Cursor detected → **skills as slash commands in .cursor/commands/, no hooks**
+- `.windsurfrules` or `~/.windsurf/` exists? → Windsurf detected → **passive rules only, no hooks**
+- None found → ask: "¿Desde qué IDE o terminal usas esto? (Claude Code / Antigravity / Cursor / Windsurf / otro)"
 
 Show detected surface at setup end so user understands what's available.
 
 If Antigravity NOT detected but user says they have it:
   `"¿Dónde está instalado Antigravity? (ej: ~/.gemini/antigravity/)"`
   Then set: ANTIGRAVITY_DIR=<path> bash bin/install.sh
+
+If Cursor detected → install.sh will auto-deploy to `~/.cursor/commands/` during Phase 4.
 
 ### 0C — Detect existing config
 Check ~/.claude/ for existing files:
@@ -204,10 +207,13 @@ If YES → generate based on IDE detected:
 - ✓ DUPLA_VERSION [from VERSION file]
 
 **Tu superficie activa:**
-  [Claude Code IDE]  → Skills (/cmd) + Hooks automáticos + MCP opcional
-  [Antigravity]      → Skills (nombre del skill) · Sin hooks · Sin MCP
-  [Terminal CLI]     → Skills (/cmd) + Hooks + Sin MCP visual
-  [Chat/Web]         → Pegar <handoff> block + PROJECT_STATE adjunto
+  [Claude Code IDE/CLI] → Skills (/cmd) + Hooks automáticos + MCP opcional ← capacidad completa
+  [Antigravity/Gemini]  → Skills (nombre del skill) · Sin hooks · run_command disponible
+  [Cursor]              → Skills (/cmd en Agent Mode) · Sin hooks · Sin MCP
+  [Windsurf]            → Reglas pasivas (@workflow) · Sin hooks
+  [Chat/Web]            → Pegar <handoff> block + PROJECT_STATE adjunto
+
+→ Ver docs/SURFACE_GUIDE.md para tabla completa de capacidades por entorno
 
 ℹ️ Para credenciales seguras: crea ~/.claude/CREDENTIALS.md
 
