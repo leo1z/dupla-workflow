@@ -8,15 +8,16 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-05-03 (sesión 9)
+Updated: 2026-05-04 (sesión 10)
 Status: ACTIVE
+Mode: full
 Phase: N/A
 Phase_Status: N/A
-Done: Sprint 4 (sesión 9) — AGENTS.md (Staff Harness + OWASP audit: Clean Windows, Tool-Result Clearing, Zero-Complacency Quality Gate, HITL, Prompt Injection) · hitl-guard.sh hook + registrado en settings.json · HOW_IT_WORKS.html + PDF · SURFACE_GUIDE rewrite · IML 7-question assessment · knowledge-graph.md skill · 3 pruebas trampa ejecutadas (PASS) · CLAUDE.md Agentic Engineering + Security sections
-Next: Validar Sprints 1-4 en máquina local (bash bin/install.sh) y hacer merge work → master
+Done: Agregados hooks auto-knowledge-graph, mejoras en HOW_IT_WORKS (MD/HTML), y Project Doctor en install.sh
+Next: Definir arquitectura para "Dupla OS" (Vision Wishlist) · Integrar Second Brain (Notion/Obsidian) y n8n según Roadmap visionario
 Blockers: none
 Branch: work
-Model: claude
+Model: gemini
 Handoff: no
 </session>
 

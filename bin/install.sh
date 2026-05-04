@@ -199,7 +199,8 @@ HOOKS_JSON='{
     "PreToolUse": [{"matcher": "Write", "hooks": [{"type": "command", "command": "bash ~/.claude/hooks/guard-project-state.sh"}]}],
     "Stop": [
       {"type": "command", "command": "bash ~/.claude/hooks/suggest-checkpoint.sh"},
-      {"type": "command", "command": "bash ~/.claude/hooks/auto-snapshot.sh"}
+      {"type": "command", "command": "bash ~/.claude/hooks/auto-snapshot.sh"},
+      {"type": "command", "command": "bash ~/.claude/hooks/auto-knowledge-graph.sh"}
     ],
     "UserPromptSubmit": [{"type": "command", "command": "bash ~/.claude/hooks/session-reminder.sh"}],
     "PostToolUse": [{"matcher": "Write", "hooks": [{"type": "command", "command": "bash ~/.claude/hooks/sync-gemini.sh"}]}]
@@ -279,4 +280,31 @@ echo ""
 echo "Per-project setup: run /adapt-project in any project"
 echo "  → Creates .agents/rules/ (project rules for Gemini)"
 echo "  → Creates .agents/workflows/ (project workflows)"
+echo ""
+
+# --- PROJECT DOCTOR (Auto-upgrade local project if detected) ---
+echo "🩺 Project Doctor: Checking current directory..."
+if [ -f "docs/PROJECT_STATE.md" ]; then
+  echo "   ✓ Dupla OS project detected in current directory."
+  
+  # Check for missing project_type
+  if ! grep -q "project_type:" "docs/PROJECT_STATE.md"; then
+    echo "   ⚠️  Missing 'project_type' in PROJECT_STATE.md. Defaulting to 'individual'."
+    # Safely inject it after <session> or at the top
+    sed -i 's/<session>/<session>\nproject_type: individual/' "docs/PROJECT_STATE.md" 2>/dev/null || true
+  fi
+
+  # Check for missing Mode
+  if ! grep -q "Mode:" "docs/PROJECT_STATE.md"; then
+    echo "   ⚠️  Missing 'Mode' in PROJECT_STATE.md. Defaulting to 'full'."
+    sed -i 's/Status: /Mode: full\nStatus: /' "docs/PROJECT_STATE.md" 2>/dev/null || true
+  fi
+
+  # Check for ROADMAP
+  if [ ! -f "docs/ROADMAP.md" ]; then
+    echo "   ⚠️  docs/ROADMAP.md is missing. Run /check-project in your IDE to generate it."
+  fi
+else
+  echo "   ℹ️  No project detected in current directory. Run /new-project when ready."
+fi
 echo ""
