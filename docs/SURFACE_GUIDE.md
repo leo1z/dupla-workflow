@@ -2,257 +2,328 @@
 doc: SURFACE_GUIDE
 type: Reference
 updated: 2026-05-03
-purpose: What works in each environment — Terminal, IDE, Chat
+purpose: Qué puedes hacer en cada entorno — IDE, Terminal, Chat. Cómo se complementan.
 ---
 
-# Dupla-Workflow: Capacidades por Entorno
+# Dupla-Workflow: Guía por Entorno
 
-> Consulta esta guía antes de un handoff para saber qué instrucciones dar al destino.
-
----
-
-## Resumen rápido
-
-| Capacidad | Claude Code IDE/CLI | Antigravity/Gemini | Cursor | Windsurf | GPT-4 API | Web Chat | Chat (OpenClaw) |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Skills (slash commands) | ✅ | ✅ (workflows) | ✅ | ⚠️ manual | ❌ | ❌ | ❌ |
-| Hooks automáticos | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Leer archivos del proyecto | ✅ | ✅ (run_command) | ✅ | ✅ | ❌* | ❌* | ❌ |
-| Handoff block | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Auto-snapshot docs/ | ✅ (hook) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| sync-gemini automático | ✅ (hook) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| MCP filesystem | ✅ (Node.js) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| MCP fetch | ✅ (pip) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Ejecutar shell | ✅ | ✅ (run_command) | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Identidad global (CLAUDE.md) | Auto | GEMINI.md auto | .cursor/rules/ | .windsurfrules | System prompt | Adjuntar | Pegar texto |
-
-*Solo si el cliente permite adjuntar archivos.
+> Lee esto antes de empezar, cambiar de herramienta, o hacer un handoff.
 
 ---
 
-## Claude Code — IDE Extension o CLI
+## La idea central
 
-**Capacidad: Completa**
+Dupla-Workflow es un **arnés de markdown** — el workflow vive en archivos `.md`, no en el LLM ni en el IDE. Eso significa que funciona en cualquier entorno. Lo que cambia es cuánta automatización tienes disponible.
 
-Qué funciona:
-- `/new-session`, `/checkpoint`, todos los 14+ skills como slash commands
-- Hooks automáticos: Stop (checkpoint reminder, auto-snapshot), PreToolUse (guard), PostToolUse (sync-gemini), UserPromptSubmit (session reminder)
-- Lectura de archivos del proyecto directamente
-- MCP: filesystem (requiere Node.js) + fetch (requiere pip)
-- Auto-snapshot de docs/ en cada Stop event
-- Sync automático CLAUDE.md → GEMINI.md al escribir CLAUDE.md
+```
+Más automatización ──────────────────────────────────────── Más manual
+Claude Code IDE/CLI  │  Antigravity/Gemini  │  Cursor  │  Chat/Web
+  Skills + Hooks     │    Skills + Shell    │  Skills  │  Solo texto
+```
 
-Qué NO funciona:
-- Nada relevante — capacidad plena
+---
 
-Para instalar:
+## Tabla: qué funciona dónde
+
+| Capacidad | Claude Code IDE/CLI | Antigravity/Gemini | Cursor | Windsurf | GPT/Web Chat |
+|---|:---:|:---:|:---:|:---:|:---:|
+| **Skills** (`/comando`) | ✅ nativo | ✅ workflows | ✅ `.cursor/commands/` | ⚠️ `@workflow` | ❌ pegar texto |
+| **Hooks automáticos** | ✅ 4 tipos | ❌ | ❌ | ❌ | ❌ |
+| **Checkpoint reminder** | ✅ automático | ❌ manual | ❌ manual | ❌ manual | ❌ manual |
+| **Auto-snapshot docs/** | ✅ en cada Stop | ❌ | ❌ | ❌ | ❌ |
+| **Leer archivos proyecto** | ✅ directo | ✅ run_command | ✅ Agent Mode | ✅ Cascade | ⚠️ adjuntar |
+| **Ejecutar shell** | ✅ | ✅ run_command | ✅ | ✅ | ❌ |
+| **Agentes paralelos** | ✅ nativo | ⚠️ run_command | ⚠️ múltiples tabs | ❌ | ❌ |
+| **Handoff block** | ✅ | ✅ | ✅ | ✅ | ✅ pegar texto |
+| **Identidad global** | Auto (CLAUDE.md) | Auto (GEMINI.md) | `.cursor/rules/` | `.windsurfrules` | Pegar al inicio |
+| **MCP filesystem** | ✅ Node.js | ❌ | ❌ | ❌ | ❌ |
+| **MCP fetch (internet)** | ✅ pip | ❌ | ❌ | ❌ | ❌ |
+| **sync CLAUDE→GEMINI** | ✅ automático | — | ❌ manual | ❌ manual | ❌ |
+
+---
+
+## Por entorno: qué puedes hacer, qué no, cómo compensar
+
+---
+
+### Claude Code — IDE (VS Code) o Terminal CLI
+
+**Nivel: Completo** — es el entorno de referencia del sistema.
+
+**Puedes:**
+- Todos los skills como `/comando` — `/new-session`, `/checkpoint`, `/new-project`, etc.
+- Hooks automáticos activos en background:
+  - `Stop` → checkpoint reminder si hay commits sin guardar
+  - `Stop` → auto-snapshot de `docs/` en `_versions/`
+  - `PreToolUse(Write)` → guard: bloquea writes si no hay `PROJECT_STATE.md`
+  - `PostToolUse(Write)` → sync automático `CLAUDE.md` → `GEMINI.md`
+  - `UserPromptSubmit` → avisa si el estado tiene >24h de antigüedad
+- Subagentes paralelos nativos (Agent tool)
+- MCP filesystem (leer archivos automáticamente sin Read tool)
+- MCP fetch (acceso a internet para research)
+
+**No puedes:**
+- Nada relevante — capacidad plena.
+
+**Para instalar:**
 ```bash
-bash bin/install.sh
+git clone https://github.com/leo1z/dupla-workflow.git ~/Projects/dupla-workflow
+bash ~/Projects/dupla-workflow/bin/install.sh
 ```
 
-Para usar handoff hacia aquí:
+**Handoff entrante:**
 ```
-1. Nuevo chat en Claude Code (VS Code o terminal)
-2. Pegar <handoff> block
-3. Escribir: /new-session
+1. Abre VS Code + Claude Code extension, o terminal con claude
+2. Navega al proyecto: cd ~/Projects/mi-proyecto
+3. Nuevo chat → pega el <handoff> block
+4. Escribe: /new-session
 ```
 
 ---
 
-## Antigravity / Gemini CLI
+### Antigravity / Gemini CLI
 
-**Capacidad: Alta (sin hooks)**
+**Nivel: Alto** — funciona sin hooks, todo lo demás disponible.
 
-Qué funciona:
-- Skills como workflows en `~/.gemini/antigravity/global_workflows/` — escribir el nombre del skill
-- `run_command`: Gemini puede ejecutar comandos de shell cuando se lo pides
-- GEMINI.md se carga automáticamente (equivalente de CLAUDE.md)
-- Handoff block: pegar al inicio del chat + "ejecuta new-session"
-- Lectura de archivos vía run_command
+**Puedes:**
+- Skills como workflows — escribes el nombre del skill o lo invocas (ej: `new-session`)
+- `GEMINI.md` se carga automáticamente (equivalente de `CLAUDE.md`)
+- `run_command` — Gemini puede ejecutar shell cuando se lo pides
+- Leer archivos del proyecto vía `run_command cat docs/PROJECT_STATE.md`
+- Handoff block funciona igual que en Claude Code
 
-Qué NO funciona:
-- Hooks automáticos (ningún equivalente en Gemini CLI)
-- Auto-snapshot → debe hacerse manual o via run_command
-- sync-gemini → no aplica (Gemini es el destino, no la fuente)
+**No puedes:**
+- Hooks automáticos (no existe equivalente)
+- Auto-snapshot → hacer manual: `cp -r docs/ _versions/$(date +%F_%H-%M)/`
+- sync-gemini automático → no aplica (Gemini es el destino)
 
-Para usar handoff hacia aquí:
-```
-1. Abre Antigravity, selecciona Gemini
-2. Nuevo chat
-3. Pegar <handoff> block
-4. Escribir: "Ejecuta new-session" (o simplemente el nombre del skill)
+**Compensación:** antes de cerrar sesión, ejecuta manualmente:
+```bash
+run_command: git add . && git commit -m "checkpoint: [descripción]"
 ```
 
-Nota: si el skill no se activa como slash command, Gemini lo lee como instrucción de texto — funciona igual.
+**Handoff entrante:**
+```
+1. Abre Antigravity → selecciona Gemini
+2. Nuevo chat → pega el <handoff> block
+3. Escribe: "Ejecuta new-session" (o el nombre del skill directamente)
+```
 
 ---
 
-## Cursor
+### Cursor
 
-**Capacidad: Media**
+**Nivel: Medio** — skills disponibles, sin hooks automáticos.
 
-Qué funciona:
-- Rules: `.cursor/rules/*.mdc` (Agent Mode) — cargadas automáticamente en cada chat
-- Slash commands: archivos en `.cursor/commands/` invocados con `/comando` — requiere instalación via `install.sh`
-- Lectura de archivos del proyecto en Agent Mode
+**Puedes:**
+- Skills como `/comando` en **Agent Mode** — requieren `.cursor/commands/*.md` instalado
+- Rules en `.cursor/rules/*.mdc` — se cargan automáticamente en Agent Mode
+- Leer archivos del proyecto en Agent Mode
 - Ejecutar shell desde el IDE
-- Handoff block: pegar al inicio del chat
+- Handoff block funciona (pegar al inicio del chat)
 
-Qué NO funciona:
-- Hooks automáticos (no hay equivalente en Cursor)
-- Auto-snapshot (manual — ejecutar `cp -r docs/ _versions/$(date +%F_%H-%M)/`)
-- sync-gemini (manual — si cambias el archivo global, copiar manualmente)
-- Chat Mode y Composer NO leen `.cursor/rules/` — usar Agent Mode
+**No puedes:**
+- Hooks automáticos
+- Auto-snapshot y sync-gemini → manuales
+- **Chat Mode y Composer NO leen `.cursor/rules/`** — siempre usar Agent Mode
 
-Para instalar skills en Cursor:
+**Compensación:** usa `/checkpoint` manualmente al final de cada sesión. Configura un atajo de teclado si lo usas mucho.
+
+**Para instalar:**
 ```bash
 bash bin/install.sh   # detecta ~/.cursor automáticamente
 ```
 
-Para usar handoff hacia aquí:
+**Handoff entrante:**
 ```
 1. Abre Cursor + proyecto
-2. Nuevo chat en AGENT MODE (importante)
-3. Pegar <handoff> block
-4. Escribir: /new-session
+2. Nuevo chat en AGENT MODE (crítico — no Chat Mode)
+3. Pega el <handoff> block
+4. Escribe: /new-session
 ```
 
 ---
 
-## Windsurf
+### Windsurf
 
-**Capacidad: Media**
+**Nivel: Medio** — reglas pasivas + workflows invocables.
 
-Qué funciona:
-- `.windsurfrules` o `.windsurf/rules/*.md` con frontmatter `trigger: always_on` — reglas pasivas
-- Workflows multi-step invocados con `@workflow-name` en Cascade
-- Lectura de archivos del proyecto
+**Puedes:**
+- `.windsurfrules` o `.windsurf/rules/*.md` con `trigger: always_on` — Cascade los lee siempre
+- Workflows en `.windsurf/workflows/` invocados con `@nombre-workflow`
+- Leer archivos del proyecto en Cascade
 - Ejecutar shell desde Cascade
 - Handoff block funciona
 
-Qué NO funciona:
-- Hooks automáticos (no hay equivalente)
-- Slash commands nativos como en Claude Code
-- Auto-snapshot, sync-gemini (manual)
+**No puedes:**
+- Slash commands nativos (`/comando`)
+- Hooks automáticos
+- Auto-snapshot, sync-gemini → manuales
 
-Para instalar reglas globales:
+**Para instalar reglas:**
 ```bash
-cp global-templates/CLAUDE_GLOBAL_TEMPLATE.md ~/.windsurfrules
-# o bien en el proyecto:
 cp global-templates/CLAUDE_GLOBAL_TEMPLATE.md .windsurfrules
 ```
 
-Para usar handoff hacia aquí:
+**Handoff entrante:**
 ```
-1. Abre Windsurf + proyecto
-2. Nuevo chat en Cascade
-3. Pegar <handoff> block + contenido de claude-progress.txt
-4. Escribir: "@new-session" (si workflow instalado) o "ejecuta new-session"
-```
-
----
-
-## GPT-4 / OpenAI API
-
-**Capacidad: Base**
-
-Qué funciona:
-- System prompt: pegar contenido de CLAUDE_GLOBAL_TEMPLATE.md como system prompt
-- Handoff block: funciona como primer mensaje del usuario
-- Adjuntar archivos: PROJECT_STATE.md + claude-progress.txt si el cliente lo permite
-
-Qué NO funciona:
-- Slash commands (ChatGPT Plus tiene Custom Instructions pero no es /comando estándar)
-- Hooks automáticos
-- Lectura automática de archivos del proyecto
-- Auto-snapshot, sync
-
-Para usar handoff hacia aquí:
-```
-1. Nuevo chat en ChatGPT o API playground
-2. SYSTEM PROMPT: pegar contenido de ~/.claude/CLAUDE.md
-3. PRIMER MENSAJE: pegar <handoff> block + "Continúa desde Next:"
-4. Adjuntar docs/PROJECT_STATE.md si el cliente lo permite
-5. Para skills: copiar el contenido del .md del skill y pegarlo como instrucción
+1. Abre Windsurf + proyecto → Cascade
+2. Pega el <handoff> block
+3. Escribe: "@new-session" o "ejecuta new-session"
 ```
 
 ---
 
-## Claude.ai Web / ChatGPT Web
+### GPT-4 / OpenAI (API o ChatGPT)
 
-**Capacidad: Mínima**
+**Nivel: Base** — funciona con texto plano y adjuntos.
 
-Qué funciona:
-- Adjuntar PROJECT_STATE.md + claude-progress.txt como archivos
+**Puedes:**
+- System prompt: pegar contenido de `CLAUDE_GLOBAL_TEMPLATE.md`
+- Handoff block como primer mensaje
+- Adjuntar `docs/PROJECT_STATE.md` + `claude-progress.txt` si el cliente lo permite
+- Usar skills como texto: copiar el contenido del `.md` del skill y pegarlo como instrucción
+
+**No puedes:**
+- Slash commands, hooks, automatizaciones
+- Leer archivos automáticamente
+
+**Handoff entrante:**
+```
+1. Nuevo chat
+2. SYSTEM PROMPT: contenido de ~/.claude/CLAUDE.md
+3. PRIMER MENSAJE: <handoff> block + "Continúa desde Next:"
+4. Adjunta: docs/PROJECT_STATE.md (si el cliente lo permite)
+```
+
+---
+
+### Claude.ai Web / ChatGPT Web
+
+**Nivel: Mínimo** — solo continuidad de contexto.
+
+**Puedes:**
+- Adjuntar `PROJECT_STATE.md` + `claude-progress.txt`
 - Pegar `<handoff>` block como texto
 - Consultas rápidas o revisión de documentos
 
-Qué NO funciona:
-- Skills, hooks, slash commands
-- Lectura automática del proyecto
-- Cualquier automatización
+**No puedes:**
+- Skills, hooks, slash commands, automatizaciones
+- Leer el proyecto automáticamente
 
-Para usar handoff hacia aquí:
+**Handoff entrante:**
 ```
 1. Nuevo chat
-2. Adjuntar: docs/PROJECT_STATE.md y claude-progress.txt
-3. Pegar: <handoff> block
-4. Escribir: "Continúa desde el Next del handoff"
+2. Adjunta: docs/PROJECT_STATE.md y claude-progress.txt
+3. Pega: <handoff> block
+4. Escribe: "Continúa desde el Next del handoff"
 ```
 
 ---
 
-## Chat vía OpenClaw (WhatsApp / Slack / Telegram)
+### Chat vía OpenClaw / WhatsApp / Slack / Telegram
 
-**Capacidad: Solo continuidad**
+**Nivel: Solo continuidad** — ideal para consultas rápidas o desbloquearse.
 
-Qué funciona:
+**Puedes:**
 - Pegar `<handoff>` block como texto → el LLM retoma desde Next
-- Pegar contenido de `claude-progress.txt` (cabe en un mensaje — ~30 tokens)
-- Exportar el bloque `<session>` de PROJECT_STATE y pegarlo junto al handoff
+- Pegar contenido de `claude-progress.txt` (~30 tokens — cabe en un mensaje)
+- Consultas de decisión rápida ("¿qué hago con X?")
 
-Qué NO funciona:
-- Leer archivos del proyecto automáticamente
-- Hooks, slash commands, skills
-- Ejecutar código
+**No puedes:**
+- Leer archivos del proyecto
+- Hooks, skills, ejecutar código
 
-Para usar handoff hacia aquí:
+**Handoff entrante:**
 ```
-1. Nuevo mensaje en el chat
-2. Pegar: <handoff> block (texto plano)
-3. Pegar: contenido de claude-progress.txt
-4. Escribir: "Continúa desde Next:"
+1. Mensaje nuevo
+2. Pega: <handoff> block (texto plano)
+3. Pega: contenido de claude-progress.txt
+4. Escribe: "Continúa desde Next:"
 ```
+
+---
+
+## Cómo se complementan los entornos
+
+El flujo típico de trabajo combina los entornos según la tarea:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    FLUJO DE TRABAJO REAL                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  CONSTRUIR / DEBUGGEAR          → Claude Code IDE/CLI       │
+│  (hooks automáticos, agentes,     capacidad completa        │
+│   commits, lectura de archivos)                             │
+│                                                             │
+│  INVESTIGAR / ANALIZAR          → Antigravity/Gemini        │
+│  (research de mercado, review      run_command disponible   │
+│   de código, segunda opinión)                               │
+│                                                             │
+│  REVISAR / EDITAR               → Cursor o Windsurf         │
+│  (Agent Mode, rules automáticas,   sin hooks pero skills OK │
+│   refactoring con contexto)                                 │
+│                                                             │
+│  CONSULTAR / DESBLOQUEARSE      → Chat (web, móvil)         │
+│  (pregunta rápida, handoff        solo texto + adjuntos     │
+│   en movimiento)                                            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Regla de oro:** el estado vive en `docs/PROJECT_STATE.md` y `git` — no en el LLM. Cambiar de herramienta no rompe nada si usas `/checkpoint` antes de salir.
 
 ---
 
 ## Regla universal de handoff
 
-Funciona en TODOS los entornos:
+Funciona en **todos** los entornos:
 
 ```
 1. En el entorno actual: /checkpoint → opción Handoff
 2. Copiar el bloque <handoff> generado
-3. En el nuevo entorno: pegar el bloque + "continúa desde Next:"
-4. El LLM leerá el bloque y retomará — sin perder contexto
+3. En el nuevo entorno: pegar el bloque + escribir /new-session
+4. El LLM leerá el bloque y retomará sin perder contexto
 ```
 
-El `<handoff>` block contiene todo lo necesario:
-- Proyecto y path
+El `<handoff>` block contiene:
+- Proyecto y path local
 - Branch actual
 - Qué se completó
-- Cuál es el próximo paso
-- Instrucción de qué leer primero
+- Cuál es el próximo paso exacto
 
 ---
 
-## Lo que NUNCA requiere un entorno específico
+## Trabajo Multi-Agente Paralelo
 
-Estas capacidades son universales porque son del LLM, no del entorno:
+| Entorno | Cómo lanzar agentes paralelos |
+|---|---|
+| Claude Code | Agent tool nativa — `run_in_background: true` para tareas independientes |
+| Antigravity | `run_command` múltiples — pedir a Gemini que los ejecute en el mismo turno |
+| Cursor | Múltiples chats (tabs) en Agent Mode — cada uno en su rama/tarea |
+| Web Chat | No soporta paralelismo — secuencial con handoff blocks |
 
-- Entender y seguir el sistema Dupla-Workflow
-- Leer PROJECT_STATE.md cuando se pega como texto
+**Patrón: Planificador → Implementadores → Evaluador**
+
+```
+1. Planificador: lee PROJECT_STATE + fase → divide trabajo en tareas independientes
+2. Implementadores: cada subagente recibe tarea + rama + archivos a tocar
+3. Evaluador: /health-check al final → verifica coherencia antes del merge
+```
+
+**Regla:** cada agente paralelo necesita su propio contexto completo. No asumas que un subagente sabe lo que hizo el otro.
+
+---
+
+## Lo que funciona en TODOS los entornos
+
+Estas capacidades son del LLM, no del IDE — universales:
+
+- Leer `PROJECT_STATE.md` cuando se pega o adjunta
+- Seguir el workflow: `/new-session` → trabajo → `/checkpoint`
+- Generar y consumir `<handoff>` blocks válidos
 - Aplicar ZOHAR, SEEQ, MOSCOW, OODA para priorizar
 - Seguir el flujo de roles: Planificador → Implementador → Evaluador
-- Generar handoff blocks válidos
-- Adaptar respuestas según Mode (research / lite / full)
+- Evaluar madurez de idea (IML) y recomendar stack
+- Actualizar ROADMAP dinámicamente en `/checkpoint`

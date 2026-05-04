@@ -120,6 +120,32 @@ No git commit required. No checkpoint needed. The file IS the state.
 
 ---
 
+## Upgrade: de proyecto pequeño a proyecto completo
+
+Cuando el usuario quiere escalar un micro-proyecto a workflow completo (más colaboradores, roadmap, arquitectura, fases), o cuando `QUICKSTATE.md` lleva más de 2 semanas activo:
+
+Mostrar una vez (no repetir en cada sesión):
+```
+💡 Este proyecto tiene [X días] activo en modo micro.
+¿Quieres escalarlo a proyecto completo? (docs/ + ROADMAP + ARCHITECTURE)
+
+  /adapt-project → si ya tienes código/estructura que preservar
+  /new-project   → si prefieres empezar desde la entrevista IML
+
+O sigue en modo micro — sin presión.
+```
+
+**Al escalar con `/adapt-project`:**
+- El skill detecta `QUICKSTATE.md` y usa su contenido (What, Done, Next) como base para pre-llenar `PROJECT_STATE.md`
+- `QUICKSTATE.md` se archiva en `docs/ARCHIVE.md` — no se elimina
+- El usuario no pierde nada de lo que había en el archivo
+
+**Al escalar con `/new-project`:**
+- El usuario pasa por la entrevista IML completa
+- Las respuestas pueden basarse en lo que ya sabe del micro-proyecto
+
+---
+
 ## Rules
 
 - Never create `docs/` or `CLAUDE.md` — micro mode is intentionally minimal
@@ -128,6 +154,7 @@ No git commit required. No checkpoint needed. The file IS the state.
 - Keep output under 8 lines — micro means micro
 - QUICKSTATE.md lives in whatever directory the user is in when they run the skill
 - Multiple micro projects = multiple folders, each with their own QUICKSTATE.md
+- Upgrade suggestion: show only if project is >14 days old OR user asks explicitly
 
 ---
 

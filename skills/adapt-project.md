@@ -4,6 +4,33 @@ Usage: /adapt-project
 
 ---
 
+## Phase 0.5 — Detect QUICKSTATE.md (micro → full upgrade)
+
+Before anything else, check if `QUICKSTATE.md` exists in the current directory:
+
+**Found:**
+```
+Encontré QUICKSTATE.md — este es un proyecto micro escalando a completo.
+
+Contenido actual:
+  What: [value]
+  Done: [value]
+  Next: [value]
+
+Usaré esto para pre-llenar PROJECT_STATE.md. El archivo se archivará en docs/ARCHIVE.md.
+¿Continuar? [s/n]
+```
+
+If YES → read QUICKSTATE.md and store values:
+- `What` → use as project description in PROJECT_STATE.md and CLAUDE.md
+- `Done` → pre-fill SESSION.Done
+- `Next` → pre-fill SESSION.Next
+- Archive QUICKSTATE.md to `docs/ARCHIVE.md` at end of Phase 4
+
+**Not found:** → continue to Phase 1 normally.
+
+---
+
 ## Phase 1 — Ask First
 
 "Where is the project docs? (Enter project root path or current if here)"

@@ -120,7 +120,7 @@ Tell user: "Copia y pega los bloques relevantes a tu setup en terminal. Cuando t
 
 Ask:
 ```
-¿Actualizar .agents/rules/ en algún proyecto? (para que Gemini lea las reglas del proyecto)
+¿Actualizar skills en proyectos existentes?
 
 Proyectos registrados en ~/.claude/SYSTEM.md:
   1. [proyecto A] — [path]
@@ -130,19 +130,71 @@ Proyectos registrados en ~/.claude/SYSTEM.md:
 ¿Cuál(es)? (número, varios con coma, o 0 para saltar)
 ```
 
-For each selected project — show command:
+For each selected project, detect what's present and show the relevant commands:
+
+**Antigravity (.agents/rules/):**
 ```bash
 mkdir -p [project-path]/.agents/rules
-# Si ya existe CLAUDE.md del proyecto:
 cp [project-path]/CLAUDE.md [project-path]/.agents/rules/claude.md
-# Agregar trigger frontmatter al inicio:
 sed -i '1s/^/---\ntrigger: always_on\n---\n\n/' [project-path]/.agents/rules/claude.md
 ```
 
+**Cursor (local .cursor/commands/ — only if directory exists in project):**
+```bash
+# [Solo si existe [project-path]/.cursor/commands/]
+cp /tmp/dupla-new/skills/*.md [project-path]/.cursor/commands/
+```
+
+**Claude Code (local .claude/skills/ — only if directory exists in project):**
+```bash
+# [Solo si existe [project-path]/.claude/skills/]
+cp /tmp/dupla-new/skills/*.md [project-path]/.claude/skills/
+```
+
+Only show the block(s) that apply to each project — skip sections for paths that don't exist.
+
 Output per project:
 ```
-✓ [proyecto] → .agents/rules/claude.md actualizado
+✓ [proyecto]
+  → .agents/rules/claude.md [si Antigravity]
+  → .cursor/commands/ [si Cursor local]
+  → .claude/skills/ [si Claude local]
 ```
+
+### Step 4.6 — Auto-propagate global docs to projects (silent, automatic)
+
+**After skills update, check if global templates changed in the new version:**
+
+Read the git diff between old version and new: `git -C /tmp/dupla-new log v[old]..v[new] --name-only -- templates/ global-templates/`
+
+If any template file changed → for each project registered in `~/.claude/SYSTEM.md`:
+
+1. Check which docs in the project are **template-derived** (have `doc:` YAML header matching a template):
+   - `docs/PROJECT_STATE.md` → from PROJECT_STATE_TEMPLATE.md
+   - `docs/ROADMAP.md` → from ROADMAP_TEMPLATE.md
+   - `CLAUDE.md` (project) → from CLAUDE_TEMPLATE.md
+
+2. For each changed template → show diff of what would change in the project doc:
+   ```
+   📄 Template actualizado: ROADMAP_TEMPLATE.md
+      Afecta: [proyecto A]/docs/ROADMAP.md, [proyecto B]/docs/ROADMAP.md
+
+   Cambio: se añade campo "Adapt if:" al bloque GO/NO-GO de cada fase
+   ¿Aplicar a todos los proyectos? [s/n/ver uno por uno]
+   ```
+
+3. If YES (all):
+   - For each project: merge the new template fields INTO the existing doc
+   - **Never overwrite custom content** — only add missing fields
+   - Mark added fields with `# (auto-updated from template vX.Y.Z)`
+
+4. If NO: skip silently — user's docs stay as-is
+
+**If no templates changed:** skip this step entirely — no prompt, no noise.
+
+**Key rule:** this is additive only. Never remove user content. If a conflict is found (user customized a field that the template now changes), show the conflict and ask.
+
+---
 
 ### Step 5 — Output
 

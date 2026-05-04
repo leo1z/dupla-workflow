@@ -8,12 +8,12 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-05-03 (sesión 8)
+Updated: 2026-05-03 (sesión 9)
 Status: ACTIVE
 Phase: N/A
 Phase_Status: N/A
-Done: Sprint 1 ✅ (990d906) + Sprint 2 ✅ (ee0036d) + Sprint 3 ✅ (3c232c6) — LLM-agnostic hardening completo · hooks 4 fixes (stash bug, stdin JSON, guard deadlock, branch dinámico) · install.sh Cursor + merge fix · checkpoint multi-destino (GPT/Cursor/local) · SURFACE_GUIDE.md nuevo · setup-dupla/update-dupla multi-IDE detection · CLAUDE_GLOBAL_TEMPLATE doc:GLOBAL_BEHAVIOR
-Next: Validar Sprints 1-3 en máquina local (bash bin/install.sh) y hacer merge work → master
+Done: Sprint 4 (sesión 9) — AGENTS.md (Staff Harness + OWASP audit: Clean Windows, Tool-Result Clearing, Zero-Complacency Quality Gate, HITL, Prompt Injection) · hitl-guard.sh hook + registrado en settings.json · HOW_IT_WORKS.html + PDF · SURFACE_GUIDE rewrite · IML 7-question assessment · knowledge-graph.md skill · 3 pruebas trampa ejecutadas (PASS) · CLAUDE.md Agentic Engineering + Security sections
+Next: Validar Sprints 1-4 en máquina local (bash bin/install.sh) y hacer merge work → master
 Blockers: none
 Branch: work
 Model: claude

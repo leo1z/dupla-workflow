@@ -35,49 +35,96 @@ Based on Team:
 
 ---
 
-## Phase 0.5 — Validation Gate (only if Maturity = 1)
+## Phase 0.5 — IML Assessment (only if Maturity = 1)
 
-Before investing time in the full flow, check if the idea is worth building.
+Evaluar viabilidad de la idea antes de invertir tiempo en el flujo completo.
+Ser objetivo, no optimista. El objetivo es detectar gaps reales — no aprobar todo.
 
-Ask in ONE message:
-
-```
-Antes de definir el proyecto, hagamos un chequeo rápido:
-
-1. ¿Cuál es el problema real que quieres resolver? (una oración, específica)
-2. ¿Hablaste con al menos 2-3 personas reales que tienen este problema? [s/n]
-   → Si sí: ¿qué dijeron?
-   → Si no: ¿tienes alguna señal de que existe? (queja, post, experiencia propia)
-3. ¿Alguien pagaría por resolverlo, aunque sea poco? [s/n] ¿Por qué?
-```
-
-**Evaluate responses:**
-
-- **Problema claro + confirmación real + señal de pago** → ✅ continúa a Phase 1
-- **Problema vago O sin validación O sin señal de pago** → mostrar:
+Ask ALL in ONE message:
 
 ```
-⚠️ La idea aún no está lista para construir.
+Antes de construir, evaluemos la viabilidad real de tu idea:
 
-Antes de continuar, valida con este prompt en Claude:
+1. ¿Cuál es el problema exacto que resuelve? (una oración específica — sin solución todavía)
+2. ¿Cuándo fue la última vez que tú u otra persona experimentó este problema? (situación concreta)
+3. ¿Hablaste con personas reales que tienen este problema? [s/n]
+   → Si sí: ¿cuántas? ¿qué dijeron exactamente?
+   → Si no: ¿qué señal tienes de que existe? (post, queja, tu propia experiencia)
+4. ¿Alguien pagaría por resolverlo? [s/n] ¿Cuánto? ¿Por qué sí o no?
+5. ¿Qué existe hoy para resolver esto? ¿Por qué no alcanza?
+6. ¿Cuál es tu ventaja real para resolver esto vs. alguien más? (acceso, skills, red, timing)
+7. Si construyes esto y nadie lo usa — ¿qué asunción resultó falsa?
+```
 
+**Evaluate responses — score por dimensión (interno, no mostrar números al usuario):**
+
+| Dimensión | Señal fuerte | Señal débil |
+|---|---|---|
+| Problema | Específico + momento concreto | Vago, genérico, "sería útil" |
+| Validación | 3+ personas confirmaron | Solo opinión propia |
+| Disposición a pagar | Cifra concreta o "pagaría X" | "Tal vez", "depende" |
+| Mercado | Alternativas claras y sus gaps | "No existe nada igual" |
+| Ventaja | Acceso exclusivo o skill específico | "Soy muy apasionado" |
+| Riesgo | Asunción específica nombrada | "No sé" o no responde |
+
+**Resultado — 3 posibles salidas:**
+
+**✅ VERDE (4+ dimensiones fuertes):** continúa a Phase 1.
+```
+✅ Idea lista para definir.
+
+Fortalezas:
+  - [dimensión 1]: [por qué es sólida]
+  - [dimensión 2]: [por qué es sólida]
+
+Riesgo principal a monitorear: [dimensión más débil]
+→ Añadiremos esto como Kill Condition en el ROADMAP.
+
+Continuamos con la entrevista completa.
+```
+
+**⚠️ AMARILLO (2–3 dimensiones fuertes):** continúa pero con advertencia explícita.
+```
+⚠️ Idea con gaps — puedes continuar, pero hay riesgos reales.
+
+Sólido:
+  - [dimensiones fuertes]
+
+Gaps a resolver antes de construir:
+  - Validación: [gap específico + acción concreta]
+  - [otra dimensión]: [gap + acción]
+
+Opciones:
+  1 — Continuar de todas formas (asumes los riesgos)
+  2 — Primero valida [gap X] (te doy un prompt para hacerlo ahora)
+  3 — Salir — vuelve cuando tengas la validación
+```
+
+**❌ ROJO (0–1 dimensiones fuertes):** stop con orientación específica.
+```
+❌ La idea no está lista para construir.
+
+El problema principal: [qué es lo más débil — específico]
+
+Antes de continuar, necesitas:
+  1. [Acción concreta de validación — ej: "habla con 3 personas que hayan pagado por X"]
+  2. [Segunda acción si aplica]
+
+Prompt para validar ahora:
 ---
-Tengo esta idea: [idea]
-
+Tengo esta idea: [idea del usuario]
 Ayúdame a:
-1. Identificar el problema real
-2. Decir si es un problema fuerte o débil
-3. Quién lo tiene (personas específicas)
-4. Si alguien pagaría — por qué sí o no
-5. Cómo validarlo sin construir nada
-
+1. ¿Es un problema real o una solución buscando problema?
+2. ¿Quién lo tiene — 3 personas específicas con nombre/rol?
+3. ¿Qué hacen hoy para resolverlo? ¿Cuánto les cuesta (tiempo/dinero)?
+4. ¿Pagarían por una solución? ¿Cuánto?
+5. ¿Cómo validarlo en 1 semana sin construir nada?
 ---
 
-Regla: Si nadie reacciona al problema → no construyas.
-Vuelve cuando tengas al menos 2-3 personas que confirmen el problema.
+Vuelve cuando tengas al menos: problema específico + 2 personas confirmaron + señal de pago.
 ```
 
-→ Stop. No continuar hasta que el usuario regrese con validación.
+→ **Stop en ROJO.** No continuar hasta que el usuario regrese con validación.
 
 ---
 
@@ -184,32 +231,72 @@ Combine results into brief summary (max 200 words).
 
 ---
 
-## Phase 5 — Stack/Tools Recommendation
+## Phase 5 — Stack/Tools Recommendation (adaptado a constraints reales)
 
-By project type, suggest:
+No recomendar stack genérico. Usar las respuestas IML para adaptar:
 
-**Software:** (4-axis decision tree)
-- Frontend: React/Vue/Svelte? → suggest + npm install
-- Backend: Node/Python/Go? → suggest + setup
-- Database: SQL/NoSQL + provider (Supabase/MongoDB/etc)
-- Deployment: Vercel/VPS/AWS? → with commands
+**Inputs que determinan el stack:**
+- IML Q7 (Constraints): tiempo/semana, deadline, presupuesto
+- IML Q3 (Usuario): ¿usuario técnico o no técnico?
+- IML Q6 (Riesgo): ¿cuál es la asunción más frágil? → afecta qué validar primero
+- Project type: Software / Negocio / Contenido / Investigación
+- Maturity level: 1 (idea) vs 3 (MVP definido) → diferente profundidad
 
-**Negocio:** Tools table
-- Operations: Notion/Airtable
-- Payment: Stripe/Polar
-- Communication: Slack/Telegram API
-- Scheduling: Calendly/Typeform
+**Para Software — decision tree por constraint:**
 
-**Contenido:**
-- Writing: Markdown/Notion/Medium
-- Design: Canva/Figma
-- Publishing: Substack/Ghost/YouTube
-- Analytics: Google Analytics/Substack stats
+```
+Tiempo disponible < 5h/semana OR deadline < 4 semanas:
+  → Stack mínimo: Next.js + Supabase + Vercel
+     Razón: un solo repo, auth integrada, deploy gratis, sin ops
 
-**Investigación:**
-- Collaboration: Notion/Google Docs
-- Analysis: Jupyter/Observable/Airtable
-- Sources: Zotero/Notion for research library
+Tiempo disponible ≥ 10h/semana AND deadline > 8 semanas:
+  → Stack adaptado al proyecto:
+     - Data-heavy → Python (FastAPI) + PostgreSQL + Railway
+     - Real-time → Next.js + Supabase Realtime + Vercel
+     - Mobile-first → React Native (Expo) + Supabase
+     - CLI/scripts → Python o Go + SQLite
+
+Usuario no técnico (solo tú construyes, ellos usan):
+  → Priorizar: UI lista (shadcn/ui, Radix) + auth sin fricción (Supabase Auth o Clerk)
+
+Presupuesto = $0:
+  → Todo en tier gratuito: Vercel (frontend) + Supabase (DB+auth) + Railway free (backend)
+  → Evitar: Firebase (costoso en escala), AWS (complejo para MVP)
+
+Riesgo principal = adopción/validación:
+  → No construyas el backend completo primero
+  → Semana 1: landing + waitlist (Next.js + Resend) para validar demanda antes de code
+```
+
+Mostrar como tabla concisa:
+```
+## Stack Recomendado — [nombre proyecto]
+
+| Capa | Opción | Por qué |
+|---|---|---|
+| Frontend | [X] | [razón ligada a tu constraint] |
+| Backend | [X] | [razón] |
+| DB | [X] | [razón] |
+| Auth | [X] | [razón] |
+| Deploy | [X] | [razón] |
+| Costo estimado MVP | $0–$[X]/mes | [breakdown] |
+
+Alternativa si cambian los constraints: [opción B] — cambia si [condición]
+```
+
+**Para Negocio:** tools ligados a la etapa de madurez:
+- Maturity 1–2 → Notion + Typeform + Stripe (validar antes de construir)
+- Maturity 3+ → Airtable + N8N + Stripe + WhatsApp API (automatizar lo validado)
+
+**Para Contenido:** por canal principal (inferido de IML Q3 Channels):
+- TikTok/video → CapCut + Notion + Beehiiv
+- Newsletter → Beehiiv o Substack + Notion
+- Blog técnico → Ghost o Obsidian Publish
+
+**Para Investigación:** por metodología (inferida de IML Q4):
+- Cualitativo → Notion + Transcription (Whisper o Otter.ai)
+- Cuantitativo → Jupyter + DuckDB + Observable
+- Mixto → Airtable + Jupyter
 
 ---
 
@@ -327,13 +414,16 @@ git init
 git add .
 git commit -m "chore: initialize project structure"
 
-# If TEAM: create work branches
-git checkout -b work/phase1-[role-a]
-git checkout main
-git checkout -b work/phase1-[role-b]
-git checkout main
+# Individual: always create work branch (never develop on main)
+git checkout -b work
+
+# If TEAM: create role branches instead
+# git checkout -b work/phase1-[role-a]
+# git checkout main
+# git checkout -b work/phase1-[role-b]
+# git checkout main
 # Push all branches + invite collaborators
-git push origin --all
+# git push origin --all
 ```
 
 **Without git** (opción 2):
@@ -428,6 +518,7 @@ Created:
 - CLAUDE.md
 - claude-progress.txt (empty, ready for /checkpoint)
 
+Branch: work (nunca desarrolles en main)
 Next: /new-session to start Phase 1
 ```
 

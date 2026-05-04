@@ -182,10 +182,28 @@ If YES → generate based on IDE detected:
 **Without MCP:** System works fine — Claude uses Read tool on demand. MCP is a convenience improvement, not required.
 
 ### 4. Install Dupla Infrastructure
-- Execute: `bash ~/Projects/dupla-workflow/bin/install.sh` (or detect dupla-workflow location)
+
+Detect dupla-workflow repo path in this order:
+1. `~/.claude/DUPLA_VERSION` exists → repo was already installed, path in `~/.claude/hooks/` (skip clone)
+2. `~/Projects/dupla-workflow/bin/install.sh` exists → use that path
+3. `~/projects/dupla-workflow/bin/install.sh` exists → use that path
+4. None found → ask user: "¿Dónde clonaste dupla-workflow? (ej: ~/code/dupla-workflow)"
+
+Then run:
+```bash
+bash [detected-path]/bin/install.sh
+```
+
 - Copies hooks to ~/.claude/hooks/
 - Configures hooks in settings.json
 - Creates DUPLA_VERSION marker
+
+If install.sh not found and user doesn't know the path:
+```
+❌ No encontré dupla-workflow. Clónalo primero:
+   git clone https://github.com/leo1z/dupla-workflow.git ~/Projects/dupla-workflow
+   Luego vuelve a correr /setup-dupla
+```
 
 ---
 
