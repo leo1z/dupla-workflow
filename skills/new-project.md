@@ -262,10 +262,54 @@ From answers → auto-generate:
 
 ---
 
+## Phase 6.5 — SPEC.md (Spec-Driven Development gate)
+
+Before generating any technical docs, create the spec. This is the source of truth for what we're building.
+
+Generate `docs/SPEC.md` from IML answers (max 1 page):
+
+```markdown
+# Spec — [Project Name]
+
+## Problema
+[One specific sentence from IML Q1]
+
+## Usuario
+[3 real people from IML Q3 — names or personas]
+
+## Solución Propuesta
+[Core flow in 3 steps from IML Q5]
+
+## MVP Scope (Must build)
+- [feature 1]
+- [feature 2]
+
+## Out of Scope (Won't build in MVP)
+- [item 1]
+
+## Kill Condition
+[IML Q6 — the assumption that if false, stops the project]
+
+## Métrica de Éxito
+[ONE metric: X users / X revenue / X validated in Y weeks]
+```
+
+**If SPEC.md already exists** (Maturity 2 or 3) → ask: "¿Actualizar SPEC.md existente? [s/n]"
+
+---
+
 ## Phase 7 — Generate Project Docs
 
-### Folder Structure first:
+### Folder Structure + Version Control
 
+Ask ONE question first:
+```
+¿Necesitas git para este proyecto?
+  1 — Sí (colaboración, GitHub, historial completo)
+  2 — No (proyecto pequeño, personal, sin remote)
+```
+
+**With git:**
 ```bash
 # For Software
 mkdir -p src docs tests public
@@ -279,7 +323,6 @@ mkdir -p posts assets media
 # For Investigación
 mkdir -p research notes data
 
-# All types:
 git init
 git add .
 git commit -m "chore: initialize project structure"
@@ -292,6 +335,17 @@ git checkout main
 # Push all branches + invite collaborators
 git push origin --all
 ```
+
+**Without git** (opción 2):
+```bash
+# Same folder structure without git
+mkdir -p docs
+mkdir -p _versions  # auto-snapshot target for auto-snapshot.sh hook
+```
+- No `git init`, no remote
+- `auto-snapshot.sh` hook will create `_versions/` copies automatically on Stop
+- `/restore` will show `_versions/` entries instead of git stash list
+- Add note to PROJECT_STATE.md: `Branch: none (no git)`
 
 **If Team:** after pushing, show collaborator invite instructions:
 ```
@@ -328,6 +382,16 @@ Execute BEFORE generating docs.
    - Fill Team section (leader, members, branches)
    - Fill Git Strategy (branch names, merge order)
 
+### Create claude-progress.txt (lightweight task state bridge):
+
+Write to project root:
+```
+[ ] Complete Phase 1 — [first outcome from ROADMAP]
+```
+This file is read by new-session Step 0A at ~30 tokens. Checkpoint updates it on close.
+
+---
+
 ### Generate docs/code-review-graph.json (project audit map):
 
 After all docs are created, generate the initial project map:
@@ -356,11 +420,13 @@ After all docs are created, generate the initial project map:
 **Listo para construir:** [1-5]
 
 Created:
+- docs/SPEC.md (problema · usuario · MVP scope · kill condition · métrica)
 - docs/PROJECT_STATE.md
 - docs/ROADMAP.md (hypothesis → Phase 1 MVP → GO/NO-GO)
 - [docs/ARCHITECTURE.md | docs/PLAN.md]
 - docs/PROBLEMS.md
 - CLAUDE.md
+- claude-progress.txt (empty, ready for /checkpoint)
 
 Next: /new-session to start Phase 1
 ```

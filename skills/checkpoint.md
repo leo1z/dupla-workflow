@@ -121,6 +121,17 @@ Complete session closure with state update + next-session prep + new chat guidan
        ```
    - If neither trigger fires → skip entirely
 
+2.9. **Write claude-progress.txt** (always on Full Close):
+   - Read PROJECT_STATE.md SESSION → extract Done items and Next
+   - Overwrite `claude-progress.txt` in project root:
+     ```
+     [x] [Done item 1 from SESSION]
+     [x] [Done item 2 from SESSION]
+     [>] [Next from SESSION — the immediate next action]
+     ```
+   - Max 10 lines. If file doesn't exist → create it. If exists → overwrite entirely.
+   - Purpose: new-session Step 0A reads this at ~30 tokens before PROJECT_STATE
+
 3. Recommend next model:
    - Next contains "plan", "research", "review", "decidir" → suggest Gemini
    - Next contains "implement", "debug", "code", "build" → suggest Claude
@@ -153,6 +164,16 @@ Modelo recomendado: [Claude / Gemini]
 Complete save + generate handoff block + step-by-step instructions.
 
 **Steps:**
+
+**Detect active surface first** (shapes the handoff instructions shown):
+- Claude Code IDE (VS Code extension)? → Full skills + hooks available
+- Claude Code Terminal (CLI)? → Full skills + hooks available
+- Antigravity/Gemini? → Skills as workflows, no hooks, no slash commands
+- Claude.ai Web? → No skills, no hooks — handoff block + manual file attach only
+- Chat (WhatsApp/Slack via OpenClaw)? → Handoff block only, minimal instructions
+- Unknown → assume Claude Code IDE (safe default)
+
+If unable to detect → ask: "¿Desde dónde estás usando esto? (Claude Code IDE / Terminal / Antigravity / Web / Chat)"
 
 1. Ask destination:
 ```
@@ -349,7 +370,9 @@ Phase [N] GO/NO-GO: [GO → proceed to Phase N+1 / ADAPT / KILL]
 
 - Always update state block (< 2 minutes of work)
 - Done field: auto-generated from git log (no manual typing needed)
+- Always write claude-progress.txt on Full Close (Mode 2) — it's the lightweight state bridge
 - Team: each dev edits ONLY their section — never touch others
 - Leader: only Leader runs Mode 4 (approve-pr)
 - Never force push — if conflict, ask user
 - If stuck → `/checkpoint close` + `/restore` to review options
+- Handoff instructions must match the detected surface — don't show IDE steps for a chat session

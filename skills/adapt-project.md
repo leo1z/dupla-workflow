@@ -60,20 +60,30 @@ Preserve: don't delete, archive instead.
 
 ## Phase 4 — Generate Missing Docs
 
-### docs/PROJECT_STATE.md (if missing or v1 format)
-- Read: git log, existing CLAUDE.md, README
-- Infer: Current goal (from git log or README), status, next steps
-- Use PROJECT_STATE_TEMPLATE structure
-- ALWAYS set `project_type: individual` in YAML header (explicitly — do not leave blank)
-- ALWAYS fill SESSION block with real values:
-  - `Updated:` → today's date (YYYY-MM-DD HH:MM)
-  - `Done:` → last 3 git log entries (or "Initial setup" if no commits)
-  - `Next:` → inferred from README/git (mark as [inferred])
-  - `Status: ACTIVE`
-  - `Branch:` → `git branch --show-current`
-  - `Phase:` → if ROADMAP.md exists, read first active phase and set `Phase: Phase [N] — [name]`; if no ROADMAP → `Phase: N/A`
-  - `Phase_Status:` → `In Progress` if ROADMAP found, `N/A` if not
-- Mark inferred vs confirmed
+### docs/PROJECT_STATE.md
+
+**If missing:** Create from PROJECT_STATE_TEMPLATE.md.
+**If exists with real SESSION data (Updated ≠ placeholder):**
+- NEVER overwrite — show the existing SESSION block and ask:
+  ```
+  Encontré SESSION block existente con datos reales.
+  ¿Qué hago?
+    1 — Mantenerlo (solo agrego campos faltantes como Mode si no están)
+    2 — Reemplazarlo (el actual se muestra primero para que lo copies)
+  ```
+  - Option 1 (default): only add missing fields (e.g., `Mode: full`) — do not touch Done/Next/Branch
+  - Option 2: show full current SESSION → ask explicit confirmation → replace
+
+**Fields to fill (when creating or user chose replace):**
+- `project_type: individual` (default — change after if team)
+- `Mode: full` (default — user changes as needed)
+- `Updated:` → today
+- `Done:` → last 3 git log entries (or "Initial setup")
+- `Next:` → inferred from README/git (mark [inferred])
+- `Status: ACTIVE`
+- `Branch:` → `git branch --show-current`
+- `Phase:` → from ROADMAP if exists, else `N/A`
+- `Phase_Status:` → `In Progress` if ROADMAP found, `N/A` if not
 
 ### docs/PROBLEMS.md (if missing)
 - Create empty from template
@@ -164,6 +174,16 @@ After registering the project, generate the initial structural map:
 
 ---
 
+## Phase 4.5 — Create claude-progress.txt
+
+After generating PROJECT_STATE.md, create `claude-progress.txt` in project root:
+- If PROJECT_STATE Next is filled → `[>] [Next value]`
+- If not → `[ ] Start first session — run /new-session`
+- This is the lightweight state bridge read by new-session Step 0A (~30 tokens)
+- If file already exists → do NOT overwrite (user may have tasks in progress)
+
+---
+
 ## Output (max 15 lines)
 
 ```
@@ -171,6 +191,7 @@ After registering the project, generate the initial structural map:
 
 **Created:**
 - [files created]
+- claude-progress.txt (lightweight task state)
 
 **Updated:**
 - [files updated]
@@ -179,8 +200,9 @@ After registering the project, generate the initial structural map:
 - docs/ARCHIVE.md (legacy docs)
 
 **Inferred (review recommended):**
-- [anything Claude guessed]
+- [anything Claude guessed — mark clearly]
 
+**SESSION preservada:** [YES — no changes / UPDATED — campos faltantes añadidos]
 **Registered in:** ~/.claude/SYSTEM.md
 **Next:** /new-session to start working
 ```
@@ -189,8 +211,11 @@ After registering the project, generate the initial structural map:
 
 ## Rules
 
-- NEVER overwrite existing docs without showing diff + approval
+- NEVER overwrite existing SESSION block with real data — always ask first
+- NEVER overwrite other docs without showing diff + approval
 - Preserve old docs in ARCHIVE.md, don't delete
 - Mark clearly: [inferred], [confirmed from code], [needs review]
+- Only add missing fields to existing SESSION — never remove existing ones
 - If git log empty → note state inference is limited
 - Trust code over docs when they conflict
+- claude-progress.txt: create if missing, never overwrite if exists
