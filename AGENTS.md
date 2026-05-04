@@ -112,7 +112,7 @@ El Evaluador es un agente adversarial. Su trabajo es **encontrar por qué algo e
 
 ---
 
-### 2.2 Regla Innegociable — Evidencia Ejecutada
+### 2.2 Regla Innegociable — Evidencia Ejecutada (Tareas de Riesgo Medio/Alto)
 
 ```
 PROHIBIDO: Declarar ✅ Done basándose en:
@@ -125,6 +125,14 @@ OBLIGATORIO: Declarar ✅ Done solo después de ejecutar:
   - Al menos 1 prueba determinista que pase con exit code 0
   - Y reportar el comando exacto + output relevante
 ```
+
+### 2.2.1 Vía Rápida (Fast-Track) para Tareas de Bajo Riesgo
+**Simplificación:** Para evitar fricción excesiva (*overengineering*) en tareas simples, el Evaluador puede omitir la prueba determinista estricta en consola y usar lectura profunda o linting rápido SI Y SOLO SI la tarea cumple alguna de estas condiciones:
+- Edición de documentación (Archivos `.md`)
+- Cambios estéticos simples (CSS / UI Menor) sin impacto en lógica
+- Correcciones ortográficas (Typos)
+
+*Para todo lo demás (Lógica de negocio, Backend, Auth, Scripts, BD), la Regla Innegociable (2.2) aplica estrictamente.*
 
 ---
 

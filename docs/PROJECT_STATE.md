@@ -8,13 +8,13 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-05-04 (sesión 10)
+Updated: 2026-05-04 (sesión 11)
 Status: ACTIVE
 Mode: full
 Phase: N/A
 Phase_Status: N/A
-Done: Agregados hooks auto-knowledge-graph, mejoras en HOW_IT_WORKS (MD/HTML), y Project Doctor en install.sh
-Next: Definir arquitectura para "Dupla OS" (Vision Wishlist) · Integrar Second Brain (Notion/Obsidian) y n8n según Roadmap visionario
+Done: Implementado Fast-Track en AGENTS.md, creado comando /research, limpiado HOW_IT_WORKS.md (HITL, borrado /zohar), archivados PDFs/HTMLs y Wishlist.
+Next: Publicar versión v2.5.0 con las mejoras de seguridad, research y fast-track.
 Blockers: none
 Branch: work
 Model: gemini

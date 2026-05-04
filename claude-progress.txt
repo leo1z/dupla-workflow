@@ -1,5 +1,5 @@
-[x] Sprint 1 — hooks fix Windows + auto-snapshot + sync-gemini + templates (990d906)
-[x] Sprint 2 — skills core + compact + SPEC.md + sin-git + claude-progress (ee0036d)
-[x] Sprint 3 — LLM-agnostic + multi-surface: hooks 4 fixes, install Cursor, checkpoint multi-destino, SURFACE_GUIDE.md, setup/update-dupla multi-IDE (75698dc, 3c232c6)
-[x] Validar con bash bin/install.sh en máquina local → merge work → master (sesión 10)
-[ ] Definir arquitectura modular para "Dupla OS" (basado en Wishlist)
+[x] Implementado Fast-Track en AGENTS.md
+[x] Creado comando /research
+[x] Limpiado HOW_IT_WORKS.md (HITL, borrado /zohar)
+[x] Archivados PDFs/HTMLs y Wishlist
+[>] Publicar versión v2.5.0 con las mejoras de seguridad, research y fast-track.
