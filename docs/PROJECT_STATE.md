@@ -8,17 +8,28 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-04-27 (sesión 7)
+Updated: 2026-05-03 (sesión 8)
 Status: ACTIVE
 Phase: N/A
 Phase_Status: N/A
-Done: /new-project mejorado — Phase 0.5 validation gate + Plan Mode + lenguaje accesible · /update-dupla check mode agregado · README con curl one-liner installer
-Next: Instalar skills actualizados con /update-dupla, luego validar flujo en proyecto real (Antigravity Workflows tab + /adapt-project en dupla-conecta)
+Done: Sprint 1 ✅ (990d906) + Sprint 2 ✅ (ee0036d) + Sprint 3 ✅ (3c232c6) — LLM-agnostic hardening completo · hooks 4 fixes (stash bug, stdin JSON, guard deadlock, branch dinámico) · install.sh Cursor + merge fix · checkpoint multi-destino (GPT/Cursor/local) · SURFACE_GUIDE.md nuevo · setup-dupla/update-dupla multi-IDE detection · CLAUDE_GLOBAL_TEMPLATE doc:GLOBAL_BEHAVIOR
+Next: Validar Sprints 1-3 en máquina local (bash bin/install.sh) y hacer merge work → master
 Blockers: none
-Branch: master
+Branch: work
 Model: claude
 Handoff: no
 </session>
+
+<handoff>
+Date: 2026-05-03
+From: Claude (sesión 8) → To: Next session
+Project: dupla-workflow at c:\Users\Leo Borjas\Projects\dupla-workflow
+Goal: Dupla-Workflow como Agentic Harness — LLM-agnostic, multi-surface
+Branch: work
+Done: 3 sprints completos (990d906, ee0036d, 75698dc, 3c232c6) — todos los hooks corregidos, install.sh multi-IDE, checkpoint multi-destino, SURFACE_GUIDE.md creado, CLAUDE_GLOBAL_TEMPLATE agnóstico
+Next: Validar con bash bin/install.sh en máquina local, luego git merge work → master
+Context: Leer docs/PROJECT_STATE.md → session block. Plan en ~/.claude/plans/dupla-workflow-sprint-plan.md (Sprint 3 marcado completo).
+</handoff>
 
 ---
 
@@ -45,6 +56,7 @@ Framework listo para distribución y uso diario en todos los proyectos.
 
 ## Recent Changes
 
+- 2026-05-03 — sesión 8: Sprint 3 completo — LLM-agnostic hardening · hooks 4 fixes · install.sh Cursor + merge-safe · checkpoint multi-destino · SURFACE_GUIDE.md · setup-dupla/update-dupla multi-IDE · CLAUDE_GLOBAL_TEMPLATE doc:GLOBAL_BEHAVIOR
 - 2026-04-27 — sesión 7: /new-project validation gate + Plan Mode + lenguaje accesible · /update-dupla check mode · README one-liner installer
 - 2026-04-22 — sesión 6: v2.4.0 Antigravity completo — global_workflows + GEMINI.md + .agents/rules/ + todos los docs alineados
 - 2026-04-22 — sesión 5: Antigravity detection fix (Windows ~/.gemini/antigravity/) + skills a knowledge/ + ANTIGRAVITY_DIR override
