@@ -175,8 +175,12 @@ SETTINGS="$CLAUDE_DIR/settings.json"
 HOOKS_JSON='{
   "hooks": {
     "PreToolUse": [{"matcher": "Write", "hooks": [{"type": "command", "command": "bash ~/.claude/hooks/guard-project-state.sh"}]}],
-    "Stop": [{"type": "command", "command": "bash ~/.claude/hooks/suggest-checkpoint.sh"}],
-    "UserPromptSubmit": [{"type": "command", "command": "bash ~/.claude/hooks/session-reminder.sh"}]
+    "Stop": [
+      {"type": "command", "command": "bash ~/.claude/hooks/suggest-checkpoint.sh"},
+      {"type": "command", "command": "bash ~/.claude/hooks/auto-snapshot.sh"}
+    ],
+    "UserPromptSubmit": [{"type": "command", "command": "bash ~/.claude/hooks/session-reminder.sh"}],
+    "PostToolUse": [{"matcher": "Write", "hooks": [{"type": "command", "command": "bash ~/.claude/hooks/sync-gemini.sh"}]}]
   }
 }'
 
@@ -219,7 +223,7 @@ echo "IDEs configured:"
 [ "$HAS_ANTIGRAVITY" = true ] && echo "  ✓ Antigravity — global rules ($AGENT_RULES_DIR)"
 echo "  ✓ Antigravity — global workflows (~/.gemini/antigravity/global_workflows/)"
 echo "  ✓ Gemini identity (~/.gemini/GEMINI.md)"
-echo "  ✓ Hooks: guard, suggest-checkpoint, session-reminder"
+echo "  ✓ Hooks: guard-project-state, suggest-checkpoint, session-reminder, auto-snapshot, sync-gemini"
 echo ""
 echo "Per-project setup: run /adapt-project in any project"
 echo "  → Creates .agents/rules/ (project rules for Gemini)"

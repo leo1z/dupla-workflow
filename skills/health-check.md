@@ -10,27 +10,54 @@ Run ALL checks silently. Output only warnings and errors, plus a summary.
 
 ---
 
+## Check 0 — Tool Availability
+
+Verify required tools are installed. If missing → show install instruction, not just the error.
+
+```bash
+# git
+git --version → ✅ git [version] / ❌ NOT FOUND → install: https://git-scm.com
+
+# python3 (required for Windows-compatible hooks)
+python3 --version → ✅ Python [version] / ⚠️ NOT FOUND
+  → Windows: winget install Python.Python.3 OR https://python.org/downloads
+  → macOS:   brew install python3
+  → Linux:   sudo apt install python3
+
+# node (required for MCP filesystem server — optional)
+node --version → ✅ Node [version] / ℹ️ NOT FOUND (optional — needed only for MCP)
+  → Install: https://nodejs.org
+
+# Active hooks in settings.json
+~/.claude/settings.json → check hook types registered:
+  Stop hooks:              [list commands] / ⚠️ none registered
+  PreToolUse hooks:        [list matchers] / ⚠️ none registered
+  UserPromptSubmit hooks:  [list commands] / ⚠️ none registered
+  PostToolUse hooks:       [list matchers] / ℹ️ none (sync-gemini needs this)
+
+# MCP servers configured (optional)
+~/.claude/settings.json or .mcp.json → mcpServers present?
+  → ✅ [list servers] / ℹ️ Not configured (optional — run /setup-dupla to enable)
+```
+
+---
+
 ## Check 1 — Global System
 
 ```bash
 # Files exist?
-~/.claude/CLAUDE.md          → ✅ / ❌ MISSING
-~/.claude/SYSTEM.md          → ✅ / ❌ MISSING
-~/.claude/PROBLEMS_GLOBAL.md → ✅ / ❌ MISSING
-~/.claude/DUPLA_VERSION      → ✅ v[X.Y.Z] / ❌ MISSING
+~/.claude/CLAUDE.md          → ✅ / ❌ MISSING (run /setup-dupla)
+~/.claude/SYSTEM.md          → ✅ / ❌ MISSING (run /setup-dupla)
+~/.claude/MEMORY_GLOBAL.md   → ✅ / ℹ️ MISSING (optional — will be created on first use)
+~/.claude/DUPLA_VERSION      → ✅ v[X.Y.Z] / ❌ MISSING (run install.sh)
 
 # Skills installed?
 ~/.claude/skills/ → list .md files → check that CORE skills are present:
   new-project, new-session, checkpoint, restore, setup-dupla,
   update-dupla, adapt-project, adapt-to-team, add-team-member,
-  health-check, token-budget, project-audit, quick-start
+  health-check, token-budget, project-audit, quick-start, check-project
   → ✅ core skills present / ⚠️ missing: [list only missing core ones]
   → Extra .md files not in core list → ℹ️ Custom skills found: [list] (not an error)
-
-# Core skills count (dynamic)
-CORE_SKILLS=(new-project new-session checkpoint restore setup-dupla update-dupla adapt-project adapt-to-team add-team-member health-check token-budget project-audit quick-start)
-FOUND=$(ls ~/.claude/skills/*.md 2>/dev/null | wc -l)
-# Compare found vs 13 expected — flag missing by name only
 
 # CLAUDE.md has required fields?
 grep "Name:" ~/.claude/CLAUDE.md    → ✅ / ⚠️ empty
@@ -42,14 +69,14 @@ grep "Stack" ~/.claude/SYSTEM.md    → ✅ / ⚠️ empty
 .agents/rules/claude.md (project) → ✅ exists / ⚠️ MISSING (run /adapt-project)
 
 # Hooks installed?
-~/.claude/hooks/guard-project-state.sh   → ✅ / ⚠️ MISSING
-~/.claude/hooks/suggest-checkpoint.sh   → ✅ / ⚠️ MISSING
-~/.claude/hooks/session-reminder.sh     → ✅ / ⚠️ MISSING
-# Hooks registered in settings?
-~/.claude/settings.json → contains "Stop", "PreToolUse", "UserPromptSubmit" hooks? → ✅ / ⚠️ hooks not wired (run /setup-dupla to re-add)
+~/.claude/hooks/guard-project-state.sh  → ✅ / ⚠️ MISSING (run install.sh)
+~/.claude/hooks/suggest-checkpoint.sh  → ✅ / ⚠️ MISSING (run install.sh)
+~/.claude/hooks/session-reminder.sh    → ✅ / ⚠️ MISSING (run install.sh)
+~/.claude/hooks/auto-snapshot.sh       → ✅ / ⚠️ MISSING (run install.sh)
+~/.claude/hooks/sync-gemini.sh         → ✅ / ℹ️ MISSING (optional — needed only if Antigravity installed)
 
 # Security
-CREDENTIALS.md in project .gitignore? → ✅ / ❌ RISK
+CREDENTIALS.md in project .gitignore? → ✅ / ❌ RISK (add to .gitignore immediately)
 ```
 
 ---
@@ -134,10 +161,12 @@ Latest on GitHub → v[latest]
 ```
 ✅ Health Check — All systems OK
 
-Global: ✅ Skills (13/13) · CLAUDE.md · SYSTEM.md · v[version]
+Tools:   ✅ git · python3 · [node if installed]
+Global:  ✅ Skills (14/14) · CLAUDE.md · SYSTEM.md · v[version]
+Hooks:   ✅ Stop (2) · PreToolUse (1) · UserPromptSubmit (1)
 Project: ✅ PROJECT_STATE (CURRENT) · ROADMAP · CLAUDE.md
-[Team: ✅ 3 devs · 3 sections · 3 branches]
-Stack: ✅ Coherent
+[Team:   ✅ 3 devs · 3 sections · 3 branches]
+Stack:   ✅ Coherent
 ```
 
 ### If issues found:

@@ -1,16 +1,18 @@
 #!/bin/bash
 # Hook: Stop — fires when Claude finishes a response
 # Suggests /checkpoint only when meaningful — avoids spamming context every turn
-# GAP-02 fix: state files stored in system temp dir (outside repo, survives git clean)
 
 # Skip if no uncommitted changes
 if [ -z "$(git status --short 2>/dev/null)" ]; then
   exit 0
 fi
 
-# System temp dir keyed by project path — survives git clean
-PROJECT_HASH=$(echo "$PWD" | cksum | cut -d' ' -f1 2>/dev/null || echo "default")
-TMPDIR_DUPLA="${TMPDIR:-/tmp}/dupla-hooks-$PROJECT_HASH"
+# Cross-platform hash: Python3 primary, fallback to cksum
+PROJECT_HASH=$(python3 -c "import hashlib; print(hashlib.md5('$PWD'.encode()).hexdigest()[:8])" 2>/dev/null \
+  || echo "$PWD" | cksum | cut -d' ' -f1 2>/dev/null \
+  || echo "default")
+# Cross-platform temp dir
+TMPDIR_DUPLA="${TMPDIR:-${TEMP:-/tmp}}/dupla-hooks-$PROJECT_HASH"
 mkdir -p "$TMPDIR_DUPLA"
 
 # Throttle: only fire once per 3 stops using a counter file

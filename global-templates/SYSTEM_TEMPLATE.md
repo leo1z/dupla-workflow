@@ -41,9 +41,9 @@ purpose: Global tech stack, services, and active projects registry
 |---------|---------|---------|-------|
 | Supabase | Database + Auth | [email] | Self-hosted? |
 | Vercel | Deployment | [email] | Production |
-| [Service 3] | [Use case] | [Account] | [Setup notes] |
 | Evolution API | WhatsApp integration | [API key] | VPS-based |
 | N8N | Workflows/automation | [URL] | Self-hosted |
+| [Service] | [Use case] | [Account] | [Setup notes] |
 
 ---
 
@@ -75,29 +75,53 @@ purpose: Global tech stack, services, and active projects registry
 
 | Project | Path | GitHub | Phase | Core Stack | Last Update |
 |---------|------|--------|-------|-----------|------------|
-| [Name] | Projects/[name]/ | leo1z/[repo] | Phase | Stack summary | YYYY-MM-DD |
-| [Name] | Projects/[name]/ | leo1z/[repo] | Phase | Stack summary | YYYY-MM-DD |
+| [Name] | Projects/[name]/ | [user]/[repo] | Phase N | Stack summary | YYYY-MM-DD |
+| [Name] | Projects/[name]/ | [user]/[repo] | Phase N | Stack summary | YYYY-MM-DD |
 
 ---
 
-## Core Skills (Dupla-Workflow)
+## Dupla-Workflow Skills
 
-| Skill | Command | When | Cadence |
-|-------|---------|------|---------|
-| Session start | /new-session | Before working on a project | Every session |
-| Save checkpoint | /checkpoint | Close session or switch models | Every session |
-| Project init | /new-project | After proyecto-nuevo.sh | Once per project |
-| Context update | /update-context | When stack or arch changes | As needed |
-| Health check | /health-check | Verify system state | Every 2–4 weeks |
-| Model switch | (see CLAUDE.md) | When switching Claude ↔ Gemini | As needed |
-| Token budget | /token-budget | Monitor session burn rate | As needed |
+### Core (uso diario)
+
+| Skill | Comando | Cuándo |
+|-------|---------|--------|
+| Iniciar sesión | /new-session | Antes de trabajar en cualquier proyecto |
+| Guardar estado | /checkpoint | Cierre de sesión o switch de modelo |
+| Sesión rápida | /quick-start | Sesión pequeña sin docs completos |
+| Proyecto nuevo | /new-project | Al iniciar un proyecto desde cero |
+| Onboardear existente | /adapt-project | Proyecto ya iniciado sin Dupla |
+| Restaurar versión | /restore | Revertir a un save point anterior |
+| Verificar sistema | /health-check | Cada 2-4 semanas o cuando algo falla |
+
+### Setup (una vez)
+
+| Skill | Comando | Cuándo |
+|-------|---------|--------|
+| Setup inicial | /setup-dupla | Primera vez que usas Dupla |
+| Actualizar sistema | /update-dupla | Cuando hay nueva versión disponible |
+
+### Team (solo en proyectos colaborativos)
+
+| Skill | Comando | Cuándo |
+|-------|---------|--------|
+| Convertir a equipo | /adapt-to-team | Proyecto individual → colaborativo |
+| Añadir miembro | /add-team-member | Nuevo colaborador o cambio de rol |
+
+### Extended (según necesidad)
+
+| Skill | Comando | Cuándo |
+|-------|---------|--------|
+| Auditoría de código | /project-audit | Revisión estructural con code-review-graph |
+| Detectar drift | /check-project | Verificar que docs reflejan la realidad |
+| Presupuesto tokens | /token-budget | Sesiones largas, controlar costos |
 
 ---
 
 ## Installed Plugins
 
-| Plugin | Command | When |
-|--------|---------|------|
+| Plugin | Comando | Cuándo |
+|--------|---------|--------|
 | [Name] | /[command] | [Use case] |
 
 ---
@@ -106,6 +130,6 @@ purpose: Global tech stack, services, and active projects registry
 
 → Behavior + routing: ~/.claude/CLAUDE.md
 → Active projects: this file (table above)
-→ Known issues across projects: ~/.claude/PROBLEMS_GLOBAL.md
+→ Cross-project patterns: ~/.claude/MEMORY_GLOBAL.md
 → Credentials: ~/.claude/CREDENTIALS.md (reference only)
 → Dupla version: ~/.claude/DUPLA_VERSION

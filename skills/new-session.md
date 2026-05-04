@@ -28,6 +28,28 @@ If the user's message contains a `<handoff>` block (pasted from another model/se
 
 ## Execution
 
+### Step 0A — Check claude-progress.txt (lightweight task state)
+
+Before reading PROJECT_STATE, check if `claude-progress.txt` exists in the current directory:
+- **Found** → read it entirely (~30 tokens max). Show in-progress tasks `[>]` in the output Plan section.
+- **Not found** → skip silently. Do not create it.
+
+Format of claude-progress.txt:
+```
+[ ] tarea pendiente
+[>] tarea en curso ahora
+[x] tarea completada
+```
+
+### Step 0B — Check _versions/ (for projects without git)
+
+If `_versions/` directory exists AND no `.git/` directory:
+- List the 3 most recent snapshot folders (by name, descending)
+- Note in the output: "📂 Snapshots disponibles — /restore para recuperar uno anterior"
+- Do not auto-restore. Just inform.
+
+---
+
 ### Step 1 — Detect Project Type
 
 First, check for `QUICKSTATE.md` in the current directory:
@@ -54,7 +76,11 @@ If no `QUICKSTATE.md`, check if `docs/PROJECT_STATE.md` exists:
 1. **Read <session> block** from docs/PROJECT_STATE.md
    - If SESSION contains placeholder values (e.g., `Updated: YYYY-MM-DD`, `Done: -`, `Next: [...]`) → treat as first session, skip staleness check, go to output
    - Check for `<handoff>` block in PROJECT_STATE.md → if found, read it (Date, From, Done, Next) and use as context BEFORE reading SESSION
-   - Extract: Updated, Done, Next, Blockers, Branch, Model, **Phase, Phase_Status**
+   - Extract: Updated, Done, Next, Blockers, Branch, Model, **Phase, Phase_Status, Mode**
+   - **Mode field:** if missing or blank → assume `full`
+   - **Mode: research** → note in output "🔬 Modo Research — investigar, no construir"
+   - **Mode: lite** → if no docs/ folder, redirect to /quick-start; else continue with lite output (no roadmap phase read)
+   - **Mode: full** → flujo normal completo
    - If Updated > 24h OR git log is newer → auto-reconstruct from git log (silent)
    - **Phase: N/A check:** if `Phase: N/A` AND `docs/ROADMAP.md` exists → show once:
      ```
@@ -169,7 +195,7 @@ Bienvenido al equipo. Día 1:
 ## Session — [date]
 
 **Phase:** [Phase N — name] · [🟡 In Progress / ⚠️ GO/NO-GO Pending / ✅ Complete / N/A]
-**Goal:** [from user arg / inferred from Next / ask if missing]
+**Mode:** [🔬 Research / ⚡ Lite / 🔨 Full] · **Goal:** [from user arg / inferred from Next / ask if missing]
 **Branch:** [current] [⚠️ if on main]
 **LLM:** [from Model field / Claude]
 
