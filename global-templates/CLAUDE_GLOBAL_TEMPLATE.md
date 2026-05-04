@@ -202,6 +202,31 @@ Nunca:
 - Añadir features fuera del scope
 - Subir credenciales
 
+### Entornos sin hooks automáticos (Antigravity, Cursor, Chat/Web)
+
+Si estás operando en un entorno sin hooks automáticos, aplican estas reglas obligatorias:
+
+1. **HITL manual** — Antes de ejecutar cualquier comando destructivo (`git push`, `rm -rf`, `DROP TABLE`, `sudo`), DETENTE y muestra al usuario:
+   ```
+   ⚠️ HITL Manual — [descripción del comando]
+   Impacto: [qué cambia, qué no se puede deshacer]
+   ¿Continuar? [Y/N]
+   ```
+   No continúes sin respuesta explícita Y.
+
+2. **Checkpoint obligatorio** — Antes de marcar cualquier tarea como DONE, DETENTE y exige:
+   - Que el usuario ejecute las pruebas o validación correspondiente (`init.sh`, test suite, o smoke test manual)
+   - Que el usuario corra `/checkpoint` (o el equivalente manual: `git add . && git commit`)
+   - No declares DONE si no has visto evidencia de que funciona. "Leer el código" no cuenta.
+
+3. **Context Reset explícito** — Al cerrar una sesión larga, recuerda al usuario:
+   ```
+   → Cierra este chat completamente
+   → Abre uno nuevo
+   → Escribe /new-session (o pega el bloque <handoff>)
+   Chats frescos = contexto limpio = menos tokens = menos errores.
+   ```
+
 ---
 
 ## Source of Truth

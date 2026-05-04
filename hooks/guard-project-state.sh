@@ -8,8 +8,12 @@ if [ ! -f "CLAUDE.md" ] && [ ! -f ".cursorrules" ] && [ ! -f ".windsurfrules" ];
 fi
 
 # Parse target file path from stdin JSON
+# Fail-closed for security guards: if we can't read the target, block rather than allow.
+STDIN_DATA=$(cat)
+TARGET=""
+
 if command -v python3 >/dev/null 2>&1; then
-  TARGET=$(python3 -c "
+  TARGET=$(echo "$STDIN_DATA" | python3 -c "
 import sys, json
 try:
     data = json.load(sys.stdin)
@@ -18,10 +22,13 @@ except:
     print('')
 " 2>/dev/null)
 elif command -v jq >/dev/null 2>&1; then
-  TARGET=$(jq -r '.tool_input.file_path // empty' 2>/dev/null)
+  TARGET=$(echo "$STDIN_DATA" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
 else
-  # Can't parse → allow (fail open, never block in uncertainty)
-  exit 0
+  # No JSON parser — cannot verify target file. Fail-closed.
+  echo "❌ BLOCKED: guard-project-state.sh requires python3 or jq to verify write target."
+  echo "   Install python3: https://python.org/downloads (mark 'Add to PATH')"
+  echo "   Or install jq:   https://jqlang.github.io/jq/download/"
+  exit 1
 fi
 
 # Normalize separators

@@ -4,8 +4,12 @@
 # OWASP Agent Security: prevents Tool Misuse and Goal Hijack side effects.
 
 # Read stdin JSON — extract the command
+# Fail-closed: if we cannot parse the input, block and warn rather than allow blindly.
+STDIN_DATA=$(cat)
+CMD=""
+
 if command -v python3 >/dev/null 2>&1; then
-  CMD=$(python3 -c "
+  CMD=$(echo "$STDIN_DATA" | python3 -c "
 import sys, json
 try:
     data = json.load(sys.stdin)
@@ -14,9 +18,24 @@ except:
     print('')
 " 2>/dev/null)
 elif command -v jq >/dev/null 2>&1; then
-  CMD=$(jq -r '.tool_input.command // empty' 2>/dev/null)
+  CMD=$(echo "$STDIN_DATA" | jq -r '.tool_input.command // empty' 2>/dev/null)
 else
-  exit 0
+  # No JSON parser available — cannot verify safety of this command.
+  # Fail-closed: block and require user to install python3 or jq.
+  echo ""
+  echo "┌─────────────────────────────────────────────────────┐"
+  echo "│  ⚠️  HITL — DEPENDENCIA FALTANTE                    │"
+  echo "└─────────────────────────────────────────────────────┘"
+  echo ""
+  echo "  hitl-guard.sh no puede verificar la seguridad de este comando"
+  echo "  porque python3 y jq no están disponibles."
+  echo ""
+  echo "  Política: BLOQUEADO por defecto (fail-closed)."
+  echo "  Instala python3: https://python.org/downloads (marca 'Add to PATH')"
+  echo "  O instala jq:    https://jqlang.github.io/jq/download/"
+  echo ""
+  echo "  Luego cierra y vuelve a abrir la terminal."
+  exit 1
 fi
 
 if [ -z "$CMD" ]; then

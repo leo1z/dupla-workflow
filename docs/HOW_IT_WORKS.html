@@ -18,324 +18,72 @@
       --yellow: #facc15;
       --red: #f87171;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      padding: 0 1rem 4rem;
-    }
-
-    /* ── Header ── */
-    header {
-      background: linear-gradient(135deg, #1a1d27 0%, #12141f 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 2.5rem 1rem 2rem;
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.5px;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; padding: 0 1rem 4rem; }
+    header { background: linear-gradient(135deg, #1a1d27 0%, #12141f 100%); border-bottom: 1px solid var(--border); padding: 2.5rem 1rem 2rem; text-align: center; margin-bottom: 2.5rem; }
+    header h1 { font-size: 2rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
     header h1 span { color: var(--accent); }
-    header p {
-      color: var(--muted);
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .badge {
-      display: inline-block;
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      margin-top: 0.75rem;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    /* ── Layout ── */
+    header p { color: var(--muted); margin-top: 0.5rem; font-size: 1rem; max-width: 620px; margin-left: auto; margin-right: auto; }
+    .badge { display: inline-block; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px; margin-top: 0.75rem; letter-spacing: 0.5px; text-transform: uppercase; }
     .container { max-width: 860px; margin: 0 auto; }
-
-    /* ── Sections ── */
-    section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    h2 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.6rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    h2 .num {
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      width: 1.6rem;
-      height: 1.6rem;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--accent2);
-      margin: 1.25rem 0 0.5rem;
-    }
+    section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
+    h2 .num { background: var(--accent); color: #fff; font-size: 0.75rem; font-weight: 700; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--accent2); margin: 1.25rem 0 0.5rem; }
     h3:first-child { margin-top: 0; }
-
     p { margin-bottom: 0.75rem; color: var(--text); }
     p:last-child { margin-bottom: 0; }
-
-    /* ── Steps ── */
-    .steps { counter-reset: step; }
-    .step {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
-    }
+    .step { display: flex; gap: 1rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
     .step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .step-num {
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 700;
-      width: 1.8rem;
-      height: 1.8rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 0.1rem;
-    }
+    .step-num { background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700; width: 1.8rem; height: 1.8rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem; }
     .step-content h3 { margin-top: 0; }
-
-    /* ── Code ── */
-    pre, code {
-      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 0.85rem;
-    }
-    pre {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      overflow-x: auto;
-      margin: 0.75rem 0;
-      color: #c9d1d9;
-      line-height: 1.6;
-    }
-    code {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.1rem 0.4rem;
-      color: var(--accent);
-      font-size: 0.82rem;
-    }
-    pre code {
-      background: none;
-      border: none;
-      padding: 0;
-      color: inherit;
-    }
-
-    /* ── Skill pill ── */
-    .skill {
-      display: inline-block;
-      background: rgba(124,106,247,0.15);
-      border: 1px solid rgba(124,106,247,0.4);
-      color: var(--accent);
-      font-family: monospace;
-      font-size: 0.82rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 5px;
-    }
-
-    /* ── Tables ── */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0.75rem 0;
-      font-size: 0.88rem;
-    }
-    th {
-      background: var(--code-bg);
-      color: var(--muted);
-      font-weight: 600;
-      text-align: left;
-      padding: 0.6rem 0.85rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    td {
-      padding: 0.6rem 0.85rem;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-    }
+    pre, code { font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 0.85rem; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; margin: 0.75rem 0; color: #c9d1d9; line-height: 1.6; }
+    code { background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.1rem 0.4rem; color: var(--accent); font-size: 0.82rem; }
+    pre code { background: none; border: none; padding: 0; color: inherit; }
+    .skill { display: inline-block; background: rgba(124,106,247,0.15); border: 1px solid rgba(124,106,247,0.4); color: var(--accent); font-family: monospace; font-size: 0.82rem; padding: 0.15rem 0.5rem; border-radius: 5px; }
+    table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.88rem; }
+    th { background: var(--code-bg); color: var(--muted); font-weight: 600; text-align: left; padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--border); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--border); vertical-align: top; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255,255,255,0.02); }
     td:first-child { color: var(--muted); white-space: nowrap; }
-
-    /* ── Hooks table ── */
     .hook-name { color: var(--accent2); font-family: monospace; font-size: 0.82rem; }
-    .trigger-badge {
-      display: inline-block;
-      font-size: 0.7rem;
-      padding: 0.1rem 0.4rem;
-      border-radius: 4px;
-      font-weight: 600;
-    }
+    .trigger-badge { display: inline-block; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 600; }
     .t-stop { background: rgba(74,222,128,0.15); color: var(--green); }
     .t-pre  { background: rgba(248,113,113,0.15); color: var(--red); }
     .t-post { background: rgba(79,163,224,0.15); color: var(--accent2); }
     .t-user { background: rgba(250,204,21,0.15); color: var(--yellow); }
-
-    /* ── Multi-surface table ── */
-    .check { color: var(--green); }
-    .cross { color: var(--red); }
-    .warn  { color: var(--yellow); }
+    .check { color: var(--green); } .cross { color: var(--red); } .warn { color: var(--yellow); }
     td.center { text-align: center; }
-
-    /* ── Callouts ── */
-    .callout {
-      border-left: 3px solid var(--accent);
-      background: rgba(124,106,247,0.08);
-      border-radius: 0 8px 8px 0;
-      padding: 0.75rem 1rem;
-      margin: 0.75rem 0;
-      font-size: 0.9rem;
-    }
-    .callout.warn {
-      border-left-color: var(--yellow);
-      background: rgba(250,204,21,0.07);
-    }
-    .callout.tip {
-      border-left-color: var(--green);
-      background: rgba(74,222,128,0.07);
-    }
-
-    /* ── Flow diagram ── */
-    .flow {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      flex-wrap: wrap;
-      margin: 0.75rem 0;
-      text-align: center;
-    }
-    .flow-box {
-      background: var(--surface);
-      border: 1px solid var(--accent);
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      font-family: monospace;
-      font-size: 0.9rem;
-      color: var(--accent);
-      font-weight: 600;
-    }
-    .flow-arrow {
-      color: var(--muted);
-      font-size: 1.2rem;
-      padding: 0 0.75rem;
-    }
-
-    /* ── Three agents ── */
+    .callout { border-left: 3px solid var(--accent); background: rgba(124,106,247,0.08); border-radius: 0 8px 8px 0; padding: 0.75rem 1rem; margin: 0.75rem 0; font-size: 0.9rem; }
+    .callout.warn { border-left-color: var(--yellow); background: rgba(250,204,21,0.07); }
+    .callout.danger { border-left-color: var(--red); background: rgba(248,113,113,0.07); }
+    .callout.tip { border-left-color: var(--green); background: rgba(74,222,128,0.07); }
+    .flow { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; margin: 0.75rem 0; text-align: center; }
+    .flow-box { background: var(--surface); border: 1px solid var(--accent); border-radius: 8px; padding: 0.5rem 1rem; font-family: monospace; font-size: 0.9rem; color: var(--accent); font-weight: 600; }
+    .flow-arrow { color: var(--muted); font-size: 1.2rem; padding: 0 0.75rem; }
     .agents { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 0.75rem; }
     @media (max-width: 600px) { .agents { grid-template-columns: 1fr; } }
-    .agent-card {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-    }
-    .agent-card h4 {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 0.4rem;
-    }
+    .agent-card { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+    .agent-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--accent); margin-bottom: 0.4rem; }
     .agent-card p { font-size: 0.85rem; color: var(--muted); margin: 0; }
-
-    /* ── Data location ── */
     .data-group { margin-bottom: 1rem; }
-    .data-group h4 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    .data-item {
-      display: flex;
-      gap: 0.75rem;
-      align-items: baseline;
-      padding: 0.3rem 0;
-      border-bottom: 1px solid rgba(42,45,62,0.5);
-      font-size: 0.88rem;
-    }
+    .data-group h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 0.4rem; }
+    .data-item { display: flex; gap: 0.75rem; align-items: baseline; padding: 0.3rem 0; border-bottom: 1px solid rgba(42,45,62,0.5); font-size: 0.88rem; }
     .data-item:last-child { border-bottom: none; }
     .data-item code { flex-shrink: 0; }
     .data-item span { color: var(--muted); font-size: 0.82rem; }
-
-    /* ── Antigravity diff ── */
     .diff-row { display: flex; gap: 0.5rem; align-items: baseline; margin-bottom: 0.4rem; }
-    .diff-bad { color: var(--red); }
-    .diff-good { color: var(--green); }
-
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.8rem;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-    }
+    .diff-bad { color: var(--red); } .diff-good { color: var(--green); }
+    .security-rule { background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.25); border-radius: 8px; padding: 0.85rem 1rem; margin: 0.75rem 0; font-size: 0.88rem; }
+    .security-rule strong { color: var(--red); }
+    footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
     footer a { color: var(--accent); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
-
     ul { padding-left: 1.25rem; margin: 0.5rem 0; }
     li { margin-bottom: 0.3rem; font-size: 0.9rem; }
-
     strong { color: #fff; }
-
     hr { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
   </style>
 </head>
@@ -354,8 +102,8 @@
   <!-- §1 User Journey -->
   <section>
     <h2><span class="num">1</span> User Journey — Del Zero al Sistema Funcionando</h2>
-
     <div class="steps">
+
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
@@ -363,11 +111,10 @@
           <p><strong>Requisitos:</strong> Claude Code instalado + Git + Python3 (requerido en Windows para hooks)</p>
           <pre>git clone https://github.com/leo1z/dupla-workflow.git ~/Projects/dupla-workflow
 bash ~/Projects/dupla-workflow/bin/install.sh</pre>
-          <p>El script hace:</p>
           <ul>
             <li>Detecta IDEs instalados (Claude Code, Antigravity, Cursor) — si no hay ninguno, para con error</li>
             <li>Despliega 15 skills a <code>~/.claude/skills/</code> y <code>~/.claude/commands/</code></li>
-            <li>Registra 6 hooks en <code>~/.claude/settings.json</code></li>
+            <li>Registra hooks en <code>~/.claude/settings.json</code></li>
             <li>Muestra al final si <code>CLAUDE.md</code> falta → indica el siguiente paso obligatorio</li>
           </ul>
           <div class="callout warn">Si <code>CLAUDE.md</code> no existe o está vacío → el sistema no funciona aún. Ir al Paso 2.</div>
@@ -379,7 +126,7 @@ bash ~/Projects/dupla-workflow/bin/install.sh</pre>
         <div class="step-content">
           <h3>Configurar identidad global (una vez, en Claude Code)</h3>
           <pre>/setup-dupla</pre>
-          <p>Hace una entrevista de 10 preguntas en un solo mensaje (nombre, stack, proyectos, plugins). Genera:</p>
+          <p>Entrevista de 10 preguntas en un solo mensaje. Genera:</p>
           <ul>
             <li><code>~/.claude/CLAUDE.md</code> — identidad y reglas del agente</li>
             <li><code>~/.claude/SYSTEM.md</code> — stack y proyectos</li>
@@ -394,15 +141,9 @@ bash ~/Projects/dupla-workflow/bin/install.sh</pre>
         <div class="step-num">3</div>
         <div class="step-content">
           <h3>Inicializar un proyecto</h3>
-          <p><strong>Proyecto nuevo:</strong></p>
-          <pre>/new-project</pre>
-          <p>Genera <code>docs/ROADMAP.md</code>, <code>docs/PROJECT_STATE.md</code>, <code>docs/ARCHITECTURE.md</code> con assessment IML.</p>
-          <p><strong>Proyecto existente:</strong></p>
-          <pre>/adapt-project</pre>
-          <p>Onboarding de repo existente. Preserva lo que tienes, agrega estructura Dupla.</p>
-          <p><strong>Sesión rápida / sin proyecto:</strong></p>
-          <pre>/quick-start</pre>
-          <p>Crea <code>QUICKSTATE.md</code> (~80 tokens). Para scripts, experimentos, tareas no-código.</p>
+          <p><strong>Proyecto nuevo:</strong> <span class="skill">/new-project</span> — genera ROADMAP, PROJECT_STATE, ARCHITECTURE con assessment IML.</p>
+          <p><strong>Proyecto existente:</strong> <span class="skill">/adapt-project</span> — preserva lo que tienes, agrega estructura Dupla.</p>
+          <p><strong>Sesión rápida / sin proyecto:</strong> <span class="skill">/quick-start</span> — crea <code>QUICKSTATE.md</code> (~80 tokens).</p>
         </div>
       </div>
 
@@ -417,7 +158,10 @@ bash ~/Projects/dupla-workflow/bin/install.sh</pre>
             <div class="flow-arrow">→</div>
             <div class="flow-box">/checkpoint</div>
           </div>
-          <p>Eso es todo. El resto es opcional según lo que necesites.</p>
+          <div class="callout tip">
+            <strong>Context Reset — regla física:</strong> al cerrar una sesión, cierra el chat completamente y abre uno nuevo.
+            <code>/compact</code> ayuda, pero no reemplaza un reset completo. Chats frescos = contexto limpio = menos tokens = menos errores de "ansiedad de contexto".
+          </div>
         </div>
       </div>
 
@@ -426,9 +170,10 @@ bash ~/Projects/dupla-workflow/bin/install.sh</pre>
         <div class="step-content">
           <h3>Verificar que todo funciona</h3>
           <pre>/health-check</pre>
-          <p>Verifica: tools, skills, hooks, CLAUDE.md con contenido real, GEMINI.md sincronizado, PROJECT_STATE actualizado. Muestra exactamente qué está roto y cómo arreglarlo.</p>
+          <p>Verifica: skills, hooks, CLAUDE.md con contenido real, GEMINI.md sincronizado, PROJECT_STATE actualizado. Muestra exactamente qué está roto y cómo arreglarlo.</p>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -497,18 +242,9 @@ Carga condicional:             Commit → push → handoff
     <h2><span class="num">5</span> Los Tres Agentes (Conceptuales)</h2>
     <p>Dupla OS coordina tres roles, aunque uses un solo chat:</p>
     <div class="agents">
-      <div class="agent-card">
-        <h4>Planificador</h4>
-        <p>Lee el estado, decide la siguiente jugada, asigna trabajo atómico</p>
-      </div>
-      <div class="agent-card">
-        <h4>Implementador</h4>
-        <p>Recibe tarea atómica, la ejecuta sin contexto adicional, devuelve solución</p>
-      </div>
-      <div class="agent-card">
-        <h4>Evaluador</h4>
-        <p>Trata de romper la solución. Exige prueba determinista antes de declarar done</p>
-      </div>
+      <div class="agent-card"><h4>Planificador</h4><p>Lee el estado, decide la siguiente jugada, asigna trabajo atómico</p></div>
+      <div class="agent-card"><h4>Implementador</h4><p>Recibe tarea atómica, la ejecuta sin contexto adicional, devuelve solución</p></div>
+      <div class="agent-card"><h4>Evaluador</h4><p>Trata de romper la solución. Exige prueba determinista antes de declarar done</p></div>
     </div>
   </section>
 
@@ -519,91 +255,62 @@ Carga condicional:             Commit → push → handoff
     <table>
       <thead><tr><th>Hook</th><th>Trigger</th><th>Qué hace</th></tr></thead>
       <tbody>
-        <tr>
-          <td><span class="hook-name">suggest-checkpoint.sh</span></td>
-          <td><span class="trigger-badge t-stop">Stop</span></td>
-          <td>Avisa si hay cambios sin commit</td>
-        </tr>
-        <tr>
-          <td><span class="hook-name">auto-snapshot.sh</span></td>
-          <td><span class="trigger-badge t-stop">Stop</span></td>
-          <td>Backup de <code>docs/</code> en <code>_versions/&lt;timestamp&gt;/</code></td>
-        </tr>
-        <tr>
-          <td><span class="hook-name">auto-knowledge-graph.sh</span></td>
-          <td><span class="trigger-badge t-stop">Stop</span></td>
-          <td>Regenera <code>docs/code-review-graph.json</code></td>
-        </tr>
-        <tr>
-          <td><span class="hook-name">guard-project-state.sh</span></td>
-          <td><span class="trigger-badge t-pre">PreToolUse(Write)</span></td>
-          <td>Bloquea escrituras si no hay <code>PROJECT_STATE.md</code></td>
-        </tr>
-        <tr>
-          <td><span class="hook-name">hitl-guard.sh</span></td>
-          <td><span class="trigger-badge t-pre">PreToolUse(Bash)</span></td>
-          <td>Para y pide <code>[Y/N]</code> ante comandos destructivos</td>
-        </tr>
-        <tr>
-          <td><span class="hook-name">session-reminder.sh</span></td>
-          <td><span class="trigger-badge t-user">UserPromptSubmit</span></td>
-          <td>Avisa si el estado tiene &gt;24h de antigüedad</td>
-        </tr>
-        <tr>
-          <td><span class="hook-name">sync-gemini.sh</span></td>
-          <td><span class="trigger-badge t-post">PostToolUse(Write)</span></td>
-          <td>Sincroniza <code>~/.claude/CLAUDE.md</code> → <code>~/.gemini/GEMINI.md</code></td>
-        </tr>
+        <tr><td><span class="hook-name">suggest-checkpoint.sh</span></td><td><span class="trigger-badge t-stop">Stop</span></td><td>Avisa si hay cambios sin commit</td></tr>
+        <tr><td><span class="hook-name">auto-snapshot.sh</span></td><td><span class="trigger-badge t-stop">Stop</span></td><td>Backup de <code>docs/</code> en <code>_versions/&lt;timestamp&gt;/</code></td></tr>
+        <tr><td><span class="hook-name">auto-knowledge-graph.sh</span></td><td><span class="trigger-badge t-stop">Stop</span></td><td>Regenera <code>docs/code-review-graph.json</code></td></tr>
+        <tr><td><span class="hook-name">guard-project-state.sh</span></td><td><span class="trigger-badge t-pre">PreToolUse(Write)</span></td><td>Bloquea escrituras si no hay <code>PROJECT_STATE.md</code></td></tr>
+        <tr><td><span class="hook-name">hitl-guard.sh</span></td><td><span class="trigger-badge t-pre">PreToolUse(Bash)</span></td><td>Para y pide <code>[Y/N]</code> ante comandos destructivos</td></tr>
+        <tr><td><span class="hook-name">session-reminder.sh</span></td><td><span class="trigger-badge t-user">UserPromptSubmit</span></td><td>Avisa si el estado tiene &gt;24h de antigüedad</td></tr>
+        <tr><td><span class="hook-name">sync-gemini.sh</span></td><td><span class="trigger-badge t-post">PostToolUse(Write)</span></td><td>Sincroniza <code>~/.claude/CLAUDE.md</code> → <code>~/.gemini/GEMINI.md</code></td></tr>
       </tbody>
     </table>
-    <div class="callout warn" style="margin-top:1rem;">
-      <strong>Limitaciones reales:</strong><br>
-      · <code>suggest-checkpoint</code> y <code>session-reminder</code> son <strong>advisory</strong> (exit 0) — solo imprimen, no bloquean.<br>
-      · <code>guard-project-state</code> y <code>hitl-guard</code> sí <strong>bloquean</strong> (exit 1).<br>
-      · Todos requieren Python3 en Windows. Sin él, fallan silenciosamente (fail-open).<br>
-      · <code>sync-gemini.sh</code> solo dispara cuando Claude usa el Write tool — ediciones externas no sincronizan.
+
+    <p style="margin-top:1rem;"><strong>Tipos por comportamiento:</strong></p>
+    <ul>
+      <li><code>suggest-checkpoint</code> y <code>session-reminder</code> son <strong>advisory</strong> (exit 0) — imprimen recordatorios, no bloquean. Si cierras sin commit, pierdes el trabajo no guardado.</li>
+      <li><code>guard-project-state</code> y <code>hitl-guard</code> son <strong>blocking</strong> (exit 1) — detienen la ejecución real.</li>
+      <li><code>sync-gemini.sh</code> solo dispara cuando Claude usa el Write tool — ediciones externas a <code>CLAUDE.md</code> no sincronizan automáticamente.</li>
+    </ul>
+
+    <div class="security-rule" style="margin-top:1rem;">
+      <strong>Política fail-closed (v2.5.0+)</strong><br>
+      <code>hitl-guard.sh</code> y <code>guard-project-state.sh</code> ahora son <strong>fail-closed</strong>: si Python3 y jq no están instalados, <strong>bloquean</strong> con error visible en lugar de permitir la acción. Esto mantiene la política Zero-Trust activa incluso sin la dependencia de parseo JSON.
     </div>
   </section>
 
   <!-- §7 Data locations -->
   <section>
     <h2><span class="num">7</span> Dónde Viven los Datos</h2>
-
     <div class="data-group">
       <h4>~/.claude/ — Global</h4>
       <div class="data-item"><code>CLAUDE.md</code><span>identidad global (siempre en contexto, ~1000 tokens/turno)</span></div>
       <div class="data-item"><code>SYSTEM.md</code><span>stack y proyectos (solo si lo pides)</span></div>
-      <div class="data-item"><code>MEMORY_GLOBAL.md</code><span>aprendizajes cross-proyecto (solo si debugging)</span></div>
+      <div class="data-item"><code>MEMORY_GLOBAL.md</code><span>aprendizajes cross-proyecto</span></div>
       <div class="data-item"><code>skills/*.md</code><span>15 slash commands (0 tokens hasta invocar)</span></div>
       <div class="data-item"><code>hooks/*.sh</code><span>7 automaciones (corren fuera del contexto)</span></div>
       <div class="data-item"><code>settings.json</code><span>hooks registrados</span></div>
       <div class="data-item"><code>DUPLA_VERSION</code><span>versión instalada</span></div>
     </div>
-
     <div class="data-group">
       <h4>docs/ — Por proyecto</h4>
       <div class="data-item"><code>PROJECT_STATE.md ⭐</code><span>fuente de verdad. &lt;session&gt; block: ~60 tokens</span></div>
       <div class="data-item"><code>ROADMAP.md</code><span>plan por fases con outcomes y GO/NO-GO</span></div>
       <div class="data-item"><code>ARCHITECTURE.md</code><span>decisiones técnicas (solo si aplica)</span></div>
       <div class="data-item"><code>PROBLEMS.md</code><span>bugs conocidos (solo si aplica)</span></div>
-      <div class="data-item"><code>code-review-graph.json</code><span>grafo de dependencias (auto-generado por hook)</span></div>
+      <div class="data-item"><code>code-review-graph.json</code><span>grafo de dependencias (auto-generado)</span></div>
     </div>
-
     <div class="data-group">
       <h4>Raíz del proyecto</h4>
       <div class="data-item"><code>_versions/</code><span>snapshots automáticos de docs/ (por hook)</span></div>
-      <div class="data-item"><code>claude-progress.txt</code><span>lista de tareas [ ] [&gt;] [x] de la sesión</span></div>
+      <div class="data-item"><code>claude-progress.txt</code><span>lista de tareas [ ] [&gt;] [x] — puente de sesión (~30 tokens)</span></div>
       <div class="data-item"><code>.agents/rules/claude.md</code><span>reglas del proyecto para Gemini (trigger: always_on)</span></div>
     </div>
-
     <div class="callout tip"><code>PROJECT_STATE.md</code> es compartido entre Claude y Gemini — ambos leen el mismo archivo. No se duplica.</div>
   </section>
 
   <!-- §8 Antigravity -->
   <section>
     <h2><span class="num">8</span> Antigravity (Gemini) — Diferencias Clave</h2>
-
-    <p>Si usas Antigravity/Gemini CLI como entorno principal, el flujo es diferente:</p>
 
     <h3>Skills ≠ Slash commands</h3>
     <div class="diff-row"><span class="diff-bad">❌</span> <code>/new-session</code> → no funciona como comando en Antigravity</div>
@@ -612,76 +319,42 @@ Carga condicional:             Commit → push → handoff
     <h3>Gemini lee el proyecto automáticamente</h3>
     <p>Vía <code>.agents/rules/claude.md</code> (<code>trigger: always_on</code>). No necesitas adjuntar PROJECT_STATE.md manualmente.</p>
 
-    <h3>No hay hooks</h3>
-    <p>Sin auto-snapshot, sin suggest-checkpoint, sin guard, sin HITL. Debes hacer checkpoint manualmente antes de cerrar:</p>
-    <pre># Antes de cerrar Antigravity — corre esto en terminal:
-git add . && git commit -m "checkpoint: [descripción]"</pre>
+    <h3>No hay hooks — reglas de compensación obligatorias</h3>
+    <div class="security-rule">
+      <strong>HITL manual:</strong> antes de cualquier <code>git push</code>, <code>rm -rf</code>, <code>DROP TABLE</code> o <code>sudo</code>, Gemini debe detenerse y pedir confirmación explícita [Y/N]. No asume aprobación.<br><br>
+      <strong>Checkpoint antes de DONE:</strong> no marques ninguna tarea como completada sin que el usuario haya ejecutado las pruebas Y hecho commit. "Leer el código" no cuenta como validación.<br><br>
+      <strong>Antes de cerrar Antigravity:</strong>
+      <pre style="margin-top:0.5rem;">git add . && git commit -m "checkpoint: [descripción]"</pre>
+    </div>
 
     <h3>Handoff Claude → Gemini</h3>
     <p>Usa <span class="skill">/checkpoint</span> → opción Handoff → selecciona Gemini. Sigue las instrucciones paso a paso que genera.</p>
 
     <h3>Actualizar Dupla en Antigravity</h3>
-    <p>Requiere terminal (no hay <span class="skill">/update-dupla</span> dentro de Gemini):</p>
     <pre>bash ~/Projects/dupla-workflow/bin/install.sh</pre>
   </section>
 
   <!-- §9 Multi-surface -->
   <section>
     <h2><span class="num">9</span> Multi-Surface — Tabla Comparativa</h2>
-    <div class="callout" style="margin-bottom:1rem; font-family:monospace; font-size:0.82rem;">
+    <div class="callout" style="font-family:monospace; font-size:0.82rem;">
       Más automatización ────────────────── Más manual<br>
-      Claude Code IDE/CLI &nbsp;│&nbsp; Antigravity &nbsp;│&nbsp; Cursor &nbsp;│&nbsp; Chat/Web<br>
-      &nbsp;&nbsp;Skills + Hooks &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp; Skills only &nbsp;│&nbsp; Skills &nbsp;│&nbsp; Solo texto
+      Claude Code IDE/CLI &nbsp;│&nbsp; Antigravity &nbsp;│&nbsp; Cursor &nbsp;│&nbsp; Chat/Web
     </div>
     <table>
       <thead>
-        <tr>
-          <th>Capacidad</th>
-          <th style="text-align:center">Claude Code</th>
-          <th style="text-align:center">Antigravity</th>
-          <th style="text-align:center">Cursor</th>
-          <th style="text-align:center">Chat/Web</th>
-        </tr>
+        <tr><th>Capacidad</th><th style="text-align:center">Claude Code</th><th style="text-align:center">Antigravity</th><th style="text-align:center">Cursor</th><th style="text-align:center">Chat/Web</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Skills (<code>/comando</code>)</td>
-          <td class="center check">✅</td>
-          <td class="center warn">✅ workflows</td>
-          <td class="center warn">✅ Agent Mode</td>
-          <td class="center cross">❌ pegar texto</td>
-        </tr>
-        <tr>
-          <td>Hooks automáticos</td>
-          <td class="center check">✅ 6 hooks</td>
-          <td class="center cross">❌ manual</td>
-          <td class="center cross">❌ manual</td>
-          <td class="center cross">❌</td>
-        </tr>
-        <tr>
-          <td>Agentes paralelos</td>
-          <td class="center check">✅ nativo</td>
-          <td class="center warn">⚠️ run_command</td>
-          <td class="center warn">⚠️ múltiples tabs</td>
-          <td class="center cross">❌</td>
-        </tr>
-        <tr>
-          <td>Handoff block</td>
-          <td class="center check">✅</td>
-          <td class="center check">✅</td>
-          <td class="center check">✅</td>
-          <td class="center warn">✅ pegar texto</td>
-        </tr>
-        <tr>
-          <td>Leer archivos proyecto</td>
-          <td class="center check">✅</td>
-          <td class="center warn">✅ run_command</td>
-          <td class="center warn">✅ Agent Mode</td>
-          <td class="center warn">⚠️ adjuntar</td>
-        </tr>
+        <tr><td>Skills (<code>/comando</code>)</td><td class="center check">✅</td><td class="center warn">✅ workflows</td><td class="center warn">✅ Agent Mode</td><td class="center cross">❌ pegar texto</td></tr>
+        <tr><td>Hooks automáticos</td><td class="center check">✅ 7 hooks</td><td class="center cross">❌ manual</td><td class="center cross">❌ manual</td><td class="center cross">❌</td></tr>
+        <tr><td>HITL automático</td><td class="center check">✅ fail-closed</td><td class="center warn">⚠️ manual obligatorio</td><td class="center warn">⚠️ manual obligatorio</td><td class="center cross">❌</td></tr>
+        <tr><td>Agentes paralelos</td><td class="center check">✅ nativo</td><td class="center warn">⚠️ run_command</td><td class="center warn">⚠️ múltiples tabs</td><td class="center cross">❌</td></tr>
+        <tr><td>Handoff block</td><td class="center check">✅</td><td class="center check">✅</td><td class="center check">✅</td><td class="center warn">✅ pegar texto</td></tr>
+        <tr><td>Leer archivos proyecto</td><td class="center check">✅</td><td class="center warn">✅ run_command</td><td class="center warn">✅ Agent Mode</td><td class="center warn">⚠️ adjuntar</td></tr>
       </tbody>
     </table>
-    <p style="margin-top:0.75rem;"><strong>Claude Code es el entorno de referencia.</strong> En Cursor o Chat, <span class="skill">/checkpoint</span> debe correrse manualmente al final de cada sesión.</p>
+    <p style="margin-top:0.75rem;"><strong>Claude Code es el entorno de referencia.</strong> En entornos sin hooks, aplican las reglas de compensación de §8.</p>
   </section>
 
   <!-- §10 Handoff -->
@@ -689,17 +362,27 @@ git add . && git commit -m "checkpoint: [descripción]"</pre>
     <h2><span class="num">10</span> Handoff entre LLMs o Sesiones</h2>
     <pre>1. /checkpoint → opción Handoff
 2. Copia el bloque &lt;handoff&gt; generado
-3. En el nuevo entorno: pega el bloque + /new-session</pre>
+3. En el nuevo entorno: pega el bloque + /new-session
+4. Cierra el chat actual completamente — no lo dejes abierto</pre>
     <p>El bloque contiene: proyecto, branch, qué se completó, cuál es el próximo paso exacto. Funciona en todos los entornos — en Chat lo pegas como texto plano.</p>
+    <div class="callout tip"><strong>Regla de Context Reset:</strong> cerrar físicamente la ventana es parte del protocolo — no es opcional. El nuevo chat arranca sin la "ansiedad de contexto" del chat anterior.</div>
   </section>
 
   <!-- §11 Teams -->
   <section>
     <h2><span class="num">11</span> Trabajo en Equipo</h2>
-    <pre>/adapt-to-team     ← convierte proyecto individual a modo equipo
-/add-team-member   ← agrega un dev con su sección y branch
+    <pre>/adapt-to-team        ← convierte proyecto individual a modo equipo
+/add-team-member      ← agrega un dev con su sección y branch
 /new-session standup  ← vista consolidada del equipo (solo Lead)</pre>
-    <p>Cada dev tiene su sección en <code>PROJECT_STATE.md</code> y su branch <code>work/phase[N]-[role]</code>. El Lead usa <span class="skill">/new-session standup</span> para ver el estado de todos en &lt;15 líneas.</p>
+    <p>Cada dev tiene su sección en <code>PROJECT_STATE.md</code> y su branch <code>work/phase[N]-[role]</code>.</p>
+
+    <h3>Gestión de concurrencia — cómo se evitan conflictos</h3>
+    <ul>
+      <li>Cada dev edita <strong>SOLO su sección</strong> (<code>### [Su Nombre]</code>) — nunca toca las secciones de otros.</li>
+      <li>Subagentes paralelos escriben en archivos temporales independientes (<code>/progress/agent-[nombre].md</code>). El Lead consolida secuencialmente en <code>PROJECT_STATE.md</code>.</li>
+      <li><code>code-review-graph.json</code> es regenerable — si dos devs generan simultáneamente, el último commit gana. No es fuente de verdad, solo es consultivo.</li>
+      <li>Conflictos de merge en <code>PROJECT_STATE.md</code>: resolver siempre preservando ambas secciones — nunca hacer "theirs" o "ours" que borre trabajo de otro dev.</li>
+    </ul>
   </section>
 
   <!-- §12 Knowledge graph -->

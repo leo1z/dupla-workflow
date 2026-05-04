@@ -69,7 +69,9 @@ Crea `QUICKSTATE.md` (~80 tokens). Para scripts, experimentos, tareas no-código
 /new-session  →  TRABAJO  →  /checkpoint
 ```
 
-Eso es todo. El resto es opcional según lo que necesites.
+Eso es todo. El resto es opcional.
+
+**Context Reset — regla física:** al cerrar una sesión, cierra el chat completamente y abre uno nuevo. No comprimas en la misma ventana indefinidamente. `/compact` ayuda, pero no reemplaza un reset completo. Chats frescos = contexto limpio = menos tokens = menos errores de "ansiedad de contexto".
 
 ---
 
@@ -163,11 +165,13 @@ Los hooks corren fuera del contexto — no consumen tokens del chat, no aparecen
 | `session-reminder.sh` | UserPromptSubmit | Avisa si el estado tiene >24h de antigüedad |
 | `sync-gemini.sh` | PostToolUse(Write) | Sincroniza `~/.claude/CLAUDE.md` → `~/.gemini/GEMINI.md` |
 
-**Limitaciones reales de los hooks:**
-- Los hooks de tipo "suggest" (suggest-checkpoint, session-reminder) solo imprimen texto — no bloquean. Son recordatorios, no guardas.
-- `guard-project-state.sh` y `hitl-guard.sh` sí bloquean (exit 1) — son guardas reales.
-- Todos requieren Python3 en Windows para parsear JSON de entrada. Sin Python3, los hooks fallan silenciosamente (fail-open).
-- `sync-gemini.sh` solo sincroniza cuando Claude usa el Write tool — si editas `CLAUDE.md` con un editor externo, no se sincroniza.
+**Tipos de hook por comportamiento:**
+- `suggest-checkpoint` y `session-reminder` son **advisory** (exit 0) — imprimen recordatorios, no bloquean. Si cierras el chat sin hacer commit, pierdes el trabajo no guardado.
+- `guard-project-state.sh` y `hitl-guard.sh` son **blocking** (exit 1) — detienen la ejecución. Son las guardas reales.
+- `sync-gemini.sh` solo sincroniza cuando Claude usa el Write tool — ediciones externas a `CLAUDE.md` no disparan el sync. Usa `/health-check` para detectar drift.
+
+**Política fail-closed (v2.5.0+):**
+`hitl-guard.sh` y `guard-project-state.sh` ahora son **fail-closed**: si Python3 y jq no están instalados, bloquean con error en lugar de permitir la acción. Esto protege la política Zero-Trust incluso cuando falta la dependencia de parseo JSON.
 
 ---
 
@@ -212,9 +216,12 @@ Si usas Antigravity/Gemini CLI como entorno principal, el flujo es diferente:
 
 **Gemini lee el proyecto automáticamente** vía `.agents/rules/claude.md` (`trigger: always_on`). No necesitas adjuntar PROJECT_STATE.md manualmente.
 
-**No hay hooks.** Sin auto-snapshot, sin suggest-checkpoint, sin guard, sin HITL. Debes hacer checkpoint manualmente antes de cerrar:
+**No hay hooks.** Sin auto-snapshot, sin suggest-checkpoint, sin guard, sin HITL. Aplican reglas obligatorias de compensación:
+
+- **HITL manual** — antes de cualquier `git push`, `rm -rf`, `DROP TABLE` o `sudo`, Gemini debe detenerse y pedir confirmación explícita [Y/N] del usuario. No lo asumes como aprobado.
+- **Checkpoint obligatorio antes de DONE** — no marques ninguna tarea como completada sin que el usuario haya ejecutado las pruebas Y hecho commit.
+- Antes de cerrar Antigravity, corre en terminal:
 ```bash
-# Antes de cerrar Antigravity — corre esto en terminal:
 git add . && git commit -m "checkpoint: [descripción]"
 ```
 
@@ -267,6 +274,12 @@ El bloque contiene: proyecto, branch, qué se completó, cuál es el próximo pa
 ```
 
 Cada dev tiene su sección en `PROJECT_STATE.md` y su branch `work/phase[N]-[role]`. El Lead usa `/new-session standup` para ver el estado de todos en <15 líneas.
+
+**Gestión de concurrencia — cómo se evitan conflictos:**
+- Cada dev edita SOLO su sección (`### [Su Nombre]`) — nunca toca las secciones de otros.
+- Los subagentes paralelos escriben sus hallazgos en archivos temporales independientes (`/progress/agent-[nombre].md`) y el Planificador/Lead los consolida secuencialmente en `PROJECT_STATE.md`.
+- `code-review-graph.json` es generado por hook al final de cada respuesta — si dos devs generan simultáneamente, el último commit gana (el archivo es regenerable, no es fuente de verdad).
+- Conflictos de merge en `PROJECT_STATE.md`: resolver siempre a favor de ambas secciones (keep both) — nunca hacer "theirs" o "ours" que borre el trabajo de otro dev.
 
 ---
 
