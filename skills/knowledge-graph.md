@@ -1,5 +1,8 @@
 Generate a knowledge graph of the project docs for AI navigation and exploration.
 
+**When to use:** After a new phase starts, when ARCHITECTURE.md changes significantly, or when `/health-check` shows graph is stale. Auto-runs via hook after each response.
+**See also:** `/research` (explore external topics) · `/check-project` (validate doc accuracy, not structure)
+
 Usage:
   /knowledge-graph          → generate graph from docs/ (full project)
   /knowledge-graph update   → regenerate after major doc changes

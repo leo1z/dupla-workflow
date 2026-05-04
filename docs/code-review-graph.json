@@ -1,13 +1,13 @@
 {
-  "project": "dupla-workflow",
-  "generated": "2026-04-22T22:00:00Z",
-  "lastCommit": "bce7c23",
+  "project": ".",
+  "generated": "2026-05-04T09:02:45Z",
+  "lastCommit": "b7f3edd",
   "structure": {
     "root": ".",
     "folders": [
       {
         "path": "skills/",
-        "files": 13,
+        "files": 15,
         "purpose": "v2 workflow commands",
         "stability": "stable",
         "riskLevel": "low"
@@ -21,7 +21,7 @@
       },
       {
         "path": "hooks/",
-        "files": 3,
+        "files": 7,
         "purpose": "automation hooks (guard, checkpoint, session)",
         "stability": "new",
         "riskLevel": "medium"
@@ -35,24 +35,17 @@
       },
       {
         "path": "docs/",
-        "files": 3,
+        "files": 5,
         "purpose": "system documentation",
-        "stability": "stable",
-        "riskLevel": "low"
-      },
-      {
-        "path": ".agents/rules/",
-        "files": 1,
-        "purpose": "Antigravity project rules (trigger: always_on)",
         "stability": "stable",
         "riskLevel": "low"
       }
     ],
     "fileCounts": {
-      "markdown": 42,
+      "markdown": 76,
       "typescript": 0,
-      "json": 2,
-      "shell": 5
+      "json": 8,
+      "shell": 9
     }
   },
   "riskZones": [

@@ -48,14 +48,22 @@ node --version → ✅ Node [version] / ℹ️ NOT FOUND (optional — needed on
 # Files exist?
 ~/.claude/CLAUDE.md          → ✅ / ❌ MISSING (run /setup-dupla)
 ~/.claude/SYSTEM.md          → ✅ / ❌ MISSING (run /setup-dupla)
-~/.claude/MEMORY_GLOBAL.md   → ✅ / ℹ️ MISSING (optional — will be created on first use)
+~/.claude/MEMORY_GLOBAL.md   → ✅ / ⚠️ MISSING (run /setup-dupla — needed for cross-project learning)
 ~/.claude/DUPLA_VERSION      → ✅ v[X.Y.Z] / ❌ MISSING (run install.sh)
+
+# CLAUDE.md has real content (not empty placeholder)?
+grep -c "." ~/.claude/CLAUDE.md → > 10 lines: ✅ / ≤ 10 lines: ⚠️ Placeholder — run /setup-dupla
+
+# GEMINI.md sync check (if ~/.gemini/ exists)
+if ~/.gemini/ exists:
+  ~/.gemini/GEMINI.md → ✅ exists / ⚠️ MISSING (run: cp ~/.claude/CLAUDE.md ~/.gemini/GEMINI.md)
+  diff ~/.claude/CLAUDE.md ~/.gemini/GEMINI.md → identical: ✅ / differs: ⚠️ Out of sync (run sync manually or via /setup-dupla)
 
 # Skills installed?
 ~/.claude/skills/ → list .md files → check that CORE skills are present:
   new-project, new-session, checkpoint, restore, setup-dupla,
   update-dupla, adapt-project, adapt-to-team, add-team-member,
-  health-check, token-budget, project-audit, quick-start, check-project
+  health-check, knowledge-graph, quick-start, check-project, compact, research
   → ✅ core skills present / ⚠️ missing: [list only missing core ones]
   → Extra .md files not in core list → ℹ️ Custom skills found: [list] (not an error)
 
@@ -198,7 +206,7 @@ grep -rn "ignore\|execute\|run\|override\|system:\|<instructions>" docs/ CLAUDE.
   → Hits en contexto sospechoso: ⚠️ POSIBLE INYECCIÓN — revisar manualmente
 
 # 7. Archivos huérfanos en docs/
-find docs/ -maxdepth 1 -type f | grep -vE "PROJECT_STATE|ROADMAP|ARCHITECTURE|PROBLEMS|SURFACE_GUIDE|SYSTEM_MAP|code-review-graph|SPEC|GRAPH_REPORT|graph\.(json|html)"
+find docs/ -maxdepth 1 -type f | grep -vE "PROJECT_STATE|ROADMAP|ARCHITECTURE|PROBLEMS|SURFACE_GUIDE|SYSTEM_MAP|HOW_IT_WORKS|code-review-graph|SPEC|GRAPH_REPORT|graph\.(json|html)"
   → Archivos inesperados: ⚠️ ¿mover a docs/vision/?
 ```
 
@@ -230,8 +238,9 @@ sed -i 's/\[>\] \[tarea\]/[x] [tarea] — EVALUADO [fecha]/' claude-progress.txt
 ✅ Health Check — All systems OK
 
 Tools:     ✅ git · python3 · [node if installed]
-Global:    ✅ Skills (14/14) · CLAUDE.md · SYSTEM.md · v[version]
-Hooks:     ✅ Stop (2) · PreToolUse (1) · UserPromptSubmit (1)
+Global:    ✅ Skills (15/15) · CLAUDE.md (real content) · SYSTEM.md · MEMORY_GLOBAL.md · v[version]
+GEMINI:    ✅ ~/.gemini/GEMINI.md synced · [N] workflows deployed
+Hooks:     ✅ Stop (3) · PreToolUse (2) · UserPromptSubmit (1) · PostToolUse (1)
 Project:   ✅ PROJECT_STATE (CURRENT) · ROADMAP · CLAUDE.md
 [Team:     ✅ 3 devs · 3 sections · 3 branches]
 Stack:     ✅ Coherent

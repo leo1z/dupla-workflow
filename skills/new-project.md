@@ -6,7 +6,8 @@ Usage: /new-project
 
 ## Phase 0 — Project Setup
 
-> 💡 **Activa Plan Mode** antes de continuar (Shift+Tab en Claude Code). Este skill genera el plan — afínalo antes de ejecutar.
+> 💡 **Claude Code IDE:** Activa Plan Mode (Shift+Tab) antes de continuar — afina el plan antes de ejecutar.
+> **Otros entornos (Antigravity, Terminal, Cursor):** omite esta instrucción — continúa directamente.
 
 Ask TWO questions upfront (in same message):
 

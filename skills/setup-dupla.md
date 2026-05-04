@@ -14,7 +14,12 @@ Check silently what is installed:
 - `pip3 --version` or `pip --version` → available? (optional — MCP Fetch)
 
 If git missing → stop: "❌ git no encontrado. Instálalo primero: https://git-scm.com"
-If python3 missing → warn (don't stop): "⚠️ python3 no encontrado — los hooks pueden fallar en Windows. Instalar: https://python.org"
+If python3 missing AND running on Windows (detected via USERPROFILE env or OS hints):
+  → STOP: "❌ python3 no encontrado. Los hooks de Dupla requieren python3 en Windows.
+     Instalar: https://python.org/downloads (marca 'Add to PATH')
+     Luego cierra y vuelve a abrir la terminal, y corre /setup-dupla de nuevo."
+If python3 missing AND on macOS/Linux:
+  → WARN (don't stop): "⚠️ python3 no encontrado — algunos hooks usarán fallbacks. Recomendado: brew install python3"
 
 ### 0B — Detect IDEs and surface
 - `~/.claude/` exists? → Claude Code detected → **full hooks + skills available**
@@ -24,6 +29,18 @@ If python3 missing → warn (don't stop): "⚠️ python3 no encontrado — los 
 - None found → ask: "¿Desde qué IDE o terminal usas esto? (Claude Code / Antigravity / Cursor / Windsurf / otro)"
 
 Show detected surface at setup end so user understands what's available.
+
+If Antigravity detected → show this warning ONCE at the end of setup:
+```
+⚠️ Nota Antigravity: los skills NO son slash commands en Gemini.
+   Para invocar un skill, escribe su nombre como texto:
+   ✅ "Ejecuta new-session" o "Haz el skill new-session"
+   ❌ /new-session  ← no funciona en Antigravity como slash command
+
+   Sin hooks: no hay auto-snapshot, suggest-checkpoint ni guard.
+   Antes de cerrar Antigravity, corre en terminal:
+   git add . && git commit -m "checkpoint: [descripción]"
+```
 
 If Antigravity NOT detected but user says they have it:
   `"¿Dónde está instalado Antigravity? (ej: ~/.gemini/antigravity/)"`
@@ -105,6 +122,20 @@ Show summary:
 
 If NO → ask: "¿Qué cambiar?"
 If YES → proceed to generation
+
+---
+
+## Phase 3.5 — MEMORY_GLOBAL seed (after clarity check, before generation)
+
+Ask ONE question only if this is a first-time setup (MEMORY_GLOBAL.md doesn't exist):
+```
+¿Has tenido problemas recurrentes con tus proyectos de código o con algún LLM antes?
+(Opcional — si sí, dime los 1-2 más frecuentes. Los guardo en tu memoria global para que no se repitan.)
+[respuesta libre / saltar]
+```
+
+If user provides content → add to MEMORY_GLOBAL.md `## Problemas Recurrentes` section during generation.
+If user skips → create empty MEMORY_GLOBAL.md with template structure. Never block on this question.
 
 ---
 

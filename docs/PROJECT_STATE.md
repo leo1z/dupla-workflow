@@ -8,12 +8,13 @@ project_type: individual
 # Project State — Dupla-Workflow
 
 <session>
-Updated: 2026-05-03 (sesión 9)
+Updated: 2026-05-04 (sesión 12)
 Status: ACTIVE
+Mode: full
 Phase: N/A
 Phase_Status: N/A
-Done: Sprint 4 (sesión 9) — AGENTS.md (Staff Harness + OWASP audit: Clean Windows, Tool-Result Clearing, Zero-Complacency Quality Gate, HITL, Prompt Injection) · hitl-guard.sh hook + registrado en settings.json · HOW_IT_WORKS.html + PDF · SURFACE_GUIDE rewrite · IML 7-question assessment · knowledge-graph.md skill · 3 pruebas trampa ejecutadas (PASS) · CLAUDE.md Agentic Engineering + Security sections
-Next: Validar Sprints 1-4 en máquina local (bash bin/install.sh) y hacer merge work → master
+Done: v2.5.0 completo — audit del sistema, eliminados 2 skills redundantes (token-budget, project-audit), 3 docs muertos, fixes en hooks (suggest-checkpoint branch order, auto-knowledge-graph silence), install.sh reescrito con validación real, setup-dupla python3 block + MEMORY_GLOBAL seed, health-check actualizado, HOW_IT_WORKS como guía maestra con user journey, skills con When-to-use/See-also.
+Next: Merge work → master y publicar v2.5.0.
 Blockers: none
 Branch: work
 Model: claude

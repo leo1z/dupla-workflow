@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Dupla OS Works</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+  h1, h2 { color: #2c3e50; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+  code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
+  .highlight { background: #eef7fa; border-left: 4px solid #3498db; padding: 10px; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>How Dupla OS Works</h1>
+
+<div class="highlight">
+  <p><strong>Dupla OS</strong> es un <em>Harness (Arnés) de Markdown</em> para trabajar con Agentes de Inteligencia Artificial (Claude, Gemini, Cursor). Su propósito es obligar a los LLMs a trabajar con economía de tokens, sin "Context Bloat" y con máxima seguridad.</p>
+</div>
+
+<h2>1. Principios Fundamentales</h2>
+<ul>
+  <li><strong>Context Engineering (Clean Windows)</strong>: Cada subtarea se hace en una nueva ventana con el mínimo contexto necesario.</li>
+  <li><strong>Tool-Result Clearing</strong>: Después de leer archivos grandes, el agente debe resumirlos y olvidar el texto gigante para no gastar tokens inútilmente.</li>
+  <li><strong>Spec-Driven</strong>: Nunca se escribe código sin haber documentado antes el plan en <code>ROADMAP.md</code> y <code>PROJECT_STATE.md</code>.</li>
+  <li><strong>Zero-Complacency Quality Gate</strong>: El Agente Evaluador no asume que el código funciona solo con leerlo; exige pruebas y comandos deterministas.</li>
+</ul>
+
+<h2>2. Flujo Básico (Cómo usarlo)</h2>
+<p>El flujo diario consiste en muy pocos comandos que puedes usar desde tu IDE o consola:</p>
+<ul>
+  <li><code>/new-project</code>: Empieza un proyecto. Evalúa tu idea con metodología ZOHAR/P2B.</li>
+  <li><code>/adapt-project</code>: Toma un repositorio existente y le agrega la inteligencia de Dupla.</li>
+  <li><code>/new-session</code>: Úsalo al empezar. Lee el <code>PROJECT_STATE.md</code> para entender el contexto al instante.</li>
+  <li><code>/checkpoint</code>: Al terminar, guarda el progreso, hace commit y actualiza el ROADMAP.</li>
+  <li><code>/zohar</code>: Organiza tus tareas por impacto (Propulsor, Escalera, Playground, Plana).</li>
+</ul>
+
+<h2>3. ¿Cómo actúan los Agentes?</h2>
+<p>Dupla OS coordina tres agentes conceptualmente:</p>
+<ol>
+  <li><strong>Planificador</strong>: Lee el estado, decide la jugada y asigna trabajo.</li>
+  <li><strong>Implementador</strong>: Recibe una tarea atómica y devuelve el código.</li>
+  <li><strong>Evaluador</strong>: Intenta "romper" la solución y exige pruebas para validarla.</li>
+</ol>
+
+<h2>4. ¿Dónde están los datos?</h2>
+<p>Todos los datos viven en tus archivos Markdown (<code>docs/</code>), <strong>no en el chat</strong>. Cerrar el chat no borra tu progreso. El comando <code>/new-session</code> y los <em>hooks</em> mantienen la base documental en sincronía con tu código.</p>
+
+<h2>5. Knowledge Graph Automático</h2>
+<p>El sistema auto-genera un grafo de conocimiento de tu proyecto (<code>docs/code-review-graph.json</code>), actualizándose automáticamente gracias al hook <code>auto-knowledge-graph.sh</code>.</p>
+
+<p><em>Nota: Esta es una versión exportada de docs/HOW_IT_WORKS.md.</em></p>
+</body>
+</html>

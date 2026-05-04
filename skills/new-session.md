@@ -1,5 +1,8 @@
 Start work session. Read state, define next steps.
 
+**When to use:** At the start of every work session — before writing any code.
+**See also:** `/checkpoint` (end of session) · `/check-project` (sync docs without starting session) · `/quick-start` (no docs/ folder)
+
 Usage:
   /new-session              → start or resume session
   /new-session [goal]       → start with specific goal

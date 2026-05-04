@@ -1,5 +1,8 @@
 Save work session state. Unified command with modes via menu.
 
+**When to use:** At the end of a session, before switching models, or after completing a meaningful task.
+**See also:** `/new-session` (start of session) · `/restore` (undo a save point) · `/compact` (reduce bloat after 10+ sessions)
+
 Usage: /checkpoint
 
 ---

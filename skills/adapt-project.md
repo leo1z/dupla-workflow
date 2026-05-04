@@ -1,5 +1,8 @@
 Onboard existing project into Dupla-Workflow. Asks first, shows diffs, preserves existing docs.
 
+**When to use:** When you have an existing repo and want to add Dupla structure to it. Run once per project.
+**See also:** `/new-project` (brand new project from scratch) · `/check-project` (validate docs after onboarding) · `/adapt-to-team` (convert to team mode)
+
 Usage: /adapt-project
 
 ---

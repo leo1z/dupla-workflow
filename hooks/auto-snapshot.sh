@@ -3,8 +3,13 @@
 # Copies docs/ to _versions/<timestamp>/ regardless of git status
 # Safe: never touches git stash (would corrupt user's own stash), never blocks
 
-# Only act if docs/ directory exists and has content
-if [ ! -d "docs" ] || [ -z "$(ls -A docs/ 2>/dev/null)" ]; then
+# Act if docs/ has content OR QUICKSTATE.md exists in root (micro mode)
+HAS_DOCS=false
+HAS_QUICKSTATE=false
+[ -d "docs" ] && [ -n "$(ls -A docs/ 2>/dev/null)" ] && HAS_DOCS=true
+[ -f "QUICKSTATE.md" ] && HAS_QUICKSTATE=true
+
+if [ "$HAS_DOCS" = false ] && [ "$HAS_QUICKSTATE" = false ]; then
   exit 0
 fi
 
@@ -17,7 +22,8 @@ fi
 
 SNAPSHOT_DIR="_versions/$STAMP"
 mkdir -p "$SNAPSHOT_DIR"
-cp -r docs/. "$SNAPSHOT_DIR/" 2>/dev/null
+[ "$HAS_DOCS" = true ] && cp -r docs/. "$SNAPSHOT_DIR/" 2>/dev/null
+[ "$HAS_QUICKSTATE" = true ] && cp QUICKSTATE.md "$SNAPSHOT_DIR/" 2>/dev/null
 
 # Keep only the 10 most recent snapshots (LRU cleanup)
 if command -v python3 >/dev/null 2>&1; then
